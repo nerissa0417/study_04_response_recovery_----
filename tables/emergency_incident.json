@@ -1,0 +1,122 @@
+[
+  {
+    "Emergency_Incident_ID": "EIID0001",
+    "Event_Type": "交付延误",
+    "Time_of_the_Incident": "2025-04-01",
+    "First_Response_Time": "2025-04-04"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0002",
+    "Event_Type": "系统故障",
+    "Time_of_the_Incident": "2025-04-19",
+    "First_Response_Time": "2025-04-19"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0003",
+    "Event_Type": "质量事故",
+    "Time_of_the_Incident": "2025-05-08",
+    "First_Response_Time": "2025-05-10"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0004",
+    "Event_Type": "质量事故",
+    "Time_of_the_Incident": "2025-05-26",
+    "First_Response_Time": "2025-05-26"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0005",
+    "Event_Type": "断供",
+    "Time_of_the_Incident": "2025-06-14",
+    "First_Response_Time": "2025-06-17"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0006",
+    "Event_Type": "交付延误",
+    "Time_of_the_Incident": "2025-07-02",
+    "First_Response_Time": "2025-07-05"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0007",
+    "Event_Type": "交付延误",
+    "Time_of_the_Incident": "2025-07-21",
+    "First_Response_Time": "2025-07-22"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0008",
+    "Event_Type": "自然灾害",
+    "Time_of_the_Incident": "2025-08-08",
+    "First_Response_Time": "2025-08-13"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0009",
+    "Event_Type": "交付延误",
+    "Time_of_the_Incident": "2025-08-27",
+    "First_Response_Time": "2025-08-29"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0010",
+    "Event_Type": "断供",
+    "Time_of_the_Incident": "2025-09-14",
+    "First_Response_Time": "2025-09-18"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0011",
+    "Event_Type": "断供",
+    "Time_of_the_Incident": "2025-10-03",
+    "First_Response_Time": "2025-10-09"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0012",
+    "Event_Type": "交付延误",
+    "Time_of_the_Incident": "2025-10-21",
+    "First_Response_Time": "2025-10-23"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0013",
+    "Event_Type": "质量事故",
+    "Time_of_the_Incident": "2025-11-09",
+    "First_Response_Time": "2025-11-10"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0014",
+    "Event_Type": "断供",
+    "Time_of_the_Incident": "2025-11-27",
+    "First_Response_Time": "2025-12-07"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0015",
+    "Event_Type": "断供",
+    "Time_of_the_Incident": "2025-12-16",
+    "First_Response_Time": "2025-12-20"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0016",
+    "Event_Type": "交付延误",
+    "Time_of_the_Incident": "2026-01-03",
+    "First_Response_Time": "2026-01-06"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0017",
+    "Event_Type": "系统故障",
+    "Time_of_the_Incident": "2026-01-22",
+    "First_Response_Time": "2026-01-22"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0018",
+    "Event_Type": "断供",
+    "Time_of_the_Incident": "2026-02-09",
+    "First_Response_Time": "2026-02-12"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0019",
+    "Event_Type": "系统故障",
+    "Time_of_the_Incident": "2026-02-28",
+    "First_Response_Time": "2026-02-28"
+  },
+  {
+    "Emergency_Incident_ID": "EIID0020",
+    "Event_Type": "交付延误",
+    "Time_of_the_Incident": "2026-03-18",
+    "First_Response_Time": "2026-03-22"
+  }
+]

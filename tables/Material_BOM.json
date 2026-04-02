@@ -1,0 +1,236 @@
+[
+  {
+    "Material_ID": "MID0001",
+    "Downstream_Material_ID": "MID0005",
+    "BOM_ID": "BOM0001",
+    "Required_Qty": 1
+  },
+  {
+    "Material_ID": "MID0001",
+    "Downstream_Material_ID": "MID0008",
+    "BOM_ID": "BOM0002",
+    "Required_Qty": 1
+  },
+  {
+    "Material_ID": "MID0001",
+    "Downstream_Material_ID": "MID0021",
+    "BOM_ID": "BOM0003",
+    "Required_Qty": 4
+  },
+  {
+    "Material_ID": "MID0001",
+    "Downstream_Material_ID": "MID0025",
+    "BOM_ID": "BOM0004",
+    "Required_Qty": 1
+  },
+  {
+    "Material_ID": "MID0003",
+    "Downstream_Material_ID": "MID0017",
+    "BOM_ID": "BOM0005",
+    "Required_Qty": 5
+  },
+  {
+    "Material_ID": "MID0003",
+    "Downstream_Material_ID": "MID0022",
+    "BOM_ID": "BOM0006",
+    "Required_Qty": 8
+  },
+  {
+    "Material_ID": "MID0003",
+    "Downstream_Material_ID": "MID0024",
+    "BOM_ID": "BOM0007",
+    "Required_Qty": 4
+  },
+  {
+    "Material_ID": "MID0005",
+    "Downstream_Material_ID": "MID0013",
+    "BOM_ID": "BOM0008",
+    "Required_Qty": 5
+  },
+  {
+    "Material_ID": "MID0005",
+    "Downstream_Material_ID": "MID0022",
+    "BOM_ID": "BOM0009",
+    "Required_Qty": 9
+  },
+  {
+    "Material_ID": "MID0006",
+    "Downstream_Material_ID": "MID0001",
+    "BOM_ID": "BOM0010",
+    "Required_Qty": 3
+  },
+  {
+    "Material_ID": "MID0006",
+    "Downstream_Material_ID": "MID0012",
+    "BOM_ID": "BOM0011",
+    "Required_Qty": 1
+  },
+  {
+    "Material_ID": "MID0006",
+    "Downstream_Material_ID": "MID0016",
+    "BOM_ID": "BOM0012",
+    "Required_Qty": 2
+  },
+  {
+    "Material_ID": "MID0006",
+    "Downstream_Material_ID": "MID0023",
+    "BOM_ID": "BOM0013",
+    "Required_Qty": 2
+  },
+  {
+    "Material_ID": "MID0007",
+    "Downstream_Material_ID": "MID0004",
+    "BOM_ID": "BOM0014",
+    "Required_Qty": 5
+  },
+  {
+    "Material_ID": "MID0007",
+    "Downstream_Material_ID": "MID0022",
+    "BOM_ID": "BOM0015",
+    "Required_Qty": 4
+  },
+  {
+    "Material_ID": "MID0008",
+    "Downstream_Material_ID": "MID0021",
+    "BOM_ID": "BOM0016",
+    "Required_Qty": 8
+  },
+  {
+    "Material_ID": "MID0008",
+    "Downstream_Material_ID": "MID0022",
+    "BOM_ID": "BOM0017",
+    "Required_Qty": 5
+  },
+  {
+    "Material_ID": "MID0010",
+    "Downstream_Material_ID": "MID0022",
+    "BOM_ID": "BOM0018",
+    "Required_Qty": 6
+  },
+  {
+    "Material_ID": "MID0010",
+    "Downstream_Material_ID": "MID0024",
+    "BOM_ID": "BOM0019",
+    "Required_Qty": 5
+  },
+  {
+    "Material_ID": "MID0011",
+    "Downstream_Material_ID": "MID0018",
+    "BOM_ID": "BOM0020",
+    "Required_Qty": 6
+  },
+  {
+    "Material_ID": "MID0011",
+    "Downstream_Material_ID": "MID0022",
+    "BOM_ID": "BOM0021",
+    "Required_Qty": 4
+  },
+  {
+    "Material_ID": "MID0012",
+    "Downstream_Material_ID": "MID0002",
+    "BOM_ID": "BOM0022",
+    "Required_Qty": 9
+  },
+  {
+    "Material_ID": "MID0012",
+    "Downstream_Material_ID": "MID0004",
+    "BOM_ID": "BOM0023",
+    "Required_Qty": 7
+  },
+  {
+    "Material_ID": "MID0012",
+    "Downstream_Material_ID": "MID0011",
+    "BOM_ID": "BOM0024",
+    "Required_Qty": 1
+  },
+  {
+    "Material_ID": "MID0012",
+    "Downstream_Material_ID": "MID0015",
+    "BOM_ID": "BOM0025",
+    "Required_Qty": 1
+  },
+  {
+    "Material_ID": "MID0015",
+    "Downstream_Material_ID": "MID0014",
+    "BOM_ID": "BOM0026",
+    "Required_Qty": 6
+  },
+  {
+    "Material_ID": "MID0015",
+    "Downstream_Material_ID": "MID0022",
+    "BOM_ID": "BOM0027",
+    "Required_Qty": 4
+  },
+  {
+    "Material_ID": "MID0016",
+    "Downstream_Material_ID": "MID0007",
+    "BOM_ID": "BOM0028",
+    "Required_Qty": 1
+  },
+  {
+    "Material_ID": "MID0016",
+    "Downstream_Material_ID": "MID0010",
+    "BOM_ID": "BOM0029",
+    "Required_Qty": 2
+  },
+  {
+    "Material_ID": "MID0016",
+    "Downstream_Material_ID": "MID0013",
+    "BOM_ID": "BOM0030",
+    "Required_Qty": 5
+  },
+  {
+    "Material_ID": "MID0016",
+    "Downstream_Material_ID": "MID0014",
+    "BOM_ID": "BOM0031",
+    "Required_Qty": 4
+  },
+  {
+    "Material_ID": "MID0020",
+    "Downstream_Material_ID": "MID0002",
+    "BOM_ID": "BOM0032",
+    "Required_Qty": 6
+  },
+  {
+    "Material_ID": "MID0020",
+    "Downstream_Material_ID": "MID0022",
+    "BOM_ID": "BOM0033",
+    "Required_Qty": 4
+  },
+  {
+    "Material_ID": "MID0023",
+    "Downstream_Material_ID": "MID0003",
+    "BOM_ID": "BOM0034",
+    "Required_Qty": 1
+  },
+  {
+    "Material_ID": "MID0023",
+    "Downstream_Material_ID": "MID0017",
+    "BOM_ID": "BOM0035",
+    "Required_Qty": 6
+  },
+  {
+    "Material_ID": "MID0023",
+    "Downstream_Material_ID": "MID0018",
+    "BOM_ID": "BOM0036",
+    "Required_Qty": 5
+  },
+  {
+    "Material_ID": "MID0023",
+    "Downstream_Material_ID": "MID0020",
+    "BOM_ID": "BOM0037",
+    "Required_Qty": 2
+  },
+  {
+    "Material_ID": "MID0025",
+    "Downstream_Material_ID": "MID0022",
+    "BOM_ID": "BOM0038",
+    "Required_Qty": 5
+  },
+  {
+    "Material_ID": "MID0025",
+    "Downstream_Material_ID": "MID0024",
+    "BOM_ID": "BOM0039",
+    "Required_Qty": 6
+  }
+]
