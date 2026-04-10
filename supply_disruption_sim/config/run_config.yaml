@@ -1,0 +1,64 @@
+input_dir: Input_data
+
+standardize:
+  enabled: true
+  output_dir: output/standardized
+
+simulation:
+  enabled: true
+  scenario: default_single_supplier_disruption
+  policy_profile: baseline
+  report_profile: minimal
+  mode: deterministic
+  bayesian_use_sampling: false
+  bayesian_random_seed: 42
+  output_dir: output/run_default
+
+batch:
+  enabled: false
+  scenarios:
+    - default_single_supplier_disruption
+    - default_region_disruption
+  policy_profiles:
+    - baseline
+    - all_policies
+    - no_policy
+    - only_backup_switch
+    - only_substitution
+    - only_priority_repair
+  report_profile: minimal
+  mode: deterministic
+  bayesian_use_sampling: false
+  bayesian_random_seed: 42
+  output_dir: output/batch_runs
+
+sensitivity:
+  enabled: false
+  scenario: default_single_supplier_disruption
+  policy_profile: baseline
+  parameters:
+    - single_source_ratio
+    - backup_coverage
+    - substitution_availability
+    - backup_switch_time_days
+    - priority_repair_lead_days
+    - incident_duration_factor
+  random_seed: 42
+  mode: deterministic
+  bayesian_use_sampling: false
+  bayesian_random_seed: 42
+  output_dir: output/sensitivity_runs
+
+monte_carlo:
+  enabled: false
+  scenarios:
+    - default_single_supplier_disruption
+  policy_profiles:
+    - baseline
+    - no_priority_repair
+  trials: 20
+  random_seed: 42
+  mode: deterministic
+  bayesian_use_sampling: false
+  bayesian_random_seed: 42
+  output_dir: output/monte_carlo_runs

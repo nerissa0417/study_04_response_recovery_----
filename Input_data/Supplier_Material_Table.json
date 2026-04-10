@@ -1,0 +1,272 @@
+[
+  {
+    "Supplier_ID": "SID0001",
+    "Material_ID": "MID0001",
+    "Supplier_Material_ID": "SMID0001"
+  },
+  {
+    "Supplier_ID": "SID0002",
+    "Material_ID": "MID0002",
+    "Supplier_Material_ID": "SMID0002"
+  },
+  {
+    "Supplier_ID": "SID0002",
+    "Material_ID": "MID0003",
+    "Supplier_Material_ID": "SMID0003"
+  },
+  {
+    "Supplier_ID": "SID0003",
+    "Material_ID": "MID0004",
+    "Supplier_Material_ID": "SMID0004"
+  },
+  {
+    "Supplier_ID": "SID0003",
+    "Material_ID": "MID0007",
+    "Supplier_Material_ID": "SMID0005"
+  },
+  {
+    "Supplier_ID": "SID0004",
+    "Material_ID": "MID0005",
+    "Supplier_Material_ID": "SMID0006"
+  },
+  {
+    "Supplier_ID": "SID0004",
+    "Material_ID": "MID0011",
+    "Supplier_Material_ID": "SMID0007"
+  },
+  {
+    "Supplier_ID": "SID0005",
+    "Material_ID": "MID0008",
+    "Supplier_Material_ID": "SMID0008"
+  },
+  {
+    "Supplier_ID": "SID0005",
+    "Material_ID": "MID0010",
+    "Supplier_Material_ID": "SMID0009"
+  },
+  {
+    "Supplier_ID": "SID0006",
+    "Material_ID": "MID0013",
+    "Supplier_Material_ID": "SMID0010"
+  },
+  {
+    "Supplier_ID": "SID0006",
+    "Material_ID": "MID0014",
+    "Supplier_Material_ID": "SMID0011"
+  },
+  {
+    "Supplier_ID": "SID0007",
+    "Material_ID": "MID0015",
+    "Supplier_Material_ID": "SMID0012"
+  },
+  {
+    "Supplier_ID": "SID0007",
+    "Material_ID": "MID0018",
+    "Supplier_Material_ID": "SMID0013"
+  },
+  {
+    "Supplier_ID": "SID0008",
+    "Material_ID": "MID0006",
+    "Supplier_Material_ID": "SMID0014"
+  },
+  {
+    "Supplier_ID": "SID0009",
+    "Material_ID": "MID0016",
+    "Supplier_Material_ID": "SMID0015"
+  },
+  {
+    "Supplier_ID": "SID0009",
+    "Material_ID": "MID0017",
+    "Supplier_Material_ID": "SMID0016"
+  },
+  {
+    "Supplier_ID": "SID0010",
+    "Material_ID": "MID0004",
+    "Supplier_Material_ID": "SMID0017"
+  },
+  {
+    "Supplier_ID": "SID0010",
+    "Material_ID": "MID0007",
+    "Supplier_Material_ID": "SMID0018"
+  },
+  {
+    "Supplier_ID": "SID0010",
+    "Material_ID": "MID0020",
+    "Supplier_Material_ID": "SMID0019"
+  },
+  {
+    "Supplier_ID": "SID0010",
+    "Material_ID": "MID0025",
+    "Supplier_Material_ID": "SMID0020"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Material_ID": "MID0003",
+    "Supplier_Material_ID": "SMID0021"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Material_ID": "MID0005",
+    "Supplier_Material_ID": "SMID0022"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Material_ID": "MID0011",
+    "Supplier_Material_ID": "SMID0023"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Material_ID": "MID0021",
+    "Supplier_Material_ID": "SMID0024"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Material_ID": "MID0008",
+    "Supplier_Material_ID": "SMID0025"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Material_ID": "MID0010",
+    "Supplier_Material_ID": "SMID0026"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Material_ID": "MID0016",
+    "Supplier_Material_ID": "SMID0027"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Material_ID": "MID0017",
+    "Supplier_Material_ID": "SMID0028"
+  },
+  {
+    "Supplier_ID": "SID0013",
+    "Material_ID": "MID0013",
+    "Supplier_Material_ID": "SMID0029"
+  },
+  {
+    "Supplier_ID": "SID0013",
+    "Material_ID": "MID0014",
+    "Supplier_Material_ID": "SMID0030"
+  },
+  {
+    "Supplier_ID": "SID0013",
+    "Material_ID": "MID0015",
+    "Supplier_Material_ID": "SMID0031"
+  },
+  {
+    "Supplier_ID": "SID0013",
+    "Material_ID": "MID0018",
+    "Supplier_Material_ID": "SMID0032"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Material_ID": "MID0004",
+    "Supplier_Material_ID": "SMID0033"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Material_ID": "MID0007",
+    "Supplier_Material_ID": "SMID0034"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Material_ID": "MID0020",
+    "Supplier_Material_ID": "SMID0035"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Material_ID": "MID0025",
+    "Supplier_Material_ID": "SMID0036"
+  },
+  {
+    "Supplier_ID": "SID0015",
+    "Material_ID": "MID0003",
+    "Supplier_Material_ID": "SMID0037"
+  },
+  {
+    "Supplier_ID": "SID0015",
+    "Material_ID": "MID0005",
+    "Supplier_Material_ID": "SMID0038"
+  },
+  {
+    "Supplier_ID": "SID0015",
+    "Material_ID": "MID0011",
+    "Supplier_Material_ID": "SMID0039"
+  },
+  {
+    "Supplier_ID": "SID0015",
+    "Material_ID": "MID0021",
+    "Supplier_Material_ID": "SMID0040"
+  },
+  {
+    "Supplier_ID": "SID0016",
+    "Material_ID": "MID0008",
+    "Supplier_Material_ID": "SMID0041"
+  },
+  {
+    "Supplier_ID": "SID0016",
+    "Material_ID": "MID0012",
+    "Supplier_Material_ID": "SMID0042"
+  },
+  {
+    "Supplier_ID": "SID0016",
+    "Material_ID": "MID0023",
+    "Supplier_Material_ID": "SMID0043"
+  },
+  {
+    "Supplier_ID": "SID0017",
+    "Material_ID": "MID0010",
+    "Supplier_Material_ID": "SMID0044"
+  },
+  {
+    "Supplier_ID": "SID0017",
+    "Material_ID": "MID0022",
+    "Supplier_Material_ID": "SMID0045"
+  },
+  {
+    "Supplier_ID": "SID0017",
+    "Material_ID": "MID0024",
+    "Supplier_Material_ID": "SMID0046"
+  },
+  {
+    "Supplier_ID": "SID0018",
+    "Material_ID": "MID0013",
+    "Supplier_Material_ID": "SMID0047"
+  },
+  {
+    "Supplier_ID": "SID0018",
+    "Material_ID": "MID0023",
+    "Supplier_Material_ID": "SMID0048"
+  },
+  {
+    "Supplier_ID": "SID0019",
+    "Material_ID": "MID0014",
+    "Supplier_Material_ID": "SMID0049"
+  },
+  {
+    "Supplier_ID": "SID0019",
+    "Material_ID": "MID0024",
+    "Supplier_Material_ID": "SMID0050"
+  },
+  {
+    "Supplier_ID": "SID0020",
+    "Material_ID": "MID0012",
+    "Supplier_Material_ID": "SMID0051"
+  },
+  {
+    "Supplier_ID": "SID0020",
+    "Material_ID": "MID0015",
+    "Supplier_Material_ID": "SMID0052"
+  },
+  {
+    "Supplier_ID": "SID0021",
+    "Material_ID": "MID0016",
+    "Supplier_Material_ID": "SMID0053"
+  },
+  {
+    "Supplier_ID": "SID0021",
+    "Material_ID": "MID0022",
+    "Supplier_Material_ID": "SMID0054"
+  }
+]

@@ -1,0 +1,36 @@
+node_palette:
+  available: "#2A9D8F"
+  degraded: "#F4A261"
+  disrupted: "#D1495B"
+  recovering: "#5C80BC"
+  stable: "#94A3B8"
+  affected: "#F6BD60"
+  blocked: "#A12934"
+
+edge_palette:
+  active: "#8FA3B8"
+  disrupted: "#D1495B"
+  backup_active: "#277DA1"
+  standby: "#9AA9BA"
+  substituted: "#6D597A"
+
+node_shape:
+  supplier: "o"
+  material: "s"
+  assembly: "D"
+  product: "^"
+
+labels:
+  supply:
+    available: "Supply Available"
+    degraded: "Supply Degraded"
+    disrupted: "Supply Disrupted"
+    unavailable: "Supply Unavailable"
+  demand:
+    stable: "Demand Stable"
+    backlog: "Demand Backlog"
+    lost: "Demand Lost"
+  fused:
+    active: "System Active"
+    affected: "System Affected"
+    failed: "System Failed"

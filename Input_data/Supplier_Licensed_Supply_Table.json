@@ -1,0 +1,482 @@
+[
+  {
+    "Purchasing_Supplier_ID": "SID0002",
+    "Purchased_Material_ID": "MID0001",
+    "Supplying_Supplier_ID": "SID0001",
+    "Supplier_Licensed_Supply_ID": "SLSID0001"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0002",
+    "Purchased_Material_ID": "MID0020",
+    "Supplying_Supplier_ID": "SID0010",
+    "Supplier_Licensed_Supply_ID": "SLSID0002"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0002",
+    "Purchased_Material_ID": "MID0025",
+    "Supplying_Supplier_ID": "SID0010",
+    "Supplier_Licensed_Supply_ID": "SLSID0003"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0004",
+    "Purchased_Material_ID": "MID0001",
+    "Supplying_Supplier_ID": "SID0001",
+    "Supplier_Licensed_Supply_ID": "SLSID0004"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0004",
+    "Purchased_Material_ID": "MID0007",
+    "Supplying_Supplier_ID": "SID0003",
+    "Supplier_Licensed_Supply_ID": "SLSID0005"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0004",
+    "Purchased_Material_ID": "MID0020",
+    "Supplying_Supplier_ID": "SID0014",
+    "Supplier_Licensed_Supply_ID": "SLSID0006"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0006",
+    "Purchased_Material_ID": "MID0004",
+    "Supplying_Supplier_ID": "SID0010",
+    "Supplier_Licensed_Supply_ID": "SLSID0007"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0006",
+    "Purchased_Material_ID": "MID0010",
+    "Supplying_Supplier_ID": "SID0005",
+    "Supplier_Licensed_Supply_ID": "SLSID0008"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0006",
+    "Purchased_Material_ID": "MID0010",
+    "Supplying_Supplier_ID": "SID0012",
+    "Supplier_Licensed_Supply_ID": "SLSID0009"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0006",
+    "Purchased_Material_ID": "MID0020",
+    "Supplying_Supplier_ID": "SID0014",
+    "Supplier_Licensed_Supply_ID": "SLSID0010"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0007",
+    "Purchased_Material_ID": "MID0016",
+    "Supplying_Supplier_ID": "SID0021",
+    "Supplier_Licensed_Supply_ID": "SLSID0011"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0007",
+    "Purchased_Material_ID": "MID0017",
+    "Supplying_Supplier_ID": "SID0012",
+    "Supplier_Licensed_Supply_ID": "SLSID0012"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0007",
+    "Purchased_Material_ID": "MID0020",
+    "Supplying_Supplier_ID": "SID0014",
+    "Supplier_Licensed_Supply_ID": "SLSID0013"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0008",
+    "Purchased_Material_ID": "MID0012",
+    "Supplying_Supplier_ID": "SID0020",
+    "Supplier_Licensed_Supply_ID": "SLSID0014"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0008",
+    "Purchased_Material_ID": "MID0022",
+    "Supplying_Supplier_ID": "SID0017",
+    "Supplier_Licensed_Supply_ID": "SLSID0015"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0008",
+    "Purchased_Material_ID": "MID0022",
+    "Supplying_Supplier_ID": "SID0021",
+    "Supplier_Licensed_Supply_ID": "SLSID0016"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0008",
+    "Purchased_Material_ID": "MID0023",
+    "Supplying_Supplier_ID": "SID0018",
+    "Supplier_Licensed_Supply_ID": "SLSID0017"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0008",
+    "Purchased_Material_ID": "MID0024",
+    "Supplying_Supplier_ID": "SID0019",
+    "Supplier_Licensed_Supply_ID": "SLSID0018"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0011",
+    "Purchased_Material_ID": "MID0001",
+    "Supplying_Supplier_ID": "SID0001",
+    "Supplier_Licensed_Supply_ID": "SLSID0019"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0011",
+    "Purchased_Material_ID": "MID0007",
+    "Supplying_Supplier_ID": "SID0010",
+    "Supplier_Licensed_Supply_ID": "SLSID0020"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0011",
+    "Purchased_Material_ID": "MID0007",
+    "Supplying_Supplier_ID": "SID0014",
+    "Supplier_Licensed_Supply_ID": "SLSID0021"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0011",
+    "Purchased_Material_ID": "MID0008",
+    "Supplying_Supplier_ID": "SID0012",
+    "Supplier_Licensed_Supply_ID": "SLSID0022"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0011",
+    "Purchased_Material_ID": "MID0020",
+    "Supplying_Supplier_ID": "SID0010",
+    "Supplier_Licensed_Supply_ID": "SLSID0023"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0011",
+    "Purchased_Material_ID": "MID0025",
+    "Supplying_Supplier_ID": "SID0010",
+    "Supplier_Licensed_Supply_ID": "SLSID0024"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0013",
+    "Purchased_Material_ID": "MID0004",
+    "Supplying_Supplier_ID": "SID0003",
+    "Supplier_Licensed_Supply_ID": "SLSID0025"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0013",
+    "Purchased_Material_ID": "MID0010",
+    "Supplying_Supplier_ID": "SID0005",
+    "Supplier_Licensed_Supply_ID": "SLSID0026"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0013",
+    "Purchased_Material_ID": "MID0010",
+    "Supplying_Supplier_ID": "SID0017",
+    "Supplier_Licensed_Supply_ID": "SLSID0027"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0013",
+    "Purchased_Material_ID": "MID0016",
+    "Supplying_Supplier_ID": "SID0009",
+    "Supplier_Licensed_Supply_ID": "SLSID0028"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0013",
+    "Purchased_Material_ID": "MID0016",
+    "Supplying_Supplier_ID": "SID0012",
+    "Supplier_Licensed_Supply_ID": "SLSID0029"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0013",
+    "Purchased_Material_ID": "MID0017",
+    "Supplying_Supplier_ID": "SID0009",
+    "Supplier_Licensed_Supply_ID": "SLSID0030"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0013",
+    "Purchased_Material_ID": "MID0020",
+    "Supplying_Supplier_ID": "SID0014",
+    "Supplier_Licensed_Supply_ID": "SLSID0031"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0015",
+    "Purchased_Material_ID": "MID0001",
+    "Supplying_Supplier_ID": "SID0001",
+    "Supplier_Licensed_Supply_ID": "SLSID0032"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0015",
+    "Purchased_Material_ID": "MID0007",
+    "Supplying_Supplier_ID": "SID0003",
+    "Supplier_Licensed_Supply_ID": "SLSID0033"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0015",
+    "Purchased_Material_ID": "MID0008",
+    "Supplying_Supplier_ID": "SID0005",
+    "Supplier_Licensed_Supply_ID": "SLSID0034"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0015",
+    "Purchased_Material_ID": "MID0008",
+    "Supplying_Supplier_ID": "SID0016",
+    "Supplier_Licensed_Supply_ID": "SLSID0035"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0015",
+    "Purchased_Material_ID": "MID0020",
+    "Supplying_Supplier_ID": "SID0014",
+    "Supplier_Licensed_Supply_ID": "SLSID0036"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0015",
+    "Purchased_Material_ID": "MID0025",
+    "Supplying_Supplier_ID": "SID0010",
+    "Supplier_Licensed_Supply_ID": "SLSID0037"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0016",
+    "Purchased_Material_ID": "MID0002",
+    "Supplying_Supplier_ID": "SID0002",
+    "Supplier_Licensed_Supply_ID": "SLSID0038"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0016",
+    "Purchased_Material_ID": "MID0003",
+    "Supplying_Supplier_ID": "SID0011",
+    "Supplier_Licensed_Supply_ID": "SLSID0039"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0016",
+    "Purchased_Material_ID": "MID0007",
+    "Supplying_Supplier_ID": "SID0003",
+    "Supplier_Licensed_Supply_ID": "SLSID0040"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0016",
+    "Purchased_Material_ID": "MID0007",
+    "Supplying_Supplier_ID": "SID0010",
+    "Supplier_Licensed_Supply_ID": "SLSID0041"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0016",
+    "Purchased_Material_ID": "MID0008",
+    "Supplying_Supplier_ID": "SID0016",
+    "Supplier_Licensed_Supply_ID": "SLSID0042"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0016",
+    "Purchased_Material_ID": "MID0011",
+    "Supplying_Supplier_ID": "SID0004",
+    "Supplier_Licensed_Supply_ID": "SLSID0043"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0016",
+    "Purchased_Material_ID": "MID0014",
+    "Supplying_Supplier_ID": "SID0006",
+    "Supplier_Licensed_Supply_ID": "SLSID0044"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0016",
+    "Purchased_Material_ID": "MID0014",
+    "Supplying_Supplier_ID": "SID0019",
+    "Supplier_Licensed_Supply_ID": "SLSID0045"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0016",
+    "Purchased_Material_ID": "MID0017",
+    "Supplying_Supplier_ID": "SID0012",
+    "Supplier_Licensed_Supply_ID": "SLSID0046"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0016",
+    "Purchased_Material_ID": "MID0021",
+    "Supplying_Supplier_ID": "SID0011",
+    "Supplier_Licensed_Supply_ID": "SLSID0047"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0017",
+    "Purchased_Material_ID": "MID0001",
+    "Supplying_Supplier_ID": "SID0001",
+    "Supplier_Licensed_Supply_ID": "SLSID0048"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0017",
+    "Purchased_Material_ID": "MID0004",
+    "Supplying_Supplier_ID": "SID0014",
+    "Supplier_Licensed_Supply_ID": "SLSID0049"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0017",
+    "Purchased_Material_ID": "MID0005",
+    "Supplying_Supplier_ID": "SID0011",
+    "Supplier_Licensed_Supply_ID": "SLSID0050"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0017",
+    "Purchased_Material_ID": "MID0010",
+    "Supplying_Supplier_ID": "SID0017",
+    "Supplier_Licensed_Supply_ID": "SLSID0051"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0017",
+    "Purchased_Material_ID": "MID0013",
+    "Supplying_Supplier_ID": "SID0006",
+    "Supplier_Licensed_Supply_ID": "SLSID0052"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0017",
+    "Purchased_Material_ID": "MID0013",
+    "Supplying_Supplier_ID": "SID0018",
+    "Supplier_Licensed_Supply_ID": "SLSID0053"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0017",
+    "Purchased_Material_ID": "MID0015",
+    "Supplying_Supplier_ID": "SID0020",
+    "Supplier_Licensed_Supply_ID": "SLSID0054"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0017",
+    "Purchased_Material_ID": "MID0016",
+    "Supplying_Supplier_ID": "SID0009",
+    "Supplier_Licensed_Supply_ID": "SLSID0055"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0017",
+    "Purchased_Material_ID": "MID0018",
+    "Supplying_Supplier_ID": "SID0013",
+    "Supplier_Licensed_Supply_ID": "SLSID0056"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0018",
+    "Purchased_Material_ID": "MID0002",
+    "Supplying_Supplier_ID": "SID0002",
+    "Supplier_Licensed_Supply_ID": "SLSID0057"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0018",
+    "Purchased_Material_ID": "MID0004",
+    "Supplying_Supplier_ID": "SID0014",
+    "Supplier_Licensed_Supply_ID": "SLSID0058"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0018",
+    "Purchased_Material_ID": "MID0007",
+    "Supplying_Supplier_ID": "SID0003",
+    "Supplier_Licensed_Supply_ID": "SLSID0059"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0018",
+    "Purchased_Material_ID": "MID0007",
+    "Supplying_Supplier_ID": "SID0010",
+    "Supplier_Licensed_Supply_ID": "SLSID0060"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0018",
+    "Purchased_Material_ID": "MID0008",
+    "Supplying_Supplier_ID": "SID0016",
+    "Supplier_Licensed_Supply_ID": "SLSID0061"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0018",
+    "Purchased_Material_ID": "MID0020",
+    "Supplying_Supplier_ID": "SID0014",
+    "Supplier_Licensed_Supply_ID": "SLSID0062"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0018",
+    "Purchased_Material_ID": "MID0021",
+    "Supplying_Supplier_ID": "SID0011",
+    "Supplier_Licensed_Supply_ID": "SLSID0063"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0019",
+    "Purchased_Material_ID": "MID0010",
+    "Supplying_Supplier_ID": "SID0012",
+    "Supplier_Licensed_Supply_ID": "SLSID0064"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0019",
+    "Purchased_Material_ID": "MID0013",
+    "Supplying_Supplier_ID": "SID0018",
+    "Supplier_Licensed_Supply_ID": "SLSID0065"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0019",
+    "Purchased_Material_ID": "MID0015",
+    "Supplying_Supplier_ID": "SID0007",
+    "Supplier_Licensed_Supply_ID": "SLSID0066"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0019",
+    "Purchased_Material_ID": "MID0015",
+    "Supplying_Supplier_ID": "SID0013",
+    "Supplier_Licensed_Supply_ID": "SLSID0067"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0019",
+    "Purchased_Material_ID": "MID0016",
+    "Supplying_Supplier_ID": "SID0021",
+    "Supplier_Licensed_Supply_ID": "SLSID0068"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0019",
+    "Purchased_Material_ID": "MID0020",
+    "Supplying_Supplier_ID": "SID0010",
+    "Supplier_Licensed_Supply_ID": "SLSID0069"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0020",
+    "Purchased_Material_ID": "MID0003",
+    "Supplying_Supplier_ID": "SID0011",
+    "Supplier_Licensed_Supply_ID": "SLSID0070"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0020",
+    "Purchased_Material_ID": "MID0003",
+    "Supplying_Supplier_ID": "SID0015",
+    "Supplier_Licensed_Supply_ID": "SLSID0071"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0020",
+    "Purchased_Material_ID": "MID0011",
+    "Supplying_Supplier_ID": "SID0011",
+    "Supplier_Licensed_Supply_ID": "SLSID0072"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0020",
+    "Purchased_Material_ID": "MID0014",
+    "Supplying_Supplier_ID": "SID0006",
+    "Supplier_Licensed_Supply_ID": "SLSID0073"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0020",
+    "Purchased_Material_ID": "MID0017",
+    "Supplying_Supplier_ID": "SID0009",
+    "Supplier_Licensed_Supply_ID": "SLSID0074"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0020",
+    "Purchased_Material_ID": "MID0020",
+    "Supplying_Supplier_ID": "SID0010",
+    "Supplier_Licensed_Supply_ID": "SLSID0075"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0021",
+    "Purchased_Material_ID": "MID0001",
+    "Supplying_Supplier_ID": "SID0001",
+    "Supplier_Licensed_Supply_ID": "SLSID0076"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0021",
+    "Purchased_Material_ID": "MID0004",
+    "Supplying_Supplier_ID": "SID0010",
+    "Supplier_Licensed_Supply_ID": "SLSID0077"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0021",
+    "Purchased_Material_ID": "MID0005",
+    "Supplying_Supplier_ID": "SID0004",
+    "Supplier_Licensed_Supply_ID": "SLSID0078"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0021",
+    "Purchased_Material_ID": "MID0005",
+    "Supplying_Supplier_ID": "SID0015",
+    "Supplier_Licensed_Supply_ID": "SLSID0079"
+  },
+  {
+    "Purchasing_Supplier_ID": "SID0021",
+    "Purchased_Material_ID": "MID0018",
+    "Supplying_Supplier_ID": "SID0013",
+    "Supplier_Licensed_Supply_ID": "SLSID0080"
+  }
+]

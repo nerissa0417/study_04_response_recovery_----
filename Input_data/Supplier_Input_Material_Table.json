@@ -1,0 +1,278 @@
+[
+  {
+    "Supplier_ID": "SID0002",
+    "Input_Material_ID": "MID0001",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0001"
+  },
+  {
+    "Supplier_ID": "SID0002",
+    "Input_Material_ID": "MID0020",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0002"
+  },
+  {
+    "Supplier_ID": "SID0002",
+    "Input_Material_ID": "MID0025",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0003"
+  },
+  {
+    "Supplier_ID": "SID0004",
+    "Input_Material_ID": "MID0007",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0004"
+  },
+  {
+    "Supplier_ID": "SID0004",
+    "Input_Material_ID": "MID0020",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0005"
+  },
+  {
+    "Supplier_ID": "SID0006",
+    "Input_Material_ID": "MID0010",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0006"
+  },
+  {
+    "Supplier_ID": "SID0006",
+    "Input_Material_ID": "MID0020",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0007"
+  },
+  {
+    "Supplier_ID": "SID0007",
+    "Input_Material_ID": "MID0017",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0008"
+  },
+  {
+    "Supplier_ID": "SID0007",
+    "Input_Material_ID": "MID0020",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0009"
+  },
+  {
+    "Supplier_ID": "SID0008",
+    "Input_Material_ID": "MID0012",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0010"
+  },
+  {
+    "Supplier_ID": "SID0008",
+    "Input_Material_ID": "MID0022",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0011"
+  },
+  {
+    "Supplier_ID": "SID0008",
+    "Input_Material_ID": "MID0023",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0012"
+  },
+  {
+    "Supplier_ID": "SID0008",
+    "Input_Material_ID": "MID0024",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0013"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Input_Material_ID": "MID0001",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0014"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Input_Material_ID": "MID0007",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0015"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Input_Material_ID": "MID0008",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0016"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Input_Material_ID": "MID0020",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0017"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Input_Material_ID": "MID0025",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0018"
+  },
+  {
+    "Supplier_ID": "SID0013",
+    "Input_Material_ID": "MID0016",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0019"
+  },
+  {
+    "Supplier_ID": "SID0013",
+    "Input_Material_ID": "MID0017",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0020"
+  },
+  {
+    "Supplier_ID": "SID0013",
+    "Input_Material_ID": "MID0020",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0021"
+  },
+  {
+    "Supplier_ID": "SID0015",
+    "Input_Material_ID": "MID0007",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0022"
+  },
+  {
+    "Supplier_ID": "SID0015",
+    "Input_Material_ID": "MID0020",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0023"
+  },
+  {
+    "Supplier_ID": "SID0015",
+    "Input_Material_ID": "MID0025",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0024"
+  },
+  {
+    "Supplier_ID": "SID0017",
+    "Input_Material_ID": "MID0001",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0025"
+  },
+  {
+    "Supplier_ID": "SID0017",
+    "Input_Material_ID": "MID0004",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0026"
+  },
+  {
+    "Supplier_ID": "SID0017",
+    "Input_Material_ID": "MID0005",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0027"
+  },
+  {
+    "Supplier_ID": "SID0017",
+    "Input_Material_ID": "MID0018",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0028"
+  },
+  {
+    "Supplier_ID": "SID0018",
+    "Input_Material_ID": "MID0002",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0029"
+  },
+  {
+    "Supplier_ID": "SID0018",
+    "Input_Material_ID": "MID0004",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0030"
+  },
+  {
+    "Supplier_ID": "SID0018",
+    "Input_Material_ID": "MID0007",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0031"
+  },
+  {
+    "Supplier_ID": "SID0018",
+    "Input_Material_ID": "MID0008",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0032"
+  },
+  {
+    "Supplier_ID": "SID0018",
+    "Input_Material_ID": "MID0020",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0033"
+  },
+  {
+    "Supplier_ID": "SID0018",
+    "Input_Material_ID": "MID0021",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0034"
+  },
+  {
+    "Supplier_ID": "SID0019",
+    "Input_Material_ID": "MID0010",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0035"
+  },
+  {
+    "Supplier_ID": "SID0019",
+    "Input_Material_ID": "MID0013",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0036"
+  },
+  {
+    "Supplier_ID": "SID0019",
+    "Input_Material_ID": "MID0015",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0037"
+  },
+  {
+    "Supplier_ID": "SID0019",
+    "Input_Material_ID": "MID0016",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0038"
+  },
+  {
+    "Supplier_ID": "SID0020",
+    "Input_Material_ID": "MID0003",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0039"
+  },
+  {
+    "Supplier_ID": "SID0020",
+    "Input_Material_ID": "MID0011",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0040"
+  },
+  {
+    "Supplier_ID": "SID0020",
+    "Input_Material_ID": "MID0014",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0041"
+  },
+  {
+    "Supplier_ID": "SID0020",
+    "Input_Material_ID": "MID0017",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0042"
+  },
+  {
+    "Supplier_ID": "SID0021",
+    "Input_Material_ID": "MID0001",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0043"
+  },
+  {
+    "Supplier_ID": "SID0021",
+    "Input_Material_ID": "MID0004",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0044"
+  },
+  {
+    "Supplier_ID": "SID0021",
+    "Input_Material_ID": "MID0005",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0045"
+  },
+  {
+    "Supplier_ID": "SID0021",
+    "Input_Material_ID": "MID0018",
+    "Supply_Mode": "external",
+    "Supplier_Input_Material_ID": "SIIMID0046"
+  }
+]

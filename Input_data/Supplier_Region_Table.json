@@ -1,77 +1,77 @@
 [
   {
     "Supplier_ID": "SID0001",
-    "Region_ID": "RID0006",
+    "Region_ID": "RID0004",
     "Supplier_Region_ID": "SRID0001"
   },
   {
     "Supplier_ID": "SID0002",
-    "Region_ID": "RID0002",
+    "Region_ID": "RID0005",
     "Supplier_Region_ID": "SRID0002"
   },
   {
     "Supplier_ID": "SID0003",
-    "Region_ID": "RID0007",
+    "Region_ID": "RID0008",
     "Supplier_Region_ID": "SRID0003"
   },
   {
     "Supplier_ID": "SID0004",
-    "Region_ID": "RID0005",
+    "Region_ID": "RID0007",
     "Supplier_Region_ID": "SRID0004"
   },
   {
     "Supplier_ID": "SID0005",
-    "Region_ID": "RID0007",
+    "Region_ID": "RID0008",
     "Supplier_Region_ID": "SRID0005"
   },
   {
     "Supplier_ID": "SID0006",
-    "Region_ID": "RID0005",
+    "Region_ID": "RID0002",
     "Supplier_Region_ID": "SRID0006"
   },
   {
     "Supplier_ID": "SID0007",
-    "Region_ID": "RID0001",
+    "Region_ID": "RID0005",
     "Supplier_Region_ID": "SRID0007"
   },
   {
     "Supplier_ID": "SID0008",
-    "Region_ID": "RID0008",
+    "Region_ID": "RID0003",
     "Supplier_Region_ID": "SRID0008"
   },
   {
     "Supplier_ID": "SID0009",
-    "Region_ID": "RID0010",
+    "Region_ID": "RID0001",
     "Supplier_Region_ID": "SRID0009"
   },
   {
     "Supplier_ID": "SID0010",
-    "Region_ID": "RID0005",
+    "Region_ID": "RID0003",
     "Supplier_Region_ID": "SRID0010"
   },
   {
     "Supplier_ID": "SID0011",
-    "Region_ID": "RID0004",
+    "Region_ID": "RID0009",
     "Supplier_Region_ID": "SRID0011"
   },
   {
     "Supplier_ID": "SID0012",
-    "Region_ID": "RID0010",
+    "Region_ID": "RID0008",
     "Supplier_Region_ID": "SRID0012"
   },
   {
     "Supplier_ID": "SID0013",
-    "Region_ID": "RID0002",
+    "Region_ID": "RID0007",
     "Supplier_Region_ID": "SRID0013"
   },
   {
     "Supplier_ID": "SID0014",
-    "Region_ID": "RID0004",
+    "Region_ID": "RID0009",
     "Supplier_Region_ID": "SRID0014"
   },
   {
     "Supplier_ID": "SID0015",
-    "Region_ID": "RID0006",
+    "Region_ID": "RID0007",
     "Supplier_Region_ID": "SRID0015"
   },
   {
@@ -81,7 +81,7 @@
   },
   {
     "Supplier_ID": "SID0017",
-    "Region_ID": "RID0008",
+    "Region_ID": "RID0004",
     "Supplier_Region_ID": "SRID0017"
   },
   {
@@ -91,17 +91,17 @@
   },
   {
     "Supplier_ID": "SID0019",
-    "Region_ID": "RID0009",
+    "Region_ID": "RID0005",
     "Supplier_Region_ID": "SRID0019"
   },
   {
     "Supplier_ID": "SID0020",
-    "Region_ID": "RID0001",
+    "Region_ID": "RID0005",
     "Supplier_Region_ID": "SRID0020"
   },
   {
     "Supplier_ID": "SID0021",
-    "Region_ID": "RID0001",
+    "Region_ID": "RID0005",
     "Supplier_Region_ID": "SRID0021"
   }
 ]

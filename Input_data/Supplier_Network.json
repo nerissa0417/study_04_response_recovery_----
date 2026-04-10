@@ -1,182 +1,582 @@
 [
   {
     "Supplier_ID": "SID0001",
-    "Supplier_down_ID": "SID0005",
+    "Supplier_down_ID": "SID0002",
     "Supplier_Network_ID": "SNID0001"
   },
   {
     "Supplier_ID": "SID0001",
-    "Supplier_down_ID": "SID0007",
+    "Supplier_down_ID": "SID0004",
     "Supplier_Network_ID": "SNID0002"
   },
   {
     "Supplier_ID": "SID0001",
-    "Supplier_down_ID": "SID0019",
+    "Supplier_down_ID": "SID0011",
     "Supplier_Network_ID": "SNID0003"
   },
   {
     "Supplier_ID": "SID0001",
-    "Supplier_down_ID": "SID0021",
+    "Supplier_down_ID": "SID0015",
     "Supplier_Network_ID": "SNID0004"
+  },
+  {
+    "Supplier_ID": "SID0001",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Network_ID": "SNID0005"
+  },
+  {
+    "Supplier_ID": "SID0001",
+    "Supplier_down_ID": "SID0021",
+    "Supplier_Network_ID": "SNID0006"
+  },
+  {
+    "Supplier_ID": "SID0002",
+    "Supplier_down_ID": "SID0016",
+    "Supplier_Network_ID": "SNID0007"
+  },
+  {
+    "Supplier_ID": "SID0002",
+    "Supplier_down_ID": "SID0018",
+    "Supplier_Network_ID": "SNID0008"
+  },
+  {
+    "Supplier_ID": "SID0002",
+    "Supplier_down_ID": "SID0020",
+    "Supplier_Network_ID": "SNID0009"
+  },
+  {
+    "Supplier_ID": "SID0003",
+    "Supplier_down_ID": "SID0004",
+    "Supplier_Network_ID": "SNID0010"
+  },
+  {
+    "Supplier_ID": "SID0003",
+    "Supplier_down_ID": "SID0006",
+    "Supplier_Network_ID": "SNID0011"
+  },
+  {
+    "Supplier_ID": "SID0003",
+    "Supplier_down_ID": "SID0011",
+    "Supplier_Network_ID": "SNID0012"
+  },
+  {
+    "Supplier_ID": "SID0003",
+    "Supplier_down_ID": "SID0013",
+    "Supplier_Network_ID": "SNID0013"
+  },
+  {
+    "Supplier_ID": "SID0003",
+    "Supplier_down_ID": "SID0015",
+    "Supplier_Network_ID": "SNID0014"
   },
   {
     "Supplier_ID": "SID0003",
     "Supplier_down_ID": "SID0016",
-    "Supplier_Network_ID": "SNID0005"
+    "Supplier_Network_ID": "SNID0015"
   },
   {
     "Supplier_ID": "SID0003",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Network_ID": "SNID0016"
+  },
+  {
+    "Supplier_ID": "SID0003",
+    "Supplier_down_ID": "SID0018",
+    "Supplier_Network_ID": "SNID0017"
+  },
+  {
+    "Supplier_ID": "SID0003",
+    "Supplier_down_ID": "SID0021",
+    "Supplier_Network_ID": "SNID0018"
+  },
+  {
+    "Supplier_ID": "SID0004",
+    "Supplier_down_ID": "SID0016",
+    "Supplier_Network_ID": "SNID0019"
+  },
+  {
+    "Supplier_ID": "SID0004",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Network_ID": "SNID0020"
+  },
+  {
+    "Supplier_ID": "SID0004",
     "Supplier_down_ID": "SID0020",
-    "Supplier_Network_ID": "SNID0006"
+    "Supplier_Network_ID": "SNID0021"
+  },
+  {
+    "Supplier_ID": "SID0004",
+    "Supplier_down_ID": "SID0021",
+    "Supplier_Network_ID": "SNID0022"
   },
   {
     "Supplier_ID": "SID0005",
-    "Supplier_down_ID": "SID0012",
-    "Supplier_Network_ID": "SNID0007"
+    "Supplier_down_ID": "SID0006",
+    "Supplier_Network_ID": "SNID0023"
   },
   {
     "Supplier_ID": "SID0005",
-    "Supplier_down_ID": "SID0020",
-    "Supplier_Network_ID": "SNID0008"
+    "Supplier_down_ID": "SID0011",
+    "Supplier_Network_ID": "SNID0024"
+  },
+  {
+    "Supplier_ID": "SID0005",
+    "Supplier_down_ID": "SID0013",
+    "Supplier_Network_ID": "SNID0025"
+  },
+  {
+    "Supplier_ID": "SID0005",
+    "Supplier_down_ID": "SID0015",
+    "Supplier_Network_ID": "SNID0026"
+  },
+  {
+    "Supplier_ID": "SID0005",
+    "Supplier_down_ID": "SID0016",
+    "Supplier_Network_ID": "SNID0027"
+  },
+  {
+    "Supplier_ID": "SID0005",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Network_ID": "SNID0028"
+  },
+  {
+    "Supplier_ID": "SID0005",
+    "Supplier_down_ID": "SID0018",
+    "Supplier_Network_ID": "SNID0029"
+  },
+  {
+    "Supplier_ID": "SID0005",
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Network_ID": "SNID0030"
   },
   {
     "Supplier_ID": "SID0006",
-    "Supplier_down_ID": "SID0004",
-    "Supplier_Network_ID": "SNID0009"
+    "Supplier_down_ID": "SID0016",
+    "Supplier_Network_ID": "SNID0031"
+  },
+  {
+    "Supplier_ID": "SID0006",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Network_ID": "SNID0032"
+  },
+  {
+    "Supplier_ID": "SID0006",
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Network_ID": "SNID0033"
   },
   {
     "Supplier_ID": "SID0006",
     "Supplier_down_ID": "SID0020",
-    "Supplier_Network_ID": "SNID0010"
+    "Supplier_Network_ID": "SNID0034"
+  },
+  {
+    "Supplier_ID": "SID0007",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Network_ID": "SNID0035"
   },
   {
     "Supplier_ID": "SID0007",
     "Supplier_down_ID": "SID0019",
-    "Supplier_Network_ID": "SNID0011"
+    "Supplier_Network_ID": "SNID0036"
   },
   {
     "Supplier_ID": "SID0007",
-    "Supplier_down_ID": "SID0020",
-    "Supplier_Network_ID": "SNID0012"
-  },
-  {
-    "Supplier_ID": "SID0008",
-    "Supplier_down_ID": "SID0001",
-    "Supplier_Network_ID": "SNID0013"
-  },
-  {
-    "Supplier_ID": "SID0008",
-    "Supplier_down_ID": "SID0011",
-    "Supplier_Network_ID": "SNID0014"
-  },
-  {
-    "Supplier_ID": "SID0008",
-    "Supplier_down_ID": "SID0015",
-    "Supplier_Network_ID": "SNID0015"
-  },
-  {
-    "Supplier_ID": "SID0008",
     "Supplier_down_ID": "SID0021",
-    "Supplier_Network_ID": "SNID0016"
+    "Supplier_Network_ID": "SNID0037"
+  },
+  {
+    "Supplier_ID": "SID0009",
+    "Supplier_down_ID": "SID0007",
+    "Supplier_Network_ID": "SNID0038"
+  },
+  {
+    "Supplier_ID": "SID0009",
+    "Supplier_down_ID": "SID0013",
+    "Supplier_Network_ID": "SNID0039"
+  },
+  {
+    "Supplier_ID": "SID0009",
+    "Supplier_down_ID": "SID0016",
+    "Supplier_Network_ID": "SNID0040"
+  },
+  {
+    "Supplier_ID": "SID0009",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Network_ID": "SNID0041"
+  },
+  {
+    "Supplier_ID": "SID0009",
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Network_ID": "SNID0042"
   },
   {
     "Supplier_ID": "SID0009",
     "Supplier_down_ID": "SID0020",
-    "Supplier_Network_ID": "SNID0017"
+    "Supplier_Network_ID": "SNID0043"
   },
   {
     "Supplier_ID": "SID0010",
-    "Supplier_down_ID": "SID0017",
-    "Supplier_Network_ID": "SNID0018"
-  },
-  {
-    "Supplier_ID": "SID0010",
-    "Supplier_down_ID": "SID0020",
-    "Supplier_Network_ID": "SNID0019"
-  },
-  {
-    "Supplier_ID": "SID0011",
     "Supplier_down_ID": "SID0002",
-    "Supplier_Network_ID": "SNID0020"
+    "Supplier_Network_ID": "SNID0044"
   },
   {
-    "Supplier_ID": "SID0011",
+    "Supplier_ID": "SID0010",
     "Supplier_down_ID": "SID0004",
-    "Supplier_Network_ID": "SNID0021"
+    "Supplier_Network_ID": "SNID0045"
   },
   {
-    "Supplier_ID": "SID0011",
-    "Supplier_down_ID": "SID0010",
-    "Supplier_Network_ID": "SNID0022"
-  },
-  {
-    "Supplier_ID": "SID0011",
-    "Supplier_down_ID": "SID0014",
-    "Supplier_Network_ID": "SNID0023"
-  },
-  {
-    "Supplier_ID": "SID0014",
-    "Supplier_down_ID": "SID0013",
-    "Supplier_Network_ID": "SNID0024"
-  },
-  {
-    "Supplier_ID": "SID0014",
-    "Supplier_down_ID": "SID0020",
-    "Supplier_Network_ID": "SNID0025"
-  },
-  {
-    "Supplier_ID": "SID0015",
+    "Supplier_ID": "SID0010",
     "Supplier_down_ID": "SID0006",
-    "Supplier_Network_ID": "SNID0026"
+    "Supplier_Network_ID": "SNID0046"
   },
   {
-    "Supplier_ID": "SID0015",
-    "Supplier_down_ID": "SID0009",
-    "Supplier_Network_ID": "SNID0027"
+    "Supplier_ID": "SID0010",
+    "Supplier_down_ID": "SID0007",
+    "Supplier_Network_ID": "SNID0047"
   },
   {
-    "Supplier_ID": "SID0015",
-    "Supplier_down_ID": "SID0012",
-    "Supplier_Network_ID": "SNID0028"
+    "Supplier_ID": "SID0010",
+    "Supplier_down_ID": "SID0011",
+    "Supplier_Network_ID": "SNID0048"
   },
   {
-    "Supplier_ID": "SID0015",
+    "Supplier_ID": "SID0010",
     "Supplier_down_ID": "SID0013",
-    "Supplier_Network_ID": "SNID0029"
+    "Supplier_Network_ID": "SNID0049"
   },
   {
-    "Supplier_ID": "SID0018",
-    "Supplier_down_ID": "SID0002",
-    "Supplier_Network_ID": "SNID0030"
+    "Supplier_ID": "SID0010",
+    "Supplier_down_ID": "SID0015",
+    "Supplier_Network_ID": "SNID0050"
   },
   {
-    "Supplier_ID": "SID0018",
-    "Supplier_down_ID": "SID0020",
-    "Supplier_Network_ID": "SNID0031"
-  },
-  {
-    "Supplier_ID": "SID0021",
-    "Supplier_down_ID": "SID0003",
-    "Supplier_Network_ID": "SNID0032"
-  },
-  {
-    "Supplier_ID": "SID0021",
+    "Supplier_ID": "SID0010",
     "Supplier_down_ID": "SID0016",
-    "Supplier_Network_ID": "SNID0033"
+    "Supplier_Network_ID": "SNID0051"
+  },
+  {
+    "Supplier_ID": "SID0010",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Network_ID": "SNID0052"
+  },
+  {
+    "Supplier_ID": "SID0010",
+    "Supplier_down_ID": "SID0018",
+    "Supplier_Network_ID": "SNID0053"
+  },
+  {
+    "Supplier_ID": "SID0010",
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Network_ID": "SNID0054"
+  },
+  {
+    "Supplier_ID": "SID0010",
+    "Supplier_down_ID": "SID0020",
+    "Supplier_Network_ID": "SNID0055"
+  },
+  {
+    "Supplier_ID": "SID0010",
+    "Supplier_down_ID": "SID0021",
+    "Supplier_Network_ID": "SNID0056"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Supplier_down_ID": "SID0016",
+    "Supplier_Network_ID": "SNID0057"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Network_ID": "SNID0058"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Supplier_down_ID": "SID0018",
+    "Supplier_Network_ID": "SNID0059"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Supplier_down_ID": "SID0020",
+    "Supplier_Network_ID": "SNID0060"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Supplier_down_ID": "SID0021",
+    "Supplier_Network_ID": "SNID0061"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Supplier_down_ID": "SID0006",
+    "Supplier_Network_ID": "SNID0062"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Supplier_down_ID": "SID0007",
+    "Supplier_Network_ID": "SNID0063"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Supplier_down_ID": "SID0011",
+    "Supplier_Network_ID": "SNID0064"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Supplier_down_ID": "SID0013",
+    "Supplier_Network_ID": "SNID0065"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Supplier_down_ID": "SID0015",
+    "Supplier_Network_ID": "SNID0066"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Supplier_down_ID": "SID0016",
+    "Supplier_Network_ID": "SNID0067"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Network_ID": "SNID0068"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Supplier_down_ID": "SID0018",
+    "Supplier_Network_ID": "SNID0069"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Network_ID": "SNID0070"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Supplier_down_ID": "SID0020",
+    "Supplier_Network_ID": "SNID0071"
+  },
+  {
+    "Supplier_ID": "SID0013",
+    "Supplier_down_ID": "SID0016",
+    "Supplier_Network_ID": "SNID0072"
+  },
+  {
+    "Supplier_ID": "SID0013",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Network_ID": "SNID0073"
+  },
+  {
+    "Supplier_ID": "SID0013",
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Network_ID": "SNID0074"
+  },
+  {
+    "Supplier_ID": "SID0013",
+    "Supplier_down_ID": "SID0020",
+    "Supplier_Network_ID": "SNID0075"
+  },
+  {
+    "Supplier_ID": "SID0013",
+    "Supplier_down_ID": "SID0021",
+    "Supplier_Network_ID": "SNID0076"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0002",
+    "Supplier_Network_ID": "SNID0077"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0004",
+    "Supplier_Network_ID": "SNID0078"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0006",
+    "Supplier_Network_ID": "SNID0079"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0007",
+    "Supplier_Network_ID": "SNID0080"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0011",
+    "Supplier_Network_ID": "SNID0081"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0013",
+    "Supplier_Network_ID": "SNID0082"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0015",
+    "Supplier_Network_ID": "SNID0083"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0016",
+    "Supplier_Network_ID": "SNID0084"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Network_ID": "SNID0085"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0018",
+    "Supplier_Network_ID": "SNID0086"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Network_ID": "SNID0087"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0020",
+    "Supplier_Network_ID": "SNID0088"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0021",
+    "Supplier_Network_ID": "SNID0089"
+  },
+  {
+    "Supplier_ID": "SID0015",
+    "Supplier_down_ID": "SID0016",
+    "Supplier_Network_ID": "SNID0090"
+  },
+  {
+    "Supplier_ID": "SID0015",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Network_ID": "SNID0091"
+  },
+  {
+    "Supplier_ID": "SID0015",
+    "Supplier_down_ID": "SID0018",
+    "Supplier_Network_ID": "SNID0092"
+  },
+  {
+    "Supplier_ID": "SID0015",
+    "Supplier_down_ID": "SID0020",
+    "Supplier_Network_ID": "SNID0093"
+  },
+  {
+    "Supplier_ID": "SID0015",
+    "Supplier_down_ID": "SID0021",
+    "Supplier_Network_ID": "SNID0094"
+  },
+  {
+    "Supplier_ID": "SID0016",
+    "Supplier_down_ID": "SID0008",
+    "Supplier_Network_ID": "SNID0095"
+  },
+  {
+    "Supplier_ID": "SID0016",
+    "Supplier_down_ID": "SID0011",
+    "Supplier_Network_ID": "SNID0096"
+  },
+  {
+    "Supplier_ID": "SID0016",
+    "Supplier_down_ID": "SID0015",
+    "Supplier_Network_ID": "SNID0097"
+  },
+  {
+    "Supplier_ID": "SID0016",
+    "Supplier_down_ID": "SID0018",
+    "Supplier_Network_ID": "SNID0098"
+  },
+  {
+    "Supplier_ID": "SID0017",
+    "Supplier_down_ID": "SID0006",
+    "Supplier_Network_ID": "SNID0099"
+  },
+  {
+    "Supplier_ID": "SID0017",
+    "Supplier_down_ID": "SID0008",
+    "Supplier_Network_ID": "SNID0100"
+  },
+  {
+    "Supplier_ID": "SID0017",
+    "Supplier_down_ID": "SID0013",
+    "Supplier_Network_ID": "SNID0101"
+  },
+  {
+    "Supplier_ID": "SID0017",
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Network_ID": "SNID0102"
+  },
+  {
+    "Supplier_ID": "SID0018",
+    "Supplier_down_ID": "SID0008",
+    "Supplier_Network_ID": "SNID0103"
+  },
+  {
+    "Supplier_ID": "SID0018",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Network_ID": "SNID0104"
+  },
+  {
+    "Supplier_ID": "SID0018",
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Network_ID": "SNID0105"
+  },
+  {
+    "Supplier_ID": "SID0019",
+    "Supplier_down_ID": "SID0008",
+    "Supplier_Network_ID": "SNID0106"
+  },
+  {
+    "Supplier_ID": "SID0019",
+    "Supplier_down_ID": "SID0016",
+    "Supplier_Network_ID": "SNID0107"
+  },
+  {
+    "Supplier_ID": "SID0019",
+    "Supplier_down_ID": "SID0020",
+    "Supplier_Network_ID": "SNID0108"
+  },
+  {
+    "Supplier_ID": "SID0020",
+    "Supplier_down_ID": "SID0008",
+    "Supplier_Network_ID": "SNID0109"
+  },
+  {
+    "Supplier_ID": "SID0020",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Network_ID": "SNID0110"
+  },
+  {
+    "Supplier_ID": "SID0020",
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Network_ID": "SNID0111"
+  },
+  {
+    "Supplier_ID": "SID0021",
+    "Supplier_down_ID": "SID0007",
+    "Supplier_Network_ID": "SNID0112"
+  },
+  {
+    "Supplier_ID": "SID0021",
+    "Supplier_down_ID": "SID0008",
+    "Supplier_Network_ID": "SNID0113"
+  },
+  {
+    "Supplier_ID": "SID0021",
+    "Supplier_down_ID": "SID0013",
+    "Supplier_Network_ID": "SNID0114"
   },
   {
     "Supplier_ID": "SID0021",
     "Supplier_down_ID": "SID0017",
-    "Supplier_Network_ID": "SNID0034"
+    "Supplier_Network_ID": "SNID0115"
   },
   {
     "Supplier_ID": "SID0021",
-    "Supplier_down_ID": "SID0018",
-    "Supplier_Network_ID": "SNID0035"
-  },
-  {
-    "Supplier_ID": "SID0021",
-    "Supplier_down_ID": "SID0020",
-    "Supplier_Network_ID": "SNID0036"
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Network_ID": "SNID0116"
   }
 ]

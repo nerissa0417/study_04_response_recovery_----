@@ -1,82 +1,82 @@
 [
   {
     "Region_ID": "RID0001",
-    "WGI_Index": 2.08,
+    "WGI_Index": -1.75,
     "Sovereign_Rating": "BBB",
-    "National_Credit_Rating": 37,
-    "Real_time_exchange_rate": 175.662,
-    "CPI_chang_rate": 0.572
+    "National_Credit_Rating": 71,
+    "Real_time_exchange_rate": 92.686,
+    "CPI_chang_rate": 0.005
   },
   {
     "Region_ID": "RID0002",
-    "WGI_Index": 1.34,
-    "Sovereign_Rating": "A",
-    "National_Credit_Rating": 40,
-    "Real_time_exchange_rate": 173.108,
-    "CPI_chang_rate": 0.523
+    "WGI_Index": -0.19,
+    "Sovereign_Rating": "AA",
+    "National_Credit_Rating": 0,
+    "Real_time_exchange_rate": 170.105,
+    "CPI_chang_rate": 0.049
   },
   {
     "Region_ID": "RID0003",
-    "WGI_Index": 2.1,
-    "Sovereign_Rating": "BB",
-    "National_Credit_Rating": 77,
-    "Real_time_exchange_rate": 28.15,
-    "CPI_chang_rate": 0.909
+    "WGI_Index": 0.81,
+    "Sovereign_Rating": "SD",
+    "National_Credit_Rating": 21,
+    "Real_time_exchange_rate": 161.459,
+    "CPI_chang_rate": 0.377
   },
   {
     "Region_ID": "RID0004",
-    "WGI_Index": 0.7,
-    "Sovereign_Rating": "BB",
-    "National_Credit_Rating": 22,
-    "Real_time_exchange_rate": 90.173,
-    "CPI_chang_rate": 0.686
+    "WGI_Index": -0.21,
+    "Sovereign_Rating": "A",
+    "National_Credit_Rating": 95,
+    "Real_time_exchange_rate": 197.615,
+    "CPI_chang_rate": -0.067
   },
   {
     "Region_ID": "RID0005",
-    "WGI_Index": 0.81,
-    "Sovereign_Rating": "SD",
-    "National_Credit_Rating": 99,
-    "Real_time_exchange_rate": 150.762,
-    "CPI_chang_rate": 0.243
+    "WGI_Index": 0.83,
+    "Sovereign_Rating": "B",
+    "National_Credit_Rating": 2,
+    "Real_time_exchange_rate": 22.495,
+    "CPI_chang_rate": 0.312
   },
   {
     "Region_ID": "RID0006",
-    "WGI_Index": 1.06,
-    "Sovereign_Rating": "CCC",
-    "National_Credit_Rating": 71,
-    "Real_time_exchange_rate": 117.254,
-    "CPI_chang_rate": 0.345
+    "WGI_Index": -0.57,
+    "Sovereign_Rating": "SD",
+    "National_Credit_Rating": 4,
+    "Real_time_exchange_rate": 181.671,
+    "CPI_chang_rate": 0.321
   },
   {
     "Region_ID": "RID0007",
-    "WGI_Index": 0.56,
-    "Sovereign_Rating": "SD",
-    "National_Credit_Rating": 37,
-    "Real_time_exchange_rate": 134.328,
-    "CPI_chang_rate": -0.152
+    "WGI_Index": 2.01,
+    "Sovereign_Rating": "B",
+    "National_Credit_Rating": 67,
+    "Real_time_exchange_rate": 184.269,
+    "CPI_chang_rate": 0.199
   },
   {
     "Region_ID": "RID0008",
-    "WGI_Index": -0.96,
-    "Sovereign_Rating": "BB",
-    "National_Credit_Rating": 96,
-    "Real_time_exchange_rate": 175.143,
-    "CPI_chang_rate": 0.202
+    "WGI_Index": -0.99,
+    "Sovereign_Rating": "B",
+    "National_Credit_Rating": 67,
+    "Real_time_exchange_rate": 180.257,
+    "CPI_chang_rate": 0.654
   },
   {
     "Region_ID": "RID0009",
-    "WGI_Index": -2.37,
-    "Sovereign_Rating": "BB",
-    "National_Credit_Rating": 12,
-    "Real_time_exchange_rate": 5.872,
-    "CPI_chang_rate": -0.109
+    "WGI_Index": 1.37,
+    "Sovereign_Rating": "B",
+    "National_Credit_Rating": 34,
+    "Real_time_exchange_rate": 150.393,
+    "CPI_chang_rate": 0.813
   },
   {
     "Region_ID": "RID0010",
-    "WGI_Index": -1.86,
-    "Sovereign_Rating": "SD",
-    "National_Credit_Rating": 12,
-    "Real_time_exchange_rate": 180.517,
-    "CPI_chang_rate": 0.22
+    "WGI_Index": 0.61,
+    "Sovereign_Rating": "CCC",
+    "National_Credit_Rating": 81,
+    "Real_time_exchange_rate": 144.183,
+    "CPI_chang_rate": 0.711
   }
 ]

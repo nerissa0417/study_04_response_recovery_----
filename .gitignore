@@ -1,2 +1,33 @@
-tables/
-中断结果展示/
+# Python cache and build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Local virtual environments
+.venv/
+venv/
+env/
+
+# Generated simulation outputs
+output/
+*.log
+
+# Local notebooks and temporary files
+.ipynb_checkpoints/
+*.tmp
+*.temp
+~$*
+
+# Editor and OS metadata
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

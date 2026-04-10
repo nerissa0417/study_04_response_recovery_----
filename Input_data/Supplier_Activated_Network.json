@@ -1,0 +1,242 @@
+[
+  {
+    "Supplier_ID": "SID0001",
+    "Supplier_down_ID": "SID0002",
+    "Supplier_Activated_Network_ID": "SANID0001"
+  },
+  {
+    "Supplier_ID": "SID0001",
+    "Supplier_down_ID": "SID0011",
+    "Supplier_Activated_Network_ID": "SANID0002"
+  },
+  {
+    "Supplier_ID": "SID0001",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Activated_Network_ID": "SANID0003"
+  },
+  {
+    "Supplier_ID": "SID0001",
+    "Supplier_down_ID": "SID0021",
+    "Supplier_Activated_Network_ID": "SANID0004"
+  },
+  {
+    "Supplier_ID": "SID0002",
+    "Supplier_down_ID": "SID0018",
+    "Supplier_Activated_Network_ID": "SANID0005"
+  },
+  {
+    "Supplier_ID": "SID0003",
+    "Supplier_down_ID": "SID0004",
+    "Supplier_Activated_Network_ID": "SANID0006"
+  },
+  {
+    "Supplier_ID": "SID0003",
+    "Supplier_down_ID": "SID0015",
+    "Supplier_Activated_Network_ID": "SANID0007"
+  },
+  {
+    "Supplier_ID": "SID0003",
+    "Supplier_down_ID": "SID0018",
+    "Supplier_Activated_Network_ID": "SANID0008"
+  },
+  {
+    "Supplier_ID": "SID0004",
+    "Supplier_down_ID": "SID0021",
+    "Supplier_Activated_Network_ID": "SANID0009"
+  },
+  {
+    "Supplier_ID": "SID0005",
+    "Supplier_down_ID": "SID0006",
+    "Supplier_Activated_Network_ID": "SANID0010"
+  },
+  {
+    "Supplier_ID": "SID0006",
+    "Supplier_down_ID": "SID0020",
+    "Supplier_Activated_Network_ID": "SANID0011"
+  },
+  {
+    "Supplier_ID": "SID0007",
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Activated_Network_ID": "SANID0012"
+  },
+  {
+    "Supplier_ID": "SID0009",
+    "Supplier_down_ID": "SID0013",
+    "Supplier_Activated_Network_ID": "SANID0013"
+  },
+  {
+    "Supplier_ID": "SID0009",
+    "Supplier_down_ID": "SID0020",
+    "Supplier_Activated_Network_ID": "SANID0014"
+  },
+  {
+    "Supplier_ID": "SID0010",
+    "Supplier_down_ID": "SID0002",
+    "Supplier_Activated_Network_ID": "SANID0015"
+  },
+  {
+    "Supplier_ID": "SID0010",
+    "Supplier_down_ID": "SID0011",
+    "Supplier_Activated_Network_ID": "SANID0016"
+  },
+  {
+    "Supplier_ID": "SID0010",
+    "Supplier_down_ID": "SID0015",
+    "Supplier_Activated_Network_ID": "SANID0017"
+  },
+  {
+    "Supplier_ID": "SID0010",
+    "Supplier_down_ID": "SID0018",
+    "Supplier_Activated_Network_ID": "SANID0018"
+  },
+  {
+    "Supplier_ID": "SID0010",
+    "Supplier_down_ID": "SID0021",
+    "Supplier_Activated_Network_ID": "SANID0019"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Activated_Network_ID": "SANID0020"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Supplier_down_ID": "SID0018",
+    "Supplier_Activated_Network_ID": "SANID0021"
+  },
+  {
+    "Supplier_ID": "SID0011",
+    "Supplier_down_ID": "SID0020",
+    "Supplier_Activated_Network_ID": "SANID0022"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Supplier_down_ID": "SID0006",
+    "Supplier_Activated_Network_ID": "SANID0023"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Supplier_down_ID": "SID0007",
+    "Supplier_Activated_Network_ID": "SANID0024"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Supplier_down_ID": "SID0011",
+    "Supplier_Activated_Network_ID": "SANID0025"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Supplier_down_ID": "SID0013",
+    "Supplier_Activated_Network_ID": "SANID0026"
+  },
+  {
+    "Supplier_ID": "SID0012",
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Activated_Network_ID": "SANID0027"
+  },
+  {
+    "Supplier_ID": "SID0013",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Activated_Network_ID": "SANID0028"
+  },
+  {
+    "Supplier_ID": "SID0013",
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Activated_Network_ID": "SANID0029"
+  },
+  {
+    "Supplier_ID": "SID0013",
+    "Supplier_down_ID": "SID0021",
+    "Supplier_Activated_Network_ID": "SANID0030"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0004",
+    "Supplier_Activated_Network_ID": "SANID0031"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0006",
+    "Supplier_Activated_Network_ID": "SANID0032"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0007",
+    "Supplier_Activated_Network_ID": "SANID0033"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0011",
+    "Supplier_Activated_Network_ID": "SANID0034"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0013",
+    "Supplier_Activated_Network_ID": "SANID0035"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0015",
+    "Supplier_Activated_Network_ID": "SANID0036"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0017",
+    "Supplier_Activated_Network_ID": "SANID0037"
+  },
+  {
+    "Supplier_ID": "SID0014",
+    "Supplier_down_ID": "SID0018",
+    "Supplier_Activated_Network_ID": "SANID0038"
+  },
+  {
+    "Supplier_ID": "SID0015",
+    "Supplier_down_ID": "SID0020",
+    "Supplier_Activated_Network_ID": "SANID0039"
+  },
+  {
+    "Supplier_ID": "SID0015",
+    "Supplier_down_ID": "SID0021",
+    "Supplier_Activated_Network_ID": "SANID0040"
+  },
+  {
+    "Supplier_ID": "SID0016",
+    "Supplier_down_ID": "SID0018",
+    "Supplier_Activated_Network_ID": "SANID0041"
+  },
+  {
+    "Supplier_ID": "SID0017",
+    "Supplier_down_ID": "SID0008",
+    "Supplier_Activated_Network_ID": "SANID0042"
+  },
+  {
+    "Supplier_ID": "SID0018",
+    "Supplier_down_ID": "SID0008",
+    "Supplier_Activated_Network_ID": "SANID0043"
+  },
+  {
+    "Supplier_ID": "SID0018",
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Activated_Network_ID": "SANID0044"
+  },
+  {
+    "Supplier_ID": "SID0019",
+    "Supplier_down_ID": "SID0008",
+    "Supplier_Activated_Network_ID": "SANID0045"
+  },
+  {
+    "Supplier_ID": "SID0020",
+    "Supplier_down_ID": "SID0008",
+    "Supplier_Activated_Network_ID": "SANID0046"
+  },
+  {
+    "Supplier_ID": "SID0021",
+    "Supplier_down_ID": "SID0008",
+    "Supplier_Activated_Network_ID": "SANID0047"
+  },
+  {
+    "Supplier_ID": "SID0021",
+    "Supplier_down_ID": "SID0019",
+    "Supplier_Activated_Network_ID": "SANID0048"
+  }
+]
