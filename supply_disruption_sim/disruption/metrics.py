@@ -30,7 +30,6 @@ BACKLOG_VALUE_DISCOUNT = 0.35
 
 
 def build_daily_record(current_date: pd.Timestamp, state: SimState, model: ModelBundle) -> dict:
-    impacted_items = [item_id for item_id, status in state.item_effective_status.items() if status != "available"]
     final_product_id = next(iter(state.product_status), None)
     product_status = state.product_status.get(final_product_id, "failed") if final_product_id else "failed"
     items = model.standard_bundle.items.set_index("item_id")
@@ -43,9 +42,6 @@ def build_daily_record(current_date: pd.Timestamp, state: SimState, model: Model
         "active_suppliers": sum(status == "available" for status in state.supplier_status.values()),
         "disrupted_suppliers": sum(status == "disrupted" for status in state.supplier_status.values()),
         "degraded_suppliers": sum(status == "degraded" for status in state.supplier_status.values()),
-        "affected_items": len(impacted_items),
-        "failed_items": sum(status == "unavailable" for status in state.item_effective_status.values()),
-        "blocked_assemblies": sum(status == "blocked" for status in state.assembly_status.values()),
         "final_product_id": final_product_id,
         "final_product_status": product_status,
         "service_level": SERVICE_LEVEL_MAP.get(product_status, 0.0),
@@ -148,9 +144,8 @@ def summarize_result(
         "failed_days": int((history["final_product_status"] == "failed").sum()),
         "affected_days": int((history["final_product_status"] == "affected").sum()),
         "average_service_level": round(float(history["service_level"].mean()), 4),
-        "max_affected_items": int(history["affected_items"].max()),
-        "max_failed_items": int(history["failed_items"].max()),
-        "max_blocked_assemblies": int(history["blocked_assemblies"].max()),
+        "max_supply_effective_affected_items": int(history["supply_effective_affected_items"].max()),
+        "max_supply_effective_unavailable_items": int(history["supply_effective_unavailable_items"].max()),
         "max_affected_key_items": int(history["affected_key_items"].max()) if "affected_key_items" in history else 0,
         "max_failed_key_items": int(history["failed_key_items"].max()) if "failed_key_items" in history else 0,
         "max_disrupted_key_suppliers": int(history["disrupted_key_suppliers"].max()) if "disrupted_key_suppliers" in history else 0,

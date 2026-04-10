@@ -23,7 +23,19 @@ def apply_backup_supplier_switch(
         trigger_supply_factor = float(policy.params.get("trigger_supply_factor", 0.95))
         current_supply_factor = _estimate_current_supply_factor(active_rows=active_rows, state=state)
         if current_supply_factor >= trigger_supply_factor:
+            active_backup = state.backup_active.pop(item_id, None)
             state.backup_pending.pop(item_id, None)
+            if active_backup is not None:
+                record_policy_event(
+                    state=state,
+                    current_date=current_date,
+                    policy_type=policy.policy_type,
+                    action="deactivate_backup_switch",
+                    target_id=item_id,
+                    target_type="item",
+                    cost=0.0,
+                    metadata={"supplier_id": str(active_backup["supplier_id"])},
+                )
             continue
 
         if item_id in state.backup_active and state.backup_active[item_id]["activate_date"] <= current_date:

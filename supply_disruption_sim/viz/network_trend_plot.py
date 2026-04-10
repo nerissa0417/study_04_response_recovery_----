@@ -64,7 +64,7 @@ NETWORK_COMPARISON_COLUMNS = [
     "service_level",
     "demand_fulfillment_rate",
     "system_service_level",
-    "supply_unavailable_items",
+    "supply_effective_unavailable_items",
     "total_backlog_demand",
     "fused_failed_items",
     "affected_key_items",
@@ -82,6 +82,12 @@ NETWORK_COMPARISON_COLUMNS = [
     "bom_edge_disrupted",
     "alternative_edge_substituted",
 ]
+
+
+def _history_column(frame: pd.DataFrame, preferred: str, fallback: str) -> pd.Series:
+    if preferred in frame:
+        return pd.to_numeric(frame[preferred], errors="coerce").fillna(0)
+    return pd.to_numeric(frame.get(fallback, 0), errors="coerce").fillna(0)
 
 
 def build_network_history(result: SimulationResult) -> pd.DataFrame:
@@ -147,8 +153,8 @@ def build_network_markers(result: SimulationResult, network_history: pd.DataFram
         + pd.to_numeric(peak_history.get("supply_failed_products", 0), errors="coerce").fillna(0)
     )
     peak_history["_supply_impact"] = (
-        pd.to_numeric(peak_history.get("supply_degraded_items", 0), errors="coerce").fillna(0)
-        + pd.to_numeric(peak_history.get("supply_unavailable_items", 0), errors="coerce").fillna(0)
+        _history_column(peak_history, "supply_effective_degraded_items", "supply_degraded_items")
+        + _history_column(peak_history, "supply_effective_unavailable_items", "supply_unavailable_items")
     )
     peak_row = peak_history.sort_values(
         by=[
@@ -175,7 +181,7 @@ def build_network_markers(result: SimulationResult, network_history: pd.DataFram
         recovery_candidates = history_after_peak.loc[
             (pd.to_numeric(history_after_peak.get("disrupted_suppliers", 0.0), errors="coerce").fillna(0.0) <= 0.0)
             & (pd.to_numeric(history_after_peak.get("degraded_suppliers", 0.0), errors="coerce").fillna(0.0) <= 0.0)
-            & (pd.to_numeric(history_after_peak.get("supply_degraded_items", 0.0), errors="coerce").fillna(0.0) <= 0.0)
+            & (_history_column(history_after_peak, "supply_effective_degraded_items", "supply_degraded_items") <= 0.0)
             & (pd.to_numeric(history_after_peak.get("supply_affected_products", 0.0), errors="coerce").fillna(0.0) <= 0.0)
         ]
     t_recovery = (
@@ -248,7 +254,7 @@ def export_core_metric_trends(result: SimulationResult, figure_path: str | Path)
                 "title": "中断影响强度",
                 "ylabel": "影响规模",
                 "series": [
-                    ("supply_unavailable_items", "供应不可用物料", "#C44536"),
+                    ("supply_effective_unavailable_items", "供应不可用物料", "#C44536"),
                     ("total_backlog_demand", "累计积压需求", "#E9A03B"),
                     ("fused_failed_items", "融合失败物料", "#7F1D1D"),
                 ],

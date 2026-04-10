@@ -10,12 +10,19 @@ def build_supply_daily_record(current_date: pd.Timestamp, state: SimState, model
     supply_items = state.supply_state["items"]
     supply_assemblies = state.supply_state["assemblies"]
     supply_products = state.supply_state["products"]
+    effective_items = state.item_effective_status
     affected_products = [product_id for product_id, status in supply_products.items() if status != "active"]
+    effective_degraded_items = sum(status == "degraded" for status in effective_items.values())
+    effective_unavailable_items = sum(status == "unavailable" for status in effective_items.values())
     return {
         "date": current_date,
         "supply_available_items": sum(status == "available" for status in supply_items.values()),
         "supply_degraded_items": sum(status == "degraded" for status in supply_items.values()),
         "supply_unavailable_items": sum(status == "unavailable" for status in supply_items.values()),
+        "supply_effective_available_items": sum(status == "available" for status in effective_items.values()),
+        "supply_effective_degraded_items": effective_degraded_items,
+        "supply_effective_unavailable_items": effective_unavailable_items,
+        "supply_effective_affected_items": effective_degraded_items + effective_unavailable_items,
         "supply_blocked_assemblies": sum(status == "blocked" for status in supply_assemblies.values()),
         "supply_affected_products": len(affected_products),
         "supply_failed_products": sum(status == "failed" for status in supply_products.values()),
@@ -48,6 +55,9 @@ def summarize_supply_history(history: pd.DataFrame) -> dict:
     return {
         "max_supply_degraded_items": int(history["supply_degraded_items"].max()),
         "max_supply_unavailable_items": int(history["supply_unavailable_items"].max()),
+        "max_supply_effective_degraded_items": int(history["supply_effective_degraded_items"].max()),
+        "max_supply_effective_unavailable_items": int(history["supply_effective_unavailable_items"].max()),
+        "max_supply_effective_affected_items": int(history["supply_effective_affected_items"].max()),
         "max_supply_blocked_assemblies": int(history["supply_blocked_assemblies"].max()),
         "max_supply_affected_products": int(history["supply_affected_products"].max()),
     }

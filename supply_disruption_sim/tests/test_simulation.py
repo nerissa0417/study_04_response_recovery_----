@@ -27,6 +27,7 @@ from supply_disruption_sim.experiment.runner import build_policy_set, run_experi
 from supply_disruption_sim.experiment.sensitivity_runner import run_sensitivity_analysis
 from supply_disruption_sim.model.builder import build_model
 from supply_disruption_sim.model.state_model import initialize_state
+from supply_disruption_sim.policy.backup_supplier_switch import apply_backup_supplier_switch
 from supply_disruption_sim.policy.equivalent_material_substitution import apply_equivalent_material_substitution
 from supply_disruption_sim.policy.priority_repair import apply_priority_repair
 from supply_disruption_sim.reporting.report_generator import generate_report
@@ -322,6 +323,41 @@ class SimulationPipelineTest(unittest.TestCase):
             policy=policy,
         )
         self.assertNotIn(str(target_item), state.substitution_active)
+
+    def test_stage6_backup_switch_deactivates_after_primary_recovers(self) -> None:
+        scenario = load_scenario("default_single_supplier_disruption", self.model)
+        params = load_default_params(self.model)
+        state = initialize_state(self.model, scenario, params)
+        policy = next(policy for policy in load_default_policies() if policy.policy_type == "backup_supplier_switch")
+        item_id = self.standard_bundle.supplier_item_map.loc[
+            self.standard_bundle.supplier_item_map["is_primary"].astype(bool), "item_id"
+        ].iloc[0]
+        state.backup_active[str(item_id)] = {
+            "supplier_id": "SID9999",
+            "activate_date": scenario.start_date.normalize(),
+            "capacity_factor": 0.75,
+            "backup_priority": 10,
+            "supply_role": "licensed_backup",
+        }
+        apply_backup_supplier_switch(
+            current_date=scenario.start_date.normalize(),
+            state=state,
+            model=self.model,
+            policy=policy,
+        )
+        self.assertNotIn(str(item_id), state.backup_active)
+
+    def test_supply_history_exposes_effective_supply_columns(self) -> None:
+        scenario = load_scenario("default_single_supplier_disruption", self.model)
+        params = load_default_params(self.model)
+        result = run_simulation(self.model, scenario, load_default_policies(), params)
+        for column in [
+            "supply_effective_available_items",
+            "supply_effective_degraded_items",
+            "supply_effective_unavailable_items",
+            "supply_effective_affected_items",
+        ]:
+            self.assertIn(column, result.history.columns)
 
     def test_gap02_multi_supplier_scenario_runs(self) -> None:
         scenario = load_scenario("default_multi_supplier_disruption", self.model)

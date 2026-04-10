@@ -37,6 +37,12 @@ EDGE_ALPHA = {
 }
 
 
+def _history_column(frame: pd.DataFrame, preferred: str, fallback: str) -> pd.Series:
+    if preferred in frame:
+        return pd.to_numeric(frame[preferred], errors="coerce").fillna(0)
+    return pd.to_numeric(frame.get(fallback, 0), errors="coerce").fillna(0)
+
+
 def export_network_snapshots(result: SimulationResult, output_dir: str | Path) -> list[Path]:
     if result.model_bundle is None or not result.network_snapshots:
         return []
@@ -80,8 +86,8 @@ def select_snapshot_points(result: SimulationResult) -> dict[str, dict]:
         + pd.to_numeric(peak_history.get("supply_failed_products", 0), errors="coerce").fillna(0)
     )
     peak_history["_supply_impact"] = (
-        pd.to_numeric(peak_history.get("supply_degraded_items", 0), errors="coerce").fillna(0)
-        + pd.to_numeric(peak_history.get("supply_unavailable_items", 0), errors="coerce").fillna(0)
+        _history_column(peak_history, "supply_effective_degraded_items", "supply_degraded_items")
+        + _history_column(peak_history, "supply_effective_unavailable_items", "supply_unavailable_items")
     )
     peak_row = peak_history.sort_values(
         by=[
@@ -108,7 +114,7 @@ def select_snapshot_points(result: SimulationResult) -> dict[str, dict]:
         recovery_candidates = history_after_peak.loc[
             (pd.to_numeric(history_after_peak.get("disrupted_suppliers", 0.0), errors="coerce").fillna(0.0) <= 0.0)
             & (pd.to_numeric(history_after_peak.get("degraded_suppliers", 0.0), errors="coerce").fillna(0.0) <= 0.0)
-            & (pd.to_numeric(history_after_peak.get("supply_degraded_items", 0.0), errors="coerce").fillna(0.0) <= 0.0)
+            & (_history_column(history_after_peak, "supply_effective_degraded_items", "supply_degraded_items") <= 0.0)
             & (pd.to_numeric(history_after_peak.get("supply_affected_products", 0.0), errors="coerce").fillna(0.0) <= 0.0)
         ]
     t_recovery = (

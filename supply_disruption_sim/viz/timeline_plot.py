@@ -55,8 +55,8 @@ def _plot_service_panel(ax, history: pd.DataFrame, result: SimulationResult) -> 
 
 
 def _plot_disruption_panel(ax, history: pd.DataFrame, result: SimulationResult) -> None:
-    if "supply_unavailable_items" in history:
-        ax.plot(history["date"], history["supply_unavailable_items"], color="#C8553D", linewidth=2, label="供应不可用物料")
+    if "supply_effective_unavailable_items" in history:
+        ax.plot(history["date"], history["supply_effective_unavailable_items"], color="#C8553D", linewidth=2, label="供应不可用物料")
     if "total_backlog_demand" in history:
         ax.plot(history["date"], history["total_backlog_demand"], color="#F6BD60", linewidth=2, label="积压需求")
     if "fused_failed_items" in history:

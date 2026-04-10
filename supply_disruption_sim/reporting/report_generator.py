@@ -456,7 +456,7 @@ def _plot_service_level(result: SimulationResult, figure_path: Path) -> None:
 def _plot_impact_overview(result: SimulationResult, figure_path: Path) -> None:
     fig, ax = plt.subplots(figsize=(10, 4))
     series = [
-        ("供应不可用物料数", "supply_unavailable_items", "#9E2A2B"),
+        ("供应不可用物料数", "supply_effective_unavailable_items", "#9E2A2B"),
         ("总积压需求", "total_backlog_demand", "#E09F3E"),
         ("融合失败物料数", "fused_failed_items", "#540B0E"),
     ]
@@ -480,9 +480,9 @@ def _select_supply_history(history: pd.DataFrame) -> pd.DataFrame:
         "active_suppliers",
         "disrupted_suppliers",
         "degraded_suppliers",
-        "affected_items",
-        "failed_items",
-        "blocked_assemblies",
+        "supply_effective_affected_items",
+        "supply_effective_degraded_items",
+        "supply_effective_unavailable_items",
         "final_product_status",
         "service_level",
         "active_backup_switches",

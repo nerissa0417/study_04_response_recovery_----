@@ -94,7 +94,7 @@ def _build_time_series(history: pd.DataFrame) -> list[dict[str, Any]]:
         "service_level",
         "demand_fulfillment_rate",
         "system_service_level",
-        "supply_unavailable_items",
+        "supply_effective_unavailable_items",
         "total_backlog_demand",
         "fused_failed_items",
         "affected_key_items",
