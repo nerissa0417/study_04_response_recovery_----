@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from supply_disruption_sim.types import SimulationResult
+from supply_disruption_sim.viz.marker_selection import select_marker_dates
 from supply_disruption_sim.viz.plot_theme import (
     add_figure_header,
     add_scenario_marker,
@@ -64,7 +65,7 @@ NETWORK_COMPARISON_COLUMNS = [
     "service_level",
     "demand_fulfillment_rate",
     "system_service_level",
-    "supply_effective_unavailable_items",
+    "supply_unavailable_items",
     "total_backlog_demand",
     "fused_failed_items",
     "affected_key_items",
@@ -82,14 +83,6 @@ NETWORK_COMPARISON_COLUMNS = [
     "bom_edge_disrupted",
     "alternative_edge_substituted",
 ]
-
-
-def _history_column(frame: pd.DataFrame, preferred: str, fallback: str) -> pd.Series:
-    if preferred in frame:
-        return pd.to_numeric(frame[preferred], errors="coerce").fillna(0)
-    return pd.to_numeric(frame.get(fallback, 0), errors="coerce").fillna(0)
-
-
 def build_network_history(result: SimulationResult) -> pd.DataFrame:
     base_dates = pd.to_datetime(result.history.get("date", pd.Series(dtype="datetime64[ns]")))
     snapshot_map = {
@@ -139,65 +132,33 @@ def build_network_markers(result: SimulationResult, network_history: pd.DataFram
     network_indexed["date_str"] = network_indexed["date"].dt.date.astype(str)
     network_by_date = network_indexed.set_index("date_str")
 
-    t0 = history.iloc[0]["date_str"]
-    t_start = str(result.scenario.start_date.normalize().date())
-    peak_history = history.copy()
-    peak_history["_system_loss"] = 1.0 - pd.to_numeric(
-        peak_history.get("system_service_level", 1.0), errors="coerce"
-    ).fillna(1.0)
-    peak_history["_demand_loss"] = 1.0 - pd.to_numeric(
-        peak_history.get("demand_fulfillment_rate", 1.0), errors="coerce"
-    ).fillna(1.0)
-    peak_history["_product_impact"] = (
-        pd.to_numeric(peak_history.get("supply_affected_products", 0), errors="coerce").fillna(0)
-        + pd.to_numeric(peak_history.get("supply_failed_products", 0), errors="coerce").fillna(0)
-    )
-    peak_history["_supply_impact"] = (
-        _history_column(peak_history, "supply_effective_degraded_items", "supply_degraded_items")
-        + _history_column(peak_history, "supply_effective_unavailable_items", "supply_unavailable_items")
-    )
-    peak_row = peak_history.sort_values(
-        by=[
-            "_system_loss",
-            "_demand_loss",
-            "_product_impact",
-            "_supply_impact",
-            "fused_failed_items",
-            "fused_affected_items",
-            "date",
-        ],
-        ascending=[False, False, False, False, False, False, True],
-    ).iloc[0]
-    t_peak = peak_row["date_str"]
-    peak_date = pd.Timestamp(peak_row["date"]).normalize()
-    history_after_peak = history.loc[history["date"] >= peak_date].copy()
-    if float(peak_row["_system_loss"]) > 0 or float(peak_row["_demand_loss"]) > 0 or float(peak_row["_product_impact"]) > 0:
-        recovery_candidates = history_after_peak.loc[
-            (pd.to_numeric(history_after_peak.get("system_service_level", 0.0), errors="coerce").fillna(0.0) >= 0.999)
-            & (pd.to_numeric(history_after_peak.get("demand_fulfillment_rate", 0.0), errors="coerce").fillna(0.0) >= 0.999)
-            & (pd.to_numeric(history_after_peak.get("supply_affected_products", 0.0), errors="coerce").fillna(0.0) <= 0.0)
-        ]
-    else:
-        recovery_candidates = history_after_peak.loc[
-            (pd.to_numeric(history_after_peak.get("disrupted_suppliers", 0.0), errors="coerce").fillna(0.0) <= 0.0)
-            & (pd.to_numeric(history_after_peak.get("degraded_suppliers", 0.0), errors="coerce").fillna(0.0) <= 0.0)
-            & (_history_column(history_after_peak, "supply_effective_degraded_items", "supply_degraded_items") <= 0.0)
-            & (pd.to_numeric(history_after_peak.get("supply_affected_products", 0.0), errors="coerce").fillna(0.0) <= 0.0)
-        ]
-    t_recovery = (
-        recovery_candidates.iloc[0]["date_str"]
-        if not recovery_candidates.empty
-        else history.iloc[-1]["date_str"]
-    )
-
     markers: dict[str, dict[str, Any]] = {}
-    fallback_key = t0
-    for label, date_key in {
-        "t0": t0,
-        "t_start": t_start,
-        "t_peak": t_peak,
-        "t_recovery": t_recovery,
-    }.items():
+    initial_snapshot = getattr(result, "initial_snapshot", None)
+    initial_date = (
+        pd.Timestamp(initial_snapshot["date"]).normalize()
+        if initial_snapshot is not None
+        else None
+    )
+    marker_dates = select_marker_dates(
+        history,
+        result.scenario.start_date.normalize(),
+        initial_date=initial_date,
+    )
+    fallback_key = history.iloc[0]["date_str"]
+    for label, date_key in marker_dates.items():
+        if (
+            label == "t0"
+            and initial_snapshot is not None
+            and str(pd.Timestamp(initial_snapshot["date"]).date()) == str(date_key)
+        ):
+            summary = _summarize_snapshot(initial_snapshot)
+            markers[label] = {
+                "date": str(pd.Timestamp(initial_snapshot["date"]).date()),
+                "supplier_disrupted_nodes": int(summary["supplier_disrupted_nodes"]),
+                "material_affected_nodes": int(summary["material_affected_nodes"]),
+                "bom_edge_disrupted": int(summary["bom_edge_disrupted"]),
+            }
+            continue
         selected_key = date_key if date_key in network_by_date.index else fallback_key
         if selected_key not in network_by_date.index:
             continue
@@ -205,9 +166,7 @@ def build_network_markers(result: SimulationResult, network_history: pd.DataFram
         markers[label] = {
             "date": str(pd.Timestamp(row["date"]).date()),
             "supplier_disrupted_nodes": int(row["supplier_disrupted_nodes"]),
-            "supplier_degraded_nodes": int(row["supplier_degraded_nodes"]),
             "material_affected_nodes": int(row["material_affected_nodes"]),
-            "material_blocked_nodes": int(row["material_blocked_nodes"]),
             "bom_edge_disrupted": int(row["bom_edge_disrupted"]),
         }
     return markers
@@ -217,14 +176,7 @@ def build_snapshot_summary(snapshot: dict[str, Any]) -> dict[str, int]:
     summary = _summarize_snapshot(snapshot)
     return {
         "supplier_disrupted_nodes": int(summary["supplier_disrupted_nodes"]),
-        "supplier_degraded_nodes": int(summary["supplier_degraded_nodes"]),
         "material_affected_nodes": int(summary["material_affected_nodes"]),
-        "material_blocked_nodes": int(summary["material_blocked_nodes"]),
-        "assembly_affected_nodes": int(summary["assembly_affected_nodes"]),
-        "assembly_blocked_nodes": int(summary["assembly_blocked_nodes"]),
-        "product_affected_nodes": int(summary["product_affected_nodes"]),
-        "product_blocked_nodes": int(summary["product_blocked_nodes"]),
-        "supply_edge_disrupted": int(summary["supply_edge_disrupted"]),
         "bom_edge_disrupted": int(summary["bom_edge_disrupted"]),
         "supply_edge_backup_active": int(summary["supply_edge_backup_active"]),
     }
@@ -238,7 +190,7 @@ def export_core_metric_trends(result: SimulationResult, figure_path: str | Path)
     return export_panel_trend_figure(
         history=history,
         figure_path=figure_path,
-        title=f"核心指标趋势：{result.scenario.scenario_id}",
+        title="核心指标趋势",
         scenario_start=result.scenario.start_date.normalize(),
         panels=[
             {
@@ -254,7 +206,7 @@ def export_core_metric_trends(result: SimulationResult, figure_path: str | Path)
                 "title": "中断影响强度",
                 "ylabel": "影响规模",
                 "series": [
-                    ("supply_effective_unavailable_items", "供应不可用物料", "#C44536"),
+                    ("supply_unavailable_items", "供应不可用物料", "#C44536"),
                     ("total_backlog_demand", "累计积压需求", "#E9A03B"),
                     ("fused_failed_items", "融合失败物料", "#7F1D1D"),
                 ],
@@ -298,7 +250,7 @@ def export_supplier_network_trends(
     return export_panel_trend_figure(
         history=history,
         figure_path=figure_path,
-        title=f"供应商网络趋势：{result.scenario.scenario_id}",
+        title="供应商网络趋势",
         scenario_start=result.scenario.start_date.normalize(),
         panels=[
             {
@@ -343,7 +295,7 @@ def export_material_network_trends(
     return export_panel_trend_figure(
         history=history,
         figure_path=figure_path,
-        title=f"物料网络趋势：{result.scenario.scenario_id}",
+        title="物料网络趋势",
         scenario_start=result.scenario.start_date.normalize(),
         panels=[
             {
@@ -703,8 +655,6 @@ def _node_metric_key(*, node_type: str, visual_status: str) -> str | None:
             "degraded": "supplier_degraded_nodes",
             "disrupted": "supplier_disrupted_nodes",
         }.get(visual_status)
-    if node_type == "part":
-        node_type = "material"
     if node_type in {"material", "assembly", "product"}:
         return {
             "available": f"{node_type}_available_nodes",

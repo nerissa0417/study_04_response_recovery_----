@@ -20,6 +20,7 @@ class SimState:
     supplier_status: dict[str, str]
     item_inventory: dict[str, float]
     item_supply_status: dict[str, str]
+    item_inbound_factor: dict[str, float]
     item_effective_status: dict[str, str]
     assembly_status: dict[str, str]
     product_status: dict[str, str]
@@ -50,6 +51,7 @@ def initialize_state(
     item_inventory = items.set_index("item_id")["initial_inventory_qty"].astype(float).to_dict()
     supplier_status = {supplier_id: "available" for supplier_id in suppliers["supplier_id"]}
     item_supply_status = {item_id: "available" for item_id in items["item_id"]}
+    item_inbound_factor = {item_id: 1.0 for item_id in items["item_id"]}
     item_effective_status = {item_id: "available" for item_id in items["item_id"]}
     assembly_status: dict[str, str] = {}
     product_status = {
@@ -111,6 +113,7 @@ def initialize_state(
         supplier_status=supplier_status,
         item_inventory=item_inventory,
         item_supply_status=item_supply_status,
+        item_inbound_factor=item_inbound_factor,
         item_effective_status=item_effective_status,
         assembly_status=assembly_status,
         product_status=product_status,

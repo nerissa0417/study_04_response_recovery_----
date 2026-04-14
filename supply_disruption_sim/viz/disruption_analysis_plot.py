@@ -72,8 +72,10 @@ def build_monthly_disrupted_nodes_frame(
     )
 
     monthly = (
-        history.groupby("month", as_index=False)[
+        history.groupby("month", as_index=False)
+        [
             [
+                "month",
                 "supplier_disrupted_nodes",
                 "material_disrupted_nodes",
                 "assembly_disrupted_nodes",
@@ -223,8 +225,8 @@ def export_monthly_disrupted_nodes_figure(
     legend_style(ax, loc="upper left", bbox_to_anchor=(1.01, 1.0))
     add_figure_header(
         fig,
-        f"中断节点月度变化：{result.scenario.scenario_id}",
-        "按月取峰值聚合，方便观察各层级中断扩散的高点与收敛速度",
+        "中断节点月度变化",
+        "按月分别提取供应商与物料/装配/产品阻断节点的最大值，并叠加展示总中断峰值",
     )
 
     plot_top = max(0.69, min(0.82, float(getattr(fig, "_codex_header_layout_top", 0.85)) - 0.02))
@@ -237,7 +239,7 @@ def export_monthly_disrupted_nodes_figure(
     ax.text(
         0.01,
         -0.16,
-        "统计口径：供应商按 disrupted 计数，物料、装配、产品按 blocked 计数。",
+        "统计口径：供应商 disrupted 与物料/装配/产品 blocked 按月分别取最大值；总中断节点为日度总和在该月内的最大值。",
         transform=ax.transAxes,
         fontsize=10,
         color="#5B6B7A",
@@ -288,7 +290,7 @@ def export_propagation_duration_figure(
 
     stop_date = summary.get("propagation_stop_date")
     subtitle = f"传播停止日期：{stop_date}" if stop_date else "传播停止日期：未观测到显著传播"
-    add_figure_header(fig, f"中断传播时长对比：{result.scenario.scenario_id}", subtitle)
+    add_figure_header(fig, "中断传播时长对比", subtitle)
     plot_top = max(0.71, min(0.83, float(getattr(fig, "_codex_header_layout_top", 0.85)) - 0.02))
     fig.subplots_adjust(left=0.15, right=0.94, bottom=0.13, top=plot_top)
     return finish_figure(fig, figure_path, top=0.9, tight=False)

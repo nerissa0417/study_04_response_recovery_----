@@ -54,7 +54,7 @@ def inject_scenario_for_day(
 
     if scenario.scenario_type == "supply_edge_disruption":
         context = _empty_context()
-        target = scenario.extra.get("supply_edge_target", {})
+        target = scenario.extra.get("supply_edge", {})
         supplier_id = str(target.get("supplier_id"))
         item_id = str(target.get("item_id"))
         if severity >= 0.95:

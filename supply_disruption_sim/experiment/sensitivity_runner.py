@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import copy
-import json
 import math
 import random
 from dataclasses import asdict
@@ -98,34 +97,12 @@ def run_sensitivity_analysis(
     runs_csv = tables_dir / "sensitivity_runs.csv"
     parameter_response_csv = tables_dir / "parameter_response.csv"
     sensitivity_ranking_csv = tables_dir / "sensitivity_ranking.csv"
-    summary_json = output_path / "summary.json"
     ranking_figure = figures_dir / "sensitivity_ranking.png"
 
     runs_df.to_csv(runs_csv, index=False)
     parameter_response_df.to_csv(parameter_response_csv, index=False)
     sensitivity_ranking_df.to_csv(sensitivity_ranking_csv, index=False)
     _plot_sensitivity_ranking(sensitivity_ranking_df, ranking_figure)
-
-    summary_json.write_text(
-        json.dumps(
-            {
-                "scenario_name": scenario_name,
-                "policy_profile": policy_profile,
-                "parameter_names": list(grid.keys()),
-                "experiment_count": int(len(runs_df)),
-                "artifacts": {
-                    "runs_csv": str(runs_csv),
-                    "parameter_response_csv": str(parameter_response_csv),
-                    "sensitivity_ranking_csv": str(sensitivity_ranking_csv),
-                    "ranking_figure": str(ranking_figure),
-                },
-            },
-            ensure_ascii=False,
-            indent=2,
-            default=str,
-        ),
-        encoding="utf-8",
-    )
 
     return {
         "output_dir": str(output_path),
@@ -134,7 +111,6 @@ def run_sensitivity_analysis(
         "runs_csv": str(runs_csv),
         "parameter_response_csv": str(parameter_response_csv),
         "sensitivity_ranking_csv": str(sensitivity_ranking_csv),
-        "summary_json": str(summary_json),
         "ranking_figure": str(ranking_figure),
     }
 
@@ -172,7 +148,6 @@ def _run_parameter_variant(
         "parameter_value": next(iter(parameter_values.values()), pd.NA),
         "applied_parameter_value": next(iter(applied_parameters.values()), pd.NA) if applied_parameters else pd.NA,
         "run_output_dir": str(artifacts.output_dir),
-        "summary_json": str(artifacts.summary_json),
         "history_csv": str(artifacts.history_csv),
         "figure_path": str(artifacts.figure_path),
     }

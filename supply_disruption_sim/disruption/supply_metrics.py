@@ -66,24 +66,34 @@ def summarize_supply_history(history: pd.DataFrame) -> dict:
 def build_supply_impacted_paths(item_history: pd.DataFrame, model: ModelBundle) -> list[dict]:
     if item_history.empty:
         return []
+    impacted_items = item_history.loc[
+        item_history["supply_effective_status"].isin(["degraded", "unavailable"]),
+        ["item_id", "item_level", "supply_effective_status"],
+    ].copy()
+    if impacted_items.empty:
+        return []
+    impacted_items["_severity"] = impacted_items["supply_effective_status"].map(
+        {"degraded": 1, "unavailable": 2}
+    ).fillna(0)
     impacted_items = (
-        item_history.loc[
-            item_history["supply_effective_status"].isin(["degraded", "unavailable"]),
-            ["item_id", "item_level"],
-        ]
-        .drop_duplicates()
+        impacted_items.sort_values(["_severity", "item_id"], ascending=[False, True])
+        .drop_duplicates(subset=["item_id"], keep="first")
+        .drop(columns=["_severity"])
         .to_dict("records")
     )
     records: list[dict] = []
     for impacted in impacted_items:
         item_id = impacted["item_id"]
         item_level = impacted["item_level"]
+        impact_status = str(impacted["supply_effective_status"])
         paths = model.bom_graph.paths_to_final_products(item_id)
         if not paths and item_level == "product":
             records.append(
                 {
                     "impact_dimension": "supply",
                     "impact_level": item_level,
+                    "impact_status": impact_status,
+                    "root_cause": "supply_constraint",
                     "item_id": item_id,
                     "path": item_id,
                 }
@@ -94,6 +104,8 @@ def build_supply_impacted_paths(item_history: pd.DataFrame, model: ModelBundle) 
                 {
                     "impact_dimension": "supply",
                     "impact_level": item_level,
+                    "impact_status": impact_status,
+                    "root_cause": "supply_constraint",
                     "item_id": item_id,
                     "path": " -> ".join(path),
                 }

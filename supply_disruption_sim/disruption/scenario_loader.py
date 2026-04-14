@@ -53,7 +53,6 @@ def load_default_policies() -> list[PolicySpec]:
             enabled=bool(config["backup_supplier_switch"]["enabled"]),
             switch_time_days=int(config["backup_supplier_switch"]["switch_time_days"]),
             params={
-                "trigger_supply_factor": float(config["backup_supplier_switch"].get("trigger_supply_factor", 0.95)),
                 "backup_capacity_factor": float(config["backup_supplier_switch"]["backup_capacity_factor"]),
                 "setup_cost": float(config["backup_supplier_switch"].get("setup_cost", 0.0)),
                 "qualification_cost_per_day": float(
@@ -152,11 +151,8 @@ def _resolve_default_material_target(model: ModelBundle) -> str:
     final_product_id = final_products[0] if final_products else None
     candidates = model.standard_bundle.items.copy()
     if final_product_id is not None:
-        related_items = set(model.bom_graph.ancestors_of(final_product_id))
-        if not related_items:
-            related_items = set(model.bom_graph.descendants_of(final_product_id))
-        related_items.add(final_product_id)
-        candidates = candidates.loc[candidates["item_id"].isin(related_items)]
+        ancestors = set(model.bom_graph.ancestors_of(final_product_id))
+        candidates = candidates.loc[candidates["item_id"].isin(ancestors)]
     candidates = candidates.sort_values(
         by=["is_key_node", "is_critical_material", "demand_priority", "avg_daily_demand", "initial_inventory_qty"],
         ascending=[False, False, False, False, True],
@@ -217,9 +213,7 @@ def _normalize_scenario_target(
             item_id = str(resolved_target["item_id"])
         else:
             supplier_id, item_id = [segment.strip() for segment in str(resolved_target).split(":", 1)]
-        target = {"supplier_id": supplier_id, "item_id": item_id}
-        scenario_extra["supply_edge_target"] = target
-        scenario_extra["supply_edge"] = target
+        scenario_extra["supply_edge"] = {"supplier_id": supplier_id, "item_id": item_id}
         return f"{supplier_id}:{item_id}", scenario_extra
 
     if scenario_type == "region_disruption":
@@ -235,9 +229,6 @@ def _resolve_final_path_suppliers(model: ModelBundle) -> list[str]:
     if final_product_id is None:
         return []
     ancestors = set(model.bom_graph.ancestors_of(final_product_id))
-    if not ancestors:
-        ancestors = set(model.bom_graph.descendants_of(final_product_id))
-    ancestors.add(final_product_id)
     rows = model.standard_bundle.supplier_item_map.loc[
         model.standard_bundle.supplier_item_map["item_id"].isin(ancestors)
         & model.standard_bundle.supplier_item_map["is_primary"]
@@ -249,9 +240,16 @@ def _resolve_default_supply_edge(model: ModelBundle) -> dict[str, str]:
     supplier_id = model.standard_bundle.metadata.get("default_disruption_supplier_id")
     if supplier_id is None:
         raise ValueError("Cannot resolve AUTO_DEFAULT_SUPPLY_EDGE without standardized metadata.")
-    rows = model.standard_bundle.supplier_item_map.loc[
+    primary_rows = model.standard_bundle.supplier_item_map.loc[
+        (model.standard_bundle.supplier_item_map["supplier_id"] == supplier_id)
+        & model.standard_bundle.supplier_item_map["is_primary"].astype(bool)
+    ]
+    rows = (primary_rows if not primary_rows.empty else model.standard_bundle.supplier_item_map.loc[
         model.standard_bundle.supplier_item_map["supplier_id"] == supplier_id
-    ].sort_values(by=["share", "is_primary"], ascending=[False, False])
+    ]).sort_values(
+        by=["share", "is_primary"],
+        ascending=[False, False],
+    )
     if rows.empty:
         raise ValueError(f"Supplier '{supplier_id}' has no standardized supply edges.")
     row = rows.iloc[0]

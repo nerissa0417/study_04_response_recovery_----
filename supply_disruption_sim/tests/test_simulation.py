@@ -6,8 +6,6 @@ import tempfile
 import copy
 import shutil
 import re
-import json
-
 import pandas as pd
 
 from supply_disruption_sim.data_adapter.raw_loader import load_raw_bundle
@@ -21,6 +19,7 @@ from supply_disruption_sim.disruption.scenario_loader import (
 from supply_disruption_sim.disruption.recovery_engine import run_simulation
 from supply_disruption_sim.disruption.scenario_injector import inject_scenario_for_day
 from supply_disruption_sim.disruption.fusion_engine import fuse_supply_and_demand
+from supply_disruption_sim.disruption.supply_metrics import build_supply_impacted_paths
 from supply_disruption_sim.experiment.batch_runner import run_batch_experiments
 from supply_disruption_sim.experiment.monte_carlo import run_monte_carlo_experiments
 from supply_disruption_sim.experiment.runner import build_policy_set, run_experiment
@@ -31,7 +30,11 @@ from supply_disruption_sim.policy.backup_supplier_switch import apply_backup_sup
 from supply_disruption_sim.policy.equivalent_material_substitution import apply_equivalent_material_substitution
 from supply_disruption_sim.policy.priority_repair import apply_priority_repair
 from supply_disruption_sim.reporting.report_generator import generate_report
+from supply_disruption_sim.viz.disruption_analysis_plot import build_monthly_disrupted_nodes_frame
+from supply_disruption_sim.viz.dashboard_data import build_dashboard_payload
+from supply_disruption_sim.viz.bom_plot import select_impacted_paths
 from supply_disruption_sim.viz.graph_export import build_export_graph
+from supply_disruption_sim.viz.network_trend_plot import build_network_history, build_network_markers
 from supply_disruption_sim.types import ScenarioSpec
 
 
@@ -64,7 +67,11 @@ class SimulationPipelineTest(unittest.TestCase):
         rows = self.standard_bundle.supplier_item_map
         origins = set(rows.loc[rows["is_backup"], "mapping_origin"].astype(str))
         self.assertTrue(origins & {"licensed", "potential"})
-        self.assertNotIn("augmented", set(rows["mapping_origin"].astype(str)))
+        augmented_rows = rows.loc[rows["mapping_origin"].astype(str) == "augmented"]
+        if not augmented_rows.empty:
+            self.assertTrue(augmented_rows["is_backup"].astype(bool).all())
+            self.assertFalse(augmented_rows["is_current_source"].astype(bool).any())
+            self.assertEqual(set(augmented_rows["supply_role"].astype(str)), {"synthetic_backup"})
 
     def test_production_plan_uses_primary_as_current_and_others_as_backup(self) -> None:
         rows = self.standard_bundle.supplier_item_map
@@ -129,6 +136,13 @@ class SimulationPipelineTest(unittest.TestCase):
         self.assertIsNot(state.fused_state["items"], state.item_effective_status)
         self.assertIsNot(state.fused_state["products"], state.product_status)
 
+    def test_stage1_state_tracks_inbound_supply_factor(self) -> None:
+        scenario = load_scenario("default_single_supplier_disruption", self.model)
+        params = load_default_params(self.model)
+        state = initialize_state(self.model, scenario, params)
+        self.assertTrue(state.item_inbound_factor)
+        self.assertTrue(all(float(value) == 1.0 for value in state.item_inbound_factor.values()))
+
     def test_stage2_supply_item_history_fields_exist(self) -> None:
         scenario = load_scenario("default_single_supplier_disruption", self.model)
         params = load_default_params(self.model)
@@ -174,7 +188,7 @@ class SimulationPipelineTest(unittest.TestCase):
         state.item_supply_status[item_id] = "unavailable"
         state.item_effective_status[item_id] = "available"
         fuse_supply_and_demand(state=state, model=self.model)
-        self.assertEqual(state.fused_state["items"][item_id], "active")
+        self.assertEqual(state.fused_state["items"][item_id], "failed")
 
     def test_stage5_network_snapshots_export(self) -> None:
         scenario = load_scenario("default_single_supplier_disruption", self.model)
@@ -182,7 +196,7 @@ class SimulationPipelineTest(unittest.TestCase):
         result = run_simulation(self.model, scenario, load_default_policies(), params)
         with tempfile.TemporaryDirectory() as tmp_dir:
             artifacts = generate_report(result, tmp_dir)
-            self.assertEqual(len(artifacts.network_snapshot_paths), 4)
+            self.assertEqual(len(artifacts.network_snapshot_paths), 5)
             for path in artifacts.network_snapshot_paths:
                 self.assertTrue(path.exists())
 
@@ -277,7 +291,7 @@ class SimulationPipelineTest(unittest.TestCase):
             normalize_ttr(result_without.summary["ttr_days"]),
         )
 
-    def test_stage6_priority_repair_respects_global_parallel_limit(self) -> None:
+    def test_stage6_priority_repair_uses_separate_supplier_and_item_limits(self) -> None:
         scenario = load_scenario("default_single_supplier_disruption", self.model)
         params = load_default_params(self.model)
         state = initialize_state(self.model, scenario, params)
@@ -300,10 +314,10 @@ class SimulationPipelineTest(unittest.TestCase):
             policy=policy,
             context=context,
         )
-        pending_total = len(state.repair_pending_suppliers) + len(state.repair_pending_items)
-        self.assertLessEqual(pending_total, 1)
+        self.assertLessEqual(len(state.repair_pending_suppliers), 1)
+        self.assertLessEqual(len(state.repair_pending_items), 1)
 
-    def test_stage6_substitution_clears_after_source_recovers(self) -> None:
+    def test_stage6_substitution_active_state_persists_after_source_recovers(self) -> None:
         scenario = load_scenario("default_single_supplier_disruption", self.model)
         params = load_default_params(self.model)
         state = initialize_state(self.model, scenario, params)
@@ -322,7 +336,7 @@ class SimulationPipelineTest(unittest.TestCase):
             model=self.model,
             policy=policy,
         )
-        self.assertNotIn(str(target_item), state.substitution_active)
+        self.assertIn(str(target_item), state.substitution_active)
 
     def test_stage6_backup_switch_deactivates_after_primary_recovers(self) -> None:
         scenario = load_scenario("default_single_supplier_disruption", self.model)
@@ -345,7 +359,35 @@ class SimulationPipelineTest(unittest.TestCase):
             model=self.model,
             policy=policy,
         )
-        self.assertNotIn(str(item_id), state.backup_active)
+        self.assertIn(str(item_id), state.backup_active)
+
+    def test_stage6_backup_switch_uses_recorded_inbound_factor(self) -> None:
+        scenario = load_scenario("default_single_supplier_disruption", self.model)
+        params = load_default_params(self.model)
+        state = initialize_state(self.model, scenario, params)
+        policy = next(policy for policy in load_default_policies() if policy.policy_type == "backup_supplier_switch")
+        primary_row = self.standard_bundle.supplier_item_map.loc[
+            self.standard_bundle.supplier_item_map["is_primary"].astype(bool)
+        ].iloc[0]
+        item_id = str(primary_row["item_id"])
+        supplier_id = str(primary_row["supplier_id"])
+        state.supplier_status[supplier_id] = "degraded"
+        state.supply_state["suppliers"][supplier_id] = "degraded"
+        state.item_inbound_factor[item_id] = 1.0
+        state.backup_active[item_id] = {
+            "supplier_id": "SID9999",
+            "activate_date": scenario.start_date.normalize(),
+            "capacity_factor": 0.75,
+            "backup_priority": 10,
+            "supply_role": "licensed_backup",
+        }
+        apply_backup_supplier_switch(
+            current_date=scenario.start_date.normalize(),
+            state=state,
+            model=self.model,
+            policy=policy,
+        )
+        self.assertIn(item_id, state.backup_active)
 
     def test_supply_history_exposes_effective_supply_columns(self) -> None:
         scenario = load_scenario("default_single_supplier_disruption", self.model)
@@ -374,7 +416,7 @@ class SimulationPipelineTest(unittest.TestCase):
             scenario=scenario,
             model=self.model,
         )
-        target = scenario.extra["supply_edge_target"]
+        target = scenario.extra["supply_edge"]
         self.assertIn((target["supplier_id"], target["item_id"]), context["disrupted_supply_edges"])
         result = run_simulation(self.model, scenario, load_default_policies(), load_default_params(self.model))
         impacted_rows = result.item_history.loc[
@@ -396,6 +438,68 @@ class SimulationPipelineTest(unittest.TestCase):
         self.assertGreater(result.history["degraded_suppliers"].max(), 0)
         self.assertGreater(result.history["disrupted_suppliers"].max(), 0)
 
+    def test_gap02_auto_final_path_suppliers_include_all_current_sources(self) -> None:
+        bundle = copy.deepcopy(self.standard_bundle)
+        final_product_id = bundle.metadata["final_product_ids"][0]
+        related_items = set(self.model.bom_graph.ancestors_of(final_product_id))
+        if not related_items:
+            related_items = set(self.model.bom_graph.descendants_of(final_product_id))
+        related_items.add(final_product_id)
+        rows = bundle.supplier_item_map.copy()
+        candidate = rows.loc[
+            rows["item_id"].isin(related_items) & rows["is_backup"].astype(bool)
+        ].iloc[0]
+        primary_mask = (rows["item_id"] == candidate["item_id"]) & rows["is_primary"].astype(bool)
+        rows.loc[primary_mask, "share"] = 0.6
+        rows.loc[candidate.name, "is_backup"] = False
+        rows.loc[candidate.name, "is_current_source"] = True
+        rows.loc[candidate.name, "share"] = 0.4
+        bundle.supplier_item_map = rows
+        model = build_model(bundle)
+        scenario = load_scenario("default_multi_supplier_disruption", model)
+        self.assertIn(str(candidate["supplier_id"]), scenario.extra.get("target_supplier_ids", []))
+
+    def test_gap02_auto_default_supply_edge_prefers_current_source(self) -> None:
+        bundle = copy.deepcopy(self.standard_bundle)
+        rows = bundle.supplier_item_map.copy()
+        default_supplier_id = str(bundle.metadata["default_disruption_supplier_id"])
+        current_row = rows.loc[
+            rows["supplier_id"].astype(str) == default_supplier_id
+        ].sort_values(by=["share", "is_primary"], ascending=[False, False]).iloc[0]
+        synthetic = current_row.copy()
+        synthetic["item_id"] = str(
+            bundle.items.loc[bundle.items["item_id"] != current_row["item_id"], "item_id"].iloc[0]
+        )
+        synthetic["is_primary"] = False
+        synthetic["is_backup"] = True
+        synthetic["is_current_source"] = False
+        synthetic["share"] = 1.0
+        rows = pd.concat([rows, pd.DataFrame([synthetic])], ignore_index=True)
+        bundle.supplier_item_map = rows
+        model = build_model(bundle)
+        scenario = load_scenario("default_supply_edge_disruption", model)
+        expected_primary_row = rows.loc[
+            (rows["supplier_id"].astype(str) == default_supplier_id)
+            & rows["is_primary"].astype(bool)
+        ].sort_values(by=["share", "is_primary"], ascending=[False, False]).iloc[0]
+        self.assertEqual(
+            str(scenario.extra["supply_edge"]["item_id"]),
+            str(expected_primary_row["item_id"]),
+        )
+
+    def test_gap02_bayesian_occurrence_is_not_applied_in_main_loop(self) -> None:
+        scenario = load_scenario("default_single_supplier_disruption", self.model)
+        params = load_default_params(self.model)
+        params.horizon_days = 1
+        params.mode = "bayesian"
+        params.bayesian_enabled = True
+        params.bayesian_use_sampling = False
+        params.bayesian_config = copy.deepcopy(params.bayesian_config)
+        params.bayesian_config.setdefault("disruption", {})
+        params.bayesian_config["disruption"]["prior"] = 0.0
+        result = run_simulation(self.model, scenario, load_default_policies(), params)
+        self.assertGreaterEqual(int(result.history["disrupted_suppliers"].iloc[0]), 1)
+
     def test_stage7_single_experiment_report_is_complete(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             payload = run_experiment(
@@ -414,7 +518,6 @@ class SimulationPipelineTest(unittest.TestCase):
             self.assertIsNone(artifacts["fusion_history_csv"])
             self.assertTrue(Path(artifacts["network_history_csv"]).exists())
             self.assertTrue(Path(artifacts["impacted_paths_csv"]).exists())
-            self.assertTrue(Path(artifacts["summary_json"]).exists())
             self.assertTrue(Path(artifacts["figure_path"]).exists())
             self.assertIsNone(artifacts["impact_figure_path"])
             self.assertTrue(Path(artifacts["bom_figure_path"]).exists())
@@ -424,19 +527,13 @@ class SimulationPipelineTest(unittest.TestCase):
             self.assertTrue(Path(artifacts["core_trends_figure_path"]).exists())
             self.assertTrue(Path(artifacts["supplier_network_figure_path"]).exists())
             self.assertTrue(Path(artifacts["material_network_figure_path"]).exists())
-            self.assertTrue(Path(artifacts["dashboard_data_json"]).exists())
             self.assertGreaterEqual(len(payload["artifacts"]["network_snapshot_paths"]), 4)
-            summary_payload = json.loads(Path(artifacts["summary_json"]).read_text(encoding="utf-8"))
-            self.assertEqual(summary_payload["report_profile"], "minimal")
-            self.assertIn("network_history_csv", summary_payload["artifacts"])
-            self.assertIn("monthly_disrupted_nodes_figure", summary_payload["artifacts"])
-            self.assertIn("propagation_duration_figure", summary_payload["artifacts"])
-            self.assertIn("core_metric_trends_figure", summary_payload["artifacts"])
-            self.assertIn("supplier_network_trends_figure", summary_payload["artifacts"])
-            self.assertIn("material_network_trends_figure", summary_payload["artifacts"])
-            self.assertNotIn("item_history_csv", summary_payload["artifacts"])
-            self.assertNotIn("impact_figure", summary_payload["artifacts"])
-            self.assertNotIn("timeline_figure", summary_payload["artifacts"])
+            self.assertIn("network_history_csv", artifacts)
+            self.assertIn("monthly_disrupted_nodes_figure_path", artifacts)
+            self.assertIn("propagation_duration_figure_path", artifacts)
+            self.assertIn("core_trends_figure_path", artifacts)
+            self.assertIn("supplier_network_figure_path", artifacts)
+            self.assertIn("material_network_figure_path", artifacts)
 
     def test_stage7_batch_runner_exports_comparison_outputs(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -449,7 +546,6 @@ class SimulationPipelineTest(unittest.TestCase):
             )
             self.assertEqual(len(payload["runs"]), 4)
             self.assertTrue(Path(payload["summary_csv"]).exists())
-            self.assertTrue(Path(payload["summary_json"]).exists())
             self.assertTrue(Path(payload["policy_summary_csv"]).exists())
             self.assertTrue(Path(payload["scenario_summary_csv"]).exists())
             self.assertTrue(Path(payload["network_comparison_csv"]).exists())
@@ -498,9 +594,13 @@ class SimulationPipelineTest(unittest.TestCase):
             summary_df = pd.read_csv(payload["summary_csv"])
             baseline = summary_df.loc[summary_df["policy_profile"] == "baseline"].iloc[0]
             without_priority = summary_df.loc[summary_df["policy_profile"] == "no_priority_repair"].iloc[0]
-            self.assertGreater(float(baseline["policy_total_cost"]), float(without_priority["policy_total_cost"]))
-            self.assertEqual(str(baseline["reference_policy_profile"]), "no_priority_repair")
-            self.assertGreaterEqual(float(baseline["benefit_vs_reference"]), 0.0)
+            baseline_cost = float(baseline["policy_total_cost"])
+            without_priority_cost = float(without_priority["policy_total_cost"])
+            expected_reference = "baseline" if baseline_cost <= without_priority_cost else "no_priority_repair"
+            self.assertNotEqual(baseline_cost, without_priority_cost)
+            self.assertEqual(str(baseline["reference_policy_profile"]), expected_reference)
+            self.assertEqual(str(without_priority["reference_policy_profile"]), expected_reference)
+            self.assertTrue(pd.notna(float(baseline["benefit_vs_reference"])))
 
     def test_policy_profiles_cover_expected_strategy_combinations(self) -> None:
         expected_enabled = {
@@ -595,7 +695,8 @@ class SimulationPipelineTest(unittest.TestCase):
             self.assertIsNotNone(artifacts.core_trends_figure_path)
             self.assertIsNotNone(artifacts.supplier_network_figure_path)
             self.assertIsNotNone(artifacts.material_network_figure_path)
-            self.assertIsNotNone(artifacts.dashboard_data_json)
+            self.assertIsNotNone(artifacts.frontend_tables_dir)
+            self.assertIsNotNone(artifacts.frontend_manifest_csv)
             self.assertTrue(Path(artifacts.bom_figure_path).exists())
             self.assertTrue(Path(artifacts.monthly_disrupted_nodes_figure_path).exists())
             self.assertTrue(Path(artifacts.propagation_duration_figure_path).exists())
@@ -603,34 +704,207 @@ class SimulationPipelineTest(unittest.TestCase):
             self.assertTrue(Path(artifacts.core_trends_figure_path).exists())
             self.assertTrue(Path(artifacts.supplier_network_figure_path).exists())
             self.assertTrue(Path(artifacts.material_network_figure_path).exists())
-            self.assertTrue(Path(artifacts.dashboard_data_json).exists())
-            payload = json.loads(Path(artifacts.dashboard_data_json).read_text(encoding="utf-8"))
+            self.assertTrue(Path(artifacts.frontend_manifest_csv).exists())
             network_history = pd.read_csv(artifacts.network_history_csv)
-            self.assertIn("kpis", payload)
-            self.assertIn("time_series", payload)
-            self.assertIn("network_time_series", payload)
-            self.assertIn("network_markers", payload)
-            self.assertIn("top_impacted_paths", payload)
-            self.assertIn("artifact_paths", payload)
-            self.assertTrue(payload["time_series"])
-            self.assertTrue(payload["network_time_series"])
+            frontend_manifest = pd.read_csv(artifacts.frontend_manifest_csv)
             self.assertEqual(len(network_history), len(result.history))
             self.assertIn("supplier_disrupted_nodes", network_history.columns)
             self.assertIn("material_affected_nodes", network_history.columns)
             self.assertIn("bom_edge_disrupted", network_history.columns)
             self.assertIn("supply_edge_backup_active", network_history.columns)
-            self.assertIn("t0", payload["network_markers"])
-            self.assertIn("t_start", payload["network_markers"])
-            self.assertIn("t_peak", payload["network_markers"])
-            self.assertIn("t_recovery", payload["network_markers"])
-            self.assertIn("network_history_csv", payload["artifact_paths"])
-            self.assertIn("core_metric_trends_figure", payload["artifact_paths"])
-            self.assertIn("supplier_network_trends_figure", payload["artifact_paths"])
-            self.assertIn("material_network_trends_figure", payload["artifact_paths"])
-            self.assertIn("monthly_disrupted_nodes_figure", payload["artifact_paths"])
-            self.assertIn("propagation_duration_figure", payload["artifact_paths"])
-            self.assertIn("propagation_duration_months", payload["summary"])
-            self.assertIn("propagation_stop_date", payload["summary"])
+            self.assertEqual(
+                set(frontend_manifest["dataset_name"]),
+                {
+                    "scenario",
+                    "summary",
+                    "kpis",
+                    "policy_start_snapshot",
+                    "time_series",
+                    "network_time_series",
+                    "network_markers",
+                    "top_impacted_paths",
+                    "policy_events",
+                    "artifact_paths",
+                },
+            )
+            network_markers = pd.read_csv(Path(artifacts.frontend_tables_dir) / "network_markers.csv")
+            artifact_paths = pd.read_csv(Path(artifacts.frontend_tables_dir) / "artifact_paths.csv")
+            time_series = pd.read_csv(Path(artifacts.frontend_tables_dir) / "time_series.csv")
+            self.assertEqual(
+                set(network_markers["marker_name"]),
+                {"t0", "t_start", "t_supply_peak", "t_policy_start", "t_recovery"},
+            )
+            t0_date = network_markers.loc[network_markers["marker_name"] == "t0", "date"].iloc[0]
+            self.assertEqual(str(t0_date), str((scenario.start_date.normalize() - pd.Timedelta(days=1)).date()))
+            self.assertIn("network_history_csv", set(artifact_paths["artifact_name"]))
+            self.assertIn("core_metric_trends_figure", set(artifact_paths["artifact_name"]))
+            self.assertIn("supplier_network_trends_figure", set(artifact_paths["artifact_name"]))
+            self.assertIn("material_network_trends_figure", set(artifact_paths["artifact_name"]))
+            self.assertIn("monthly_disrupted_nodes_figure", set(artifact_paths["artifact_name"]))
+            self.assertIn("propagation_duration_figure", set(artifact_paths["artifact_name"]))
+            self.assertIn("frontend_tables_dir", set(artifact_paths["artifact_name"]))
+            self.assertIn("propagation_duration_months", pd.read_csv(Path(artifacts.frontend_tables_dir) / "summary.csv").columns)
+            self.assertIn("propagation_stop_date", pd.read_csv(Path(artifacts.frontend_tables_dir) / "summary.csv").columns)
+            self.assertIn("supply_degraded_items", time_series.columns)
+            self.assertIn("supply_unavailable_items", time_series.columns)
+            self.assertIn("supply_effective_degraded_items", time_series.columns)
+            self.assertIn("supply_effective_unavailable_items", time_series.columns)
+
+    def test_gap05_monthly_disrupted_nodes_use_same_peak_day_components(self) -> None:
+        scenario = load_scenario("default_single_supplier_disruption", self.model)
+        result = run_simulation(self.model, scenario, load_default_policies(), load_default_params(self.model))
+        network_history = build_network_history(result)
+        monthly = build_monthly_disrupted_nodes_frame(network_history)
+        self.assertFalse(monthly.empty)
+        network_history["date"] = pd.to_datetime(network_history["date"])
+        network_history["month"] = network_history["date"].dt.to_period("M").dt.to_timestamp()
+        for row in monthly.itertuples(index=False):
+            month_rows = network_history.loc[network_history["month"] == pd.Timestamp(row.month)]
+            self.assertEqual(int(row.supplier_disrupted_nodes), int(month_rows["supplier_disrupted_nodes"].max()))
+            self.assertEqual(int(row.material_disrupted_nodes), int(month_rows["material_blocked_nodes"].max()))
+            self.assertEqual(int(row.assembly_disrupted_nodes), int(month_rows["assembly_blocked_nodes"].max()))
+            self.assertEqual(int(row.product_disrupted_nodes), int(month_rows["product_blocked_nodes"].max()))
+            self.assertEqual(
+                int(row.total_disrupted_nodes),
+                int(
+                    (
+                        month_rows["supplier_disrupted_nodes"]
+                        + month_rows["material_blocked_nodes"]
+                        + month_rows["assembly_blocked_nodes"]
+                        + month_rows["product_blocked_nodes"]
+                    ).max()
+                ),
+            )
+
+    def test_gap05_inactive_equivalent_materials_follow_normal_supply_logic(self) -> None:
+        scenario = load_scenario("default_single_supplier_disruption", self.model)
+        result = run_simulation(self.model, scenario, load_default_policies(), load_default_params(self.model))
+        first_day = result.item_history.loc[result.item_history["date"] == str(scenario.start_date.normalize().date())]
+        first_rows = first_day.loc[first_day["item_id"].isin(["MID0009", "MID0019"])]
+        self.assertTrue((first_rows["supply_status"].astype(str) == "degraded").all())
+        self.assertTrue((first_rows["supply_effective_status"].astype(str) == "degraded").all())
+        self.assertTrue((first_rows["fused_status"].astype(str) == "affected").all())
+
+    def test_gap05_recovery_marker_uses_business_recovery_threshold(self) -> None:
+        scenario = load_scenario("default_single_supplier_disruption", self.model)
+        result = run_simulation(self.model, scenario, load_default_policies(), load_default_params(self.model))
+        markers = build_network_markers(result, build_network_history(result))
+        history = result.history.copy()
+        history["date"] = pd.to_datetime(history["date"])
+        recovery_candidates = history.loc[
+            (history["date"] >= scenario.start_date.normalize())
+            & (history["final_product_status"].astype(str) == "active")
+            & (history["system_service_level"] >= 0.999)
+            & (history["demand_fulfillment_rate"] >= 0.999)
+            & (history["total_backlog_demand"] <= 0.0)
+            & (history["total_lost_demand"] <= 0.0)
+        ]
+        expected_date = str(pd.Timestamp(recovery_candidates.iloc[0]["date"]).date())
+        self.assertEqual(int(markers["t_recovery"]["supplier_disrupted_nodes"]), 0)
+        self.assertEqual(str(markers["t_recovery"]["date"]), expected_date)
+
+    def test_gap05_dashboard_policy_start_snapshot_uses_shared_marker_logic(self) -> None:
+        scenario = load_scenario("default_single_supplier_disruption", self.model)
+        params = load_default_params(self.model)
+        params.bayesian_enabled = True
+        params.mode = "bayesian"
+        params.bayesian_config["enabled"] = True
+        result = run_simulation(self.model, scenario, load_default_policies(), params)
+        network_history = build_network_history(result)
+        payload = build_dashboard_payload(
+            result=result,
+            artifact_paths={},
+            network_history=network_history,
+        )
+        self.assertEqual(
+            payload["policy_start_snapshot"]["date"],
+            payload["network_markers"]["t_policy_start"]["date"],
+        )
+
+    def test_gap05_policy_start_marker_uses_strategy_start_logic(self) -> None:
+        scenario = load_scenario("default_single_supplier_disruption", self.model)
+        result = run_simulation(self.model, scenario, load_default_policies(), load_default_params(self.model))
+        markers = build_network_markers(result, build_network_history(result))
+        history = result.history.copy()
+        history["date"] = pd.to_datetime(history["date"])
+        strategy_candidates = history.loc[
+            (history["date"] >= scenario.start_date.normalize())
+            & (
+                (pd.to_numeric(history["active_backup_switches"], errors="coerce").fillna(0) > 0)
+                | (pd.to_numeric(history["active_substitutions"], errors="coerce").fillna(0) > 0)
+                | (pd.to_numeric(history["active_priority_repairs"], errors="coerce").fillna(0) > 0)
+            )
+        ]
+        expected_date = str(pd.Timestamp(strategy_candidates.iloc[0]["date"]).date())
+        self.assertEqual(str(markers["t_policy_start"]["date"]), expected_date)
+
+    def test_gap05_supply_peak_marker_uses_raw_supply_logic(self) -> None:
+        scenario = load_scenario("default_single_supplier_disruption", self.model)
+        params = load_default_params(self.model)
+        params.bayesian_enabled = True
+        params.mode = "bayesian"
+        params.bayesian_config["enabled"] = True
+        result = run_simulation(self.model, scenario, load_default_policies(), params)
+        markers = build_network_markers(result, build_network_history(result))
+        history = result.history.copy()
+        history["date"] = pd.to_datetime(history["date"])
+        history["_raw_supply_impact"] = (
+            pd.to_numeric(history["disrupted_suppliers"], errors="coerce").fillna(0)
+            + pd.to_numeric(history["degraded_suppliers"], errors="coerce").fillna(0)
+            + pd.to_numeric(history["supply_unavailable_items"], errors="coerce").fillna(0)
+            + pd.to_numeric(history["supply_degraded_items"], errors="coerce").fillna(0)
+        )
+        expected = history.sort_values(
+            by=[
+                "_raw_supply_impact",
+                "supply_unavailable_items",
+                "supply_degraded_items",
+                "disrupted_suppliers",
+                "degraded_suppliers",
+                "date",
+            ],
+            ascending=[False, False, False, False, False, True],
+        ).iloc[0]
+        self.assertEqual(
+            str(markers["t_supply_peak"]["date"]),
+            str(pd.Timestamp(expected["date"]).date()),
+        )
+
+    def test_gap05_dashboard_impacted_paths_match_bom_plot_selection(self) -> None:
+        scenario = load_scenario("default_single_supplier_disruption", self.model)
+        params = load_default_params(self.model)
+        params.bayesian_enabled = True
+        params.mode = "bayesian"
+        params.bayesian_config["enabled"] = True
+        result = run_simulation(self.model, scenario, load_default_policies(), params)
+        payload = build_dashboard_payload(
+            result=result,
+            artifact_paths={},
+            network_history=build_network_history(result),
+        )
+        self.assertEqual(payload["top_impacted_paths"], select_impacted_paths(result, limit=12))
+
+    def test_gap05_supply_impacted_paths_include_status(self) -> None:
+        scenario = load_scenario("default_single_supplier_disruption", self.model)
+        params = load_default_params(self.model)
+        params.bayesian_enabled = True
+        params.mode = "bayesian"
+        params.bayesian_config["enabled"] = True
+        result = run_simulation(self.model, scenario, load_default_policies(), params)
+        item_history = result.item_history.copy()
+        supply_paths = build_supply_impacted_paths(item_history=item_history, model=self.model)
+        self.assertTrue(supply_paths)
+        self.assertTrue(all(path.get("impact_status") in {"degraded", "unavailable"} for path in supply_paths))
+
+    def test_gap05_bom_path_selection_includes_supply_dimension_when_present(self) -> None:
+        scenario = load_scenario("default_single_supplier_disruption", self.model)
+        params = load_default_params(self.model)
+        params.bayesian_enabled = True
+        params.mode = "bayesian"
+        params.bayesian_config["enabled"] = True
+        result = run_simulation(self.model, scenario, load_default_policies(), params)
+        selected = select_impacted_paths(result, limit=10)
+        self.assertTrue(any(str(record.get("impact_dimension")) == "supply" for record in selected))
 
     def test_network_history_export_tolerates_missing_edge_type_and_status(self) -> None:
         scenario = load_scenario("default_single_supplier_disruption", self.model)

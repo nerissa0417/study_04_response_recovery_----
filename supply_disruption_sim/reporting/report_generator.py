@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import matplotlib
@@ -13,7 +12,7 @@ import matplotlib.pyplot as plt
 
 from supply_disruption_sim.types import BatchReportArtifacts, ReportArtifacts, SimulationResult
 from supply_disruption_sim.viz.bom_plot import export_bom_impact_plot
-from supply_disruption_sim.viz.dashboard_data import export_dashboard_data
+from supply_disruption_sim.viz.dashboard_data import export_dashboard_tables
 from supply_disruption_sim.viz.disruption_analysis_plot import (
     export_batch_propagation_duration_comparison_figure,
     export_monthly_disrupted_nodes_comparison_figure,
@@ -53,8 +52,11 @@ def generate_report(
     tables_dir = output_path / "tables"
     figures_dir = output_path / "figures"
     snapshot_dir = output_path / "network_snapshots"
+    frontend_tables_dir = tables_dir / "frontend"
     tables_dir.mkdir(parents=True, exist_ok=True)
     figures_dir.mkdir(parents=True, exist_ok=True)
+    frontend_tables_dir.mkdir(parents=True, exist_ok=True)
+    _clear_directory(frontend_tables_dir)
 
     history_csv = tables_dir / "history.csv"
     item_history_csv = tables_dir / "item_history.csv"
@@ -65,7 +67,6 @@ def generate_report(
     fusion_history_csv = tables_dir / "fusion_history.csv"
     network_history_csv = tables_dir / "network_history.csv"
     impacted_paths_csv = tables_dir / "impacted_paths.csv"
-    summary_json = output_path / "summary.json"
     figure_path = figures_dir / "service_level.png"
     impact_figure_path = figures_dir / "impact_overview.png"
     bom_figure_path = figures_dir / "bom_impact_paths.png"
@@ -75,7 +76,7 @@ def generate_report(
     core_trends_figure_path = figures_dir / "core_metric_trends.png"
     supplier_network_figure_path = figures_dir / "supplier_network_trends.png"
     material_network_figure_path = figures_dir / "material_network_trends.png"
-    dashboard_data_json = output_path / "dashboard_data.json"
+    frontend_manifest_csv = frontend_tables_dir / "manifest.csv"
     _clear_paths(
         [
             history_csv,
@@ -96,8 +97,7 @@ def generate_report(
             core_trends_figure_path,
             supplier_network_figure_path,
             material_network_figure_path,
-            dashboard_data_json,
-            summary_json,
+            frontend_manifest_csv,
         ]
     )
 
@@ -175,33 +175,17 @@ def generate_report(
             "core_metric_trends_figure": rendered_core_trends_path,
             "supplier_network_trends_figure": rendered_supplier_network_path,
             "material_network_trends_figure": rendered_material_network_path,
-            "dashboard_data_json": dashboard_data_json,
             "network_snapshot_paths": [str(path) for path in snapshot_paths],
         }
     )
-    dashboard_path = export_dashboard_data(
+    artifact_paths["frontend_tables_dir"] = str(frontend_tables_dir)
+    frontend_table_paths = export_dashboard_tables(
         result,
-        dashboard_data_json,
+        frontend_tables_dir,
         artifact_paths=artifact_paths,
         network_history=network_history,
     )
-    artifact_paths["dashboard_data_json"] = str(dashboard_path)
-    summary_json.write_text(
-        json.dumps(
-            {
-                "report_profile": profile,
-                "summary": result.summary,
-                "params": dict(params or {}),
-                "impacted_paths": result.impacted_paths,
-                "artifacts": artifact_paths,
-                "network_snapshot_paths": [str(path) for path in snapshot_paths],
-            },
-            ensure_ascii=False,
-            indent=2,
-            default=str,
-        ),
-        encoding="utf-8",
-    )
+    artifact_paths["frontend_manifest_csv"] = str(frontend_table_paths["manifest"])
     return ReportArtifacts(
         output_dir=output_path,
         tables_dir=tables_dir,
@@ -215,7 +199,6 @@ def generate_report(
         fusion_history_csv=rendered_fusion_history_csv,
         network_history_csv=network_history_csv,
         impacted_paths_csv=impacted_paths_csv,
-        summary_json=summary_json,
         figure_path=rendered_core_trends_path or core_trends_figure_path,
         impact_figure_path=rendered_impact_figure_path,
         bom_figure_path=rendered_bom_path,
@@ -225,7 +208,8 @@ def generate_report(
         core_trends_figure_path=rendered_core_trends_path,
         supplier_network_figure_path=rendered_supplier_network_path,
         material_network_figure_path=rendered_material_network_path,
-        dashboard_data_json=dashboard_path,
+        frontend_tables_dir=frontend_tables_dir,
+        frontend_manifest_csv=frontend_table_paths["manifest"],
         network_snapshot_dir=snapshot_dir if snapshot_paths else None,
         network_snapshot_paths=snapshot_paths,
     )
@@ -257,7 +241,6 @@ def generate_batch_report(
     paper_policy_effect_csv = paper_tables_dir / "policy_effect_table.csv"
     paper_policy_ranking_csv = paper_tables_dir / "policy_ranking_table.csv"
     paper_parameter_dimension_csv = paper_tables_dir / "parameter_dimension_table.csv"
-    summary_json = output_path / "summary.json"
     comparison_figure_path = figures_dir / "policy_comparison.png"
     scenario_figure_path = figures_dir / "scenario_comparison.png"
     timeline_comparison_figure_path = figures_dir / "timeline_comparison.png"
@@ -277,7 +260,6 @@ def generate_batch_report(
             paper_policy_effect_csv,
             paper_policy_ranking_csv,
             paper_parameter_dimension_csv,
-            summary_json,
             comparison_figure_path,
             scenario_figure_path,
             timeline_comparison_figure_path,
@@ -370,31 +352,9 @@ def generate_batch_report(
         }
     )
 
-    summary_json.write_text(
-        json.dumps(
-            {
-                "report_profile": profile,
-                "experiment_count": int(len(summary_df)),
-                "policy_profiles": sorted(enriched_summary["policy_profile"].dropna().unique().tolist())
-                if "policy_profile" in enriched_summary
-                else [],
-                "scenarios": sorted(enriched_summary["scenario_id"].dropna().unique().tolist())
-                if "scenario_id" in enriched_summary
-                else [],
-                "comparison_reference_rule": "lowest_policy_cost_per_scenario",
-                "artifacts": artifact_paths,
-            },
-            ensure_ascii=False,
-            indent=2,
-            default=str,
-        ),
-        encoding="utf-8",
-    )
-
     return BatchReportArtifacts(
         output_dir=output_path,
         summary_csv=summary_csv,
-        summary_json=summary_json,
         tables_dir=tables_dir,
         figures_dir=figures_dir,
         network_comparison_csv=network_comparison_csv,
@@ -593,7 +553,7 @@ def _build_paper_scenario_policy_table(summary_df: pd.DataFrame) -> pd.DataFrame
         "policy_cost_benefit_ratio_vs_reference",
         "average_service_level_gain_vs_reference",
         "ttr_improvement_days_vs_reference",
-        "dominant_root_cause_at_peak",
+        "dominant_root_cause_at_max_business_impact",
     ]
     table = summary_df[[column for column in columns if column in summary_df.columns]].copy()
     if not table.empty and {"scenario_id", "policy_profile"}.issubset(table.columns):
@@ -899,7 +859,7 @@ def _attach_policy_comparison_metrics(summary_df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _cleanup_legacy_report_files(output_path: Path) -> None:
-    for legacy_name in ["history.csv", "item_history.csv", "service_level.png", "dashboard_data.json"]:
+    for legacy_name in ["history.csv", "item_history.csv", "service_level.png"]:
         legacy_path = output_path / legacy_name
         if legacy_path.exists():
             legacy_path.unlink()
@@ -935,4 +895,12 @@ def _compact_artifact_paths(artifact_paths: dict[str, object]) -> dict[str, obje
 def _clear_paths(paths: list[Path]) -> None:
     for path in paths:
         if path.exists():
+            path.unlink()
+
+
+def _clear_directory(directory: Path) -> None:
+    if not directory.exists():
+        return
+    for path in directory.iterdir():
+        if path.is_file():
             path.unlink()

@@ -55,10 +55,28 @@ def _plot_service_panel(ax, history: pd.DataFrame, result: SimulationResult) -> 
 
 
 def _plot_disruption_panel(ax, history: pd.DataFrame, result: SimulationResult) -> None:
+    if "supply_degraded_items" in history:
+        ax.plot(history["date"], history["supply_degraded_items"], color="#F4A261", linewidth=1.8, label="原始供应降级物料")
+    if "supply_unavailable_items" in history:
+        ax.plot(history["date"], history["supply_unavailable_items"], color="#C8553D", linewidth=2, label="原始供应不可用物料")
+    if "supply_effective_degraded_items" in history:
+        ax.plot(
+            history["date"],
+            history["supply_effective_degraded_items"],
+            color="#9C6644",
+            linewidth=1.6,
+            label="最终有效降级物料",
+        )
     if "supply_effective_unavailable_items" in history:
-        ax.plot(history["date"], history["supply_effective_unavailable_items"], color="#C8553D", linewidth=2, label="供应不可用物料")
+        ax.plot(
+            history["date"],
+            history["supply_effective_unavailable_items"],
+            color="#8C1C13",
+            linewidth=1.8,
+            label="最终有效不可用物料",
+        )
     if "total_backlog_demand" in history:
-        ax.plot(history["date"], history["total_backlog_demand"], color="#F6BD60", linewidth=2, label="积压需求")
+        ax.plot(history["date"], history["total_backlog_demand"], color="#F6BD60", linewidth=2, label="累计积压需求")
     if "fused_failed_items" in history:
         ax.plot(history["date"], history["fused_failed_items"], color="#6A040F", linewidth=2, label="融合失败物料")
     ax.axvline(result.scenario.start_date.normalize(), color="#D9534F", linestyle="--", linewidth=1.2)
@@ -71,9 +89,9 @@ def _plot_policy_panel(ax, history: pd.DataFrame, result: SimulationResult) -> N
     if "policy_cumulative_cost" in history:
         ax.plot(history["date"], history["policy_cumulative_cost"], color="#7A4EAB", linewidth=2, label="累计策略成本")
     if "active_priority_repairs" in history:
-        ax.plot(history["date"], history["active_priority_repairs"], color="#2A6F97", linewidth=1.8, label="激活修复数")
+        ax.plot(history["date"], history["active_priority_repairs"], color="#2A6F97", linewidth=1.8, label="激活维修数")
     if "active_backup_switches" in history:
-        ax.plot(history["date"], history["active_backup_switches"], color="#5FA8D3", linewidth=1.8, label="激活备用切换数")
+        ax.plot(history["date"], history["active_backup_switches"], color="#5FA8D3", linewidth=1.8, label="激活备供切换数")
     if result.policy_events:
         event_dates = pd.to_datetime(pd.DataFrame(result.policy_events)["date"])
         event_levels = [history["policy_cumulative_cost"].max() * 0.05 if "policy_cumulative_cost" in history else 1] * len(event_dates)

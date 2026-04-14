@@ -16,7 +16,7 @@ class BayesianEngine:
         self.use_sampling = bool(use_sampling)
         self.rng = np.random.default_rng(int(random_seed))
 
-    def apply_disruption_occurrence(
+    def apply_supplier_network_propagation(
         self,
         *,
         current_date: pd.Timestamp,
@@ -33,96 +33,49 @@ class BayesianEngine:
             "degraded_supply_edges": dict(context.get("degraded_supply_edges", {})),
         }
         suppliers = model.standard_bundle.suppliers.set_index("supplier_id")
-        for supplier_id in list(patched["disrupted_suppliers"]):
-            if supplier_id not in suppliers.index:
-                continue
-            p = self.disruption_probability(suppliers.loc[supplier_id], scenario, current_date)
-            if self.use_sampling:
-                if not self.rng.binomial(1, p):
-                    patched["disrupted_suppliers"].discard(supplier_id)
-                    patched["degraded_suppliers"][supplier_id] = max(0.25, 1.0 - p)
-            else:
-                if p < 0.5:
-                    patched["disrupted_suppliers"].discard(supplier_id)
-                    patched["degraded_suppliers"][supplier_id] = max(0.25, 1.0 - p)
-        return patched
-
-    def apply_supplier_network_propagation(
-        self,
-        *,
-        context: dict,
-        state: SimState,
-        model: ModelBundle,
-    ) -> dict:
-        patched = {
-            "disrupted_suppliers": set(context.get("disrupted_suppliers", set())),
-            "degraded_suppliers": dict(context.get("degraded_suppliers", {})),
-            "material_shortages": set(context.get("material_shortages", set())),
-            "disrupted_supply_edges": set(context.get("disrupted_supply_edges", set())),
-            "degraded_supply_edges": dict(context.get("degraded_supply_edges", {})),
+        source_statuses = {
+            **{str(supplier_id): "disrupted" for supplier_id in patched["disrupted_suppliers"]},
+            **{str(supplier_id): "degraded" for supplier_id in patched["degraded_suppliers"]},
         }
-        supplier_edges = model.standard_bundle.supplier_edges
-        if supplier_edges.empty:
-            return patched
+        for supplier_id, status in state.supplier_status.items():
+            supplier_id = str(supplier_id)
+            if supplier_id in state.repair_active_suppliers:
+                continue
+            if supplier_id in source_statuses:
+                continue
+            if status in {"disrupted", "degraded"}:
+                source_statuses[supplier_id] = status
 
-        suppliers = model.standard_bundle.suppliers.set_index("supplier_id")
-        cfg = self.config.get("supplier_network_propagation", {})
-        degrade_threshold = float(cfg.get("degrade_threshold", 0.35))
-        disrupt_threshold = float(cfg.get("disrupt_threshold", 0.8))
-        min_capacity = float(cfg.get("min_capacity_factor", 0.25))
-
-        max_depth = max(len(supplier_edges), 1)
-        for _ in range(max_depth):
-            changed = False
-            current_disrupted = set(patched["disrupted_suppliers"])
-            current_degraded = dict(patched["degraded_suppliers"])
-            for row in supplier_edges.itertuples(index=False):
-                source_supplier_id = str(row.source_supplier_id)
-                target_supplier_id = str(row.target_supplier_id)
-                if source_supplier_id == target_supplier_id:
+        for source_id, source_status in list(source_statuses.items()):
+            if source_id in state.repair_active_suppliers:
+                continue
+            for target_id in sorted(model.supplier_graph.neighbors(source_id)):
+                if target_id == source_id or target_id in state.repair_active_suppliers:
                     continue
-                if source_supplier_id in current_disrupted:
-                    source_status = "disrupted"
-                elif source_supplier_id in current_degraded:
-                    source_status = "degraded"
-                else:
+                if target_id in patched["disrupted_suppliers"] or target_id in patched["degraded_suppliers"]:
                     continue
-                if target_supplier_id in patched["disrupted_suppliers"]:
+                if target_id not in suppliers.index:
                     continue
 
-                target_row = suppliers.loc[target_supplier_id] if target_supplier_id in suppliers.index else None
                 p = self.supplier_network_propagation_probability(
+                    supplier_row=suppliers.loc[target_id],
                     source_status=source_status,
-                    target_supplier_row=target_row,
+                    scenario=scenario,
+                    current_date=current_date,
                 )
-                if not self._propagation_occurs(p, threshold=degrade_threshold):
+                propagated = bool(self.rng.binomial(1, p)) if self.use_sampling else p >= self._degrade_threshold()
+                if not propagated:
                     continue
 
-                if source_status == "disrupted" and p >= disrupt_threshold:
-                    patched["degraded_suppliers"].pop(target_supplier_id, None)
-                    patched["disrupted_suppliers"].add(target_supplier_id)
-                    changed = True
+                if source_status == "disrupted" and p >= self._disrupt_threshold():
+                    patched["disrupted_suppliers"].add(target_id)
+                    patched["degraded_suppliers"].pop(target_id, None)
                 else:
-                    capacity_factor = max(min_capacity, 1.0 - p)
-                    previous = float(patched["degraded_suppliers"].get(target_supplier_id, 1.0))
-                    next_factor = min(previous, capacity_factor)
-                    if target_supplier_id not in patched["degraded_suppliers"] or next_factor < previous:
-                        patched["degraded_suppliers"][target_supplier_id] = next_factor
-                        changed = True
-            if not changed:
-                break
+                    patched["degraded_suppliers"][target_id] = max(
+                        self._propagated_degrade_floor(),
+                        1.0 - p,
+                    )
         return patched
-
-    def disruption_probability(self, supplier_row, scenario: ScenarioSpec, current_date: pd.Timestamp) -> float:
-        cfg = self.config.get("disruption", {})
-        p = float(cfg.get("prior", 0.15))
-        risk_level_factor = cfg.get("risk_level_factor", {})
-        p *= float(risk_level_factor.get(str(supplier_row.get("risk_level", "medium")), 1.0))
-        p *= 1 + float(cfg.get("incident_weight", 0.15)) * float(supplier_row.get("historical_incident_count", 0.0))
-        p *= 1 + float(cfg.get("severity_weight", 1.2)) * float(getattr(scenario, "severity", 1.0))
-        p *= 1 + float(cfg.get("compliance_penalty", 0.4)) * (1 - float(supplier_row.get("compliance_rate", 1.0)))
-        p *= 1 + float(cfg.get("qms_penalty", 0.25)) * (1 - float(supplier_row.get("qms_rate", 1.0)))
-        return self._clip_probability(p)
 
     def edge_propagation_probability(
         self,
@@ -182,8 +135,10 @@ class BayesianEngine:
     def supplier_network_propagation_probability(
         self,
         *,
+        supplier_row,
         source_status: str,
-        target_supplier_row,
+        scenario: ScenarioSpec,
+        current_date: pd.Timestamp,
     ) -> float:
         cfg = self.config.get("supplier_network_propagation", {})
         base = (
@@ -191,18 +146,22 @@ class BayesianEngine:
             if source_status == "disrupted"
             else float(cfg.get("degraded_base", 0.22))
         )
-        if target_supplier_row is not None:
-            resilience = (
-                float(target_supplier_row.get("compliance_rate", 1.0))
-                + float(target_supplier_row.get("qms_rate", 1.0))
-                + max(0.0, 1.0 - float(target_supplier_row.get("default_rate", 0.0)))
-            ) / 3.0
-            if resilience < 0.75:
-                base += float(cfg.get("low_resilience_bonus", 0.15))
-            if float(target_supplier_row.get("historical_incident_count", 0.0)) >= 2:
-                base += float(cfg.get("high_incident_bonus", 0.08))
-            if bool(target_supplier_row.get("is_key_node", False)):
-                base += float(cfg.get("key_supplier_bonus", 0.12))
+
+        severity = float(getattr(scenario, "severity", 1.0))
+        severity_multiplier = 0.75 + 0.5 * max(0.0, min(severity, 1.0))
+        base *= severity_multiplier
+
+        compliance_rate = float(supplier_row.get("compliance_rate", 1.0))
+        qms_rate = float(supplier_row.get("qms_rate", 1.0))
+        default_rate = float(supplier_row.get("default_rate", 0.0))
+        resilience = (compliance_rate + qms_rate + max(0.0, 1.0 - default_rate)) / 3.0
+        vulnerability = max(0.0, 1.0 - resilience)
+        base += vulnerability * float(cfg.get("resilience_penalty", 0.25))
+
+        if str(supplier_row.get("risk_level", "medium")) == "high":
+            base += float(cfg.get("high_risk_bonus", 0.10))
+        if bool(supplier_row.get("is_key_node", False)):
+            base += float(cfg.get("key_node_bonus", 0.10))
         return self._clip_probability(base)
 
     def _propagation_occurs(self, probability: float, *, threshold: float) -> bool:
@@ -210,6 +169,15 @@ class BayesianEngine:
         if self.use_sampling:
             return bool(self.rng.binomial(1, p))
         return p >= threshold
+
+    def _disrupt_threshold(self) -> float:
+        return float(self.config.get("supplier_network_propagation", {}).get("disrupt_threshold", 0.7))
+
+    def _degrade_threshold(self) -> float:
+        return float(self.config.get("supplier_network_propagation", {}).get("degrade_threshold", 0.35))
+
+    def _propagated_degrade_floor(self) -> float:
+        return float(self.config.get("supplier_network_propagation", {}).get("propagated_degrade_floor", 0.25))
 
     @staticmethod
     def _clip_probability(value: float) -> float:

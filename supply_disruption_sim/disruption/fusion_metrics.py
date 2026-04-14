@@ -72,7 +72,7 @@ def summarize_fusion_history(history: pd.DataFrame) -> dict:
         "max_fused_failed_items": int(history["fused_failed_items"].max()),
         "avg_system_service_level": round(float(history["system_service_level"].mean()), 4),
         "min_system_service_level": round(float(history["system_service_level"].min()), 4),
-        "dominant_root_cause_at_peak": str(
+        "dominant_root_cause_at_max_business_impact": str(
             history.loc[history["fused_failed_items"].idxmax(), "system_root_cause"]
         ),
     }

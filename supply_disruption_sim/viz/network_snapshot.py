@@ -14,6 +14,7 @@ import networkx as nx
 import pandas as pd
 
 from supply_disruption_sim.types import SimulationResult
+from supply_disruption_sim.viz.marker_selection import select_marker_dates
 from supply_disruption_sim.viz.graph_export import build_export_graph
 from supply_disruption_sim.viz.network_trend_plot import build_snapshot_summary
 from supply_disruption_sim.viz.plot_theme import finish_figure, font_props
@@ -27,20 +28,21 @@ from supply_disruption_sim.viz.state_colormap import (
 
 
 NODE_EDGE_COLOR = "#22313F"
-KEY_NODE_EDGE_COLOR = "#DB2777"
 EDGE_ALPHA = {
     "active": 0.72,
     "backup_active": 0.96,
-    "standby": 0.68,
+    "standby": 0.82,
     "substituted": 0.92,
     "disrupted": 0.95,
 }
 
-
-def _history_column(frame: pd.DataFrame, preferred: str, fallback: str) -> pd.Series:
-    if preferred in frame:
-        return pd.to_numeric(frame[preferred], errors="coerce").fillna(0)
-    return pd.to_numeric(frame.get(fallback, 0), errors="coerce").fillna(0)
+SNAPSHOT_TITLES = {
+    "t0": "冲击前基线网络快照",
+    "t_start": "首次可见冲击网络快照",
+    "t_supply_peak": "原始供应冲击峰值网络快照",
+    "t_policy_start": "恢复策略开始执行网络快照",
+    "t_recovery": "业务恢复网络快照",
+}
 
 
 def export_network_snapshots(result: SimulationResult, output_dir: str | Path) -> list[Path]:
@@ -59,7 +61,7 @@ def export_network_snapshots(result: SimulationResult, output_dir: str | Path) -
             positions=positions,
             snapshot=snapshot,
             figure_path=figure_path,
-            title=f"{label.upper()} 网络快照",
+            title=SNAPSHOT_TITLES.get(label, f"{label.upper()} 网络快照"),
         )
         rendered_paths.append(figure_path)
     return rendered_paths
@@ -72,61 +74,28 @@ def select_snapshot_points(result: SimulationResult) -> dict[str, dict]:
     }
     history = result.history.copy()
     history["date_str"] = pd.to_datetime(history["date"]).dt.date.astype(str)
-    t0 = history.iloc[0]["date_str"]
-    t_start = str(result.scenario.start_date.normalize().date())
-    peak_history = history.copy()
-    peak_history["_system_loss"] = 1.0 - pd.to_numeric(
-        peak_history.get("system_service_level", 1.0), errors="coerce"
-    ).fillna(1.0)
-    peak_history["_demand_loss"] = 1.0 - pd.to_numeric(
-        peak_history.get("demand_fulfillment_rate", 1.0), errors="coerce"
-    ).fillna(1.0)
-    peak_history["_product_impact"] = (
-        pd.to_numeric(peak_history.get("supply_affected_products", 0), errors="coerce").fillna(0)
-        + pd.to_numeric(peak_history.get("supply_failed_products", 0), errors="coerce").fillna(0)
+    initial_snapshot = getattr(result, "initial_snapshot", None)
+    initial_date = (
+        pd.Timestamp(initial_snapshot["date"]).normalize()
+        if initial_snapshot is not None
+        else None
     )
-    peak_history["_supply_impact"] = (
-        _history_column(peak_history, "supply_effective_degraded_items", "supply_degraded_items")
-        + _history_column(peak_history, "supply_effective_unavailable_items", "supply_unavailable_items")
+    marker_dates = select_marker_dates(
+        history,
+        result.scenario.start_date.normalize(),
+        initial_date=initial_date,
     )
-    peak_row = peak_history.sort_values(
-        by=[
-            "_system_loss",
-            "_demand_loss",
-            "_product_impact",
-            "_supply_impact",
-            "fused_failed_items",
-            "fused_affected_items",
-            "date",
-        ],
-        ascending=[False, False, False, False, False, False, True],
-    ).iloc[0]
-    t_peak = peak_row["date_str"]
-    peak_date = pd.Timestamp(peak_row["date"]).normalize()
-    history_after_peak = history.loc[history["date"] >= peak_date].copy()
-    if float(peak_row["_system_loss"]) > 0 or float(peak_row["_demand_loss"]) > 0 or float(peak_row["_product_impact"]) > 0:
-        recovery_candidates = history_after_peak.loc[
-            (pd.to_numeric(history_after_peak.get("system_service_level", 0.0), errors="coerce").fillna(0.0) >= 0.999)
-            & (pd.to_numeric(history_after_peak.get("demand_fulfillment_rate", 0.0), errors="coerce").fillna(0.0) >= 0.999)
-            & (pd.to_numeric(history_after_peak.get("supply_affected_products", 0.0), errors="coerce").fillna(0.0) <= 0.0)
-        ]
-    else:
-        recovery_candidates = history_after_peak.loc[
-            (pd.to_numeric(history_after_peak.get("disrupted_suppliers", 0.0), errors="coerce").fillna(0.0) <= 0.0)
-            & (pd.to_numeric(history_after_peak.get("degraded_suppliers", 0.0), errors="coerce").fillna(0.0) <= 0.0)
-            & (_history_column(history_after_peak, "supply_effective_degraded_items", "supply_degraded_items") <= 0.0)
-            & (pd.to_numeric(history_after_peak.get("supply_affected_products", 0.0), errors="coerce").fillna(0.0) <= 0.0)
-        ]
-    t_recovery = (
-        recovery_candidates.iloc[0]["date_str"]
-        if not recovery_candidates.empty
-        else history.iloc[-1]["date_str"]
-    )
+    fallback_snapshot = snapshots_by_date.get(history.iloc[0]["date_str"])
     ordered = {
-        "t0": snapshots_by_date.get(t0),
-        "t_start": snapshots_by_date.get(t_start, snapshots_by_date.get(t0)),
-        "t_peak": snapshots_by_date.get(t_peak, snapshots_by_date.get(t0)),
-        "t_recovery": snapshots_by_date.get(t_recovery, snapshots_by_date.get(t_peak, snapshots_by_date.get(t0))),
+        "t0": (
+            initial_snapshot
+            if initial_snapshot is not None and str(pd.Timestamp(initial_snapshot["date"]).date()) == marker_dates.get("t0")
+            else snapshots_by_date.get(marker_dates.get("t0", ""), fallback_snapshot)
+        ),
+        "t_start": snapshots_by_date.get(marker_dates.get("t_start", ""), fallback_snapshot),
+        "t_supply_peak": snapshots_by_date.get(marker_dates.get("t_supply_peak", ""), fallback_snapshot),
+        "t_policy_start": snapshots_by_date.get(marker_dates.get("t_policy_start", ""), fallback_snapshot),
+        "t_recovery": snapshots_by_date.get(marker_dates.get("t_recovery", ""), fallback_snapshot),
     }
     return {label: snapshot for label, snapshot in ordered.items() if snapshot is not None}
 
@@ -209,7 +178,7 @@ def render_network_snapshot(
                     _node_size(node_key=node_key, node_type=node_type, snapshot=snapshot) * 1.24
                     for node_key in key_node_keys
                 ],
-                edgecolors=KEY_NODE_EDGE_COLOR,
+                edgecolors="#F59E0B",
                 linewidths=3.8,
                 alpha=1.0,
                 ax=ax,
@@ -236,11 +205,10 @@ def _draw_header(*, fig, title: str, snapshot: dict, summary: dict[str, int]) ->
         0.045,
         0.948,
         (
-            f"供应商中断 {summary['supplier_disrupted_nodes']}，降级 {summary['supplier_degraded_nodes']} ｜ "
-            f"物料受影响 {summary['material_affected_nodes']}，阻断 {summary['material_blocked_nodes']} ｜ "
-            f"装配受影响 {summary['assembly_affected_nodes']} ｜ "
-            f"产品受影响 {summary['product_affected_nodes']} ｜ "
-            f"中断边：{summary['supply_edge_disrupted'] + summary['bom_edge_disrupted']}"
+            f"供应商中断数：{summary['supplier_disrupted_nodes']} ｜ "
+            f"物料受影响数：{summary['material_affected_nodes']} ｜ "
+            f"BOM 中断边数：{summary['bom_edge_disrupted']} ｜ "
+            f"备用供应边激活数：{summary['supply_edge_backup_active']}"
         ),
         ha="left",
         va="top",
@@ -260,7 +228,7 @@ def _draw_structure_notes(*, fig) -> None:
     fig.text(0.205, 0.865, "上游：BOM 网络（从左到右）", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
     fig.text(0.02, 0.54, "中部：物料-供应商映射关系", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
     fig.text(0.02, 0.17, "下部：供应商网络", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
-    fig.text(0.84, 0.23, "供应关系映射按表显示当前/备用来源", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
+    fig.text(0.84, 0.23, "供应关系映射仅显示到零件/原材料", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
 
 
 def _draw_all_labels(*, ax, graph: nx.DiGraph, positions: dict[str, tuple[float, float]], snapshot: dict) -> None:
@@ -290,16 +258,15 @@ def _draw_all_labels(*, ax, graph: nx.DiGraph, positions: dict[str, tuple[float,
 def _draw_legends(*, node_legend_ax, status_legend_ax) -> None:
     node_type_handles = [
         Line2D([0], [0], marker="o", color="w", label="供应商", markerfacecolor="#7F8C8D", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.5, markersize=16),
-        Line2D([0], [0], marker="s", color="w", label="物料", markerfacecolor="#7F8C8D", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.5, markersize=16),
+        Line2D([0], [0], marker="s", color="w", label="物料/零件", markerfacecolor="#7F8C8D", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.5, markersize=16),
         Line2D([0], [0], marker="D", color="w", label="装配件", markerfacecolor="#7F8C8D", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.5, markersize=16),
         Line2D([0], [0], marker="^", color="w", label="产品", markerfacecolor="#7F8C8D", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.5, markersize=16),
-        Line2D([0], [0], marker="o", color="w", label="关键节点", markerfacecolor="none", markeredgecolor=KEY_NODE_EDGE_COLOR, markeredgewidth=3.8, markersize=18),
     ]
     state_handles = [
         Line2D([0], [0], marker="o", color="w", label="可用", markerfacecolor="#2E8B57", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.4, markersize=16),
         Line2D([0], [0], marker="o", color="w", label="降级/受影响", markerfacecolor="#F0AD4E", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.4, markersize=16),
         Line2D([0], [0], marker="o", color="w", label="中断/阻断", markerfacecolor="#D9534F", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.4, markersize=16),
-        Line2D([0], [0], color="#9AA9BA", lw=3.0, linestyle="dashed", label="备用/待命边"),
+        Line2D([0], [0], color="#64748B", lw=3.0, linestyle="dashed", label="备用/待命边"),
         Line2D([0], [0], color="#4A90E2", lw=3.2, label="备用已激活"),
         Line2D([0], [0], color="#8E44AD", lw=3.0, linestyle="dashdot", label="已替代"),
         Line2D([0], [0], color="#D9534F", lw=3.0, linestyle="dotted", label="中断边"),

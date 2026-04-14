@@ -1,0 +1,73 @@
+# 场景模板配置。
+# `main.py` 或其他入口会按名称读取这里的场景定义。
+
+scenarios:
+  - scenario_id: default_single_supplier_disruption
+    scenario_type: single_supplier_disruption
+    target_type: supplier
+    # AUTO_PRIMARY_SUPPLIER_ON_FINAL_PATH 会在运行时自动解析为
+    # 终产品关键路径上、适合观察策略效果的默认供应商。
+    target_id: AUTO_PRIMARY_SUPPLIER_ON_FINAL_PATH
+    start_date: 2025-06-15
+    duration_days: 21
+    severity: 1.0
+    description: Default disruption on the primary supplier located on the final product path.
+  - scenario_id: mild_single_supplier_disruption
+    scenario_type: single_supplier_disruption
+    target_type: supplier
+    target_id: AUTO_PRIMARY_SUPPLIER_ON_FINAL_PATH
+    start_date: 2025-06-15
+    duration_days: 10
+    severity: 0.6
+    description: A shorter and milder disruption for quick experiments.
+  - scenario_id: default_region_disruption
+    scenario_type: region_disruption
+    target_type: region
+    target_id: AUTO_REGION_OF_DEFAULT_SUPPLIER
+    start_date: 2025-06-15
+    duration_days: 18
+    severity: 1.0
+    description: Region-wide disruption around the default critical-path supplier.
+  - scenario_id: default_material_shortage
+    scenario_type: material_shortage
+    target_type: material
+    target_id: AUTO_CRITICAL_PATH_ITEM
+    start_date: 2025-06-15
+    duration_days: 14
+    severity: 1.0
+    description: Direct shortage on a critical-path material with high downstream impact.
+  - scenario_id: default_multi_supplier_disruption
+    scenario_type: multi_supplier_disruption
+    target_type: supplier_group
+    target_id: AUTO_FINAL_PATH_SUPPLIERS
+    start_date: 2025-06-15
+    duration_days: 18
+    severity: 1.0
+    description: Simultaneous disruption on multiple primary suppliers along the final-product path.
+  - scenario_id: default_supply_edge_disruption
+    scenario_type: supply_edge_disruption
+    target_type: supply_edge
+    target_id: AUTO_DEFAULT_SUPPLY_EDGE
+    start_date: 2025-06-15
+    duration_days: 16
+    severity: 1.0
+    description: Disruption on a specific supplier-item supply edge while the rest of the supplier remains available.
+  - scenario_id: default_progressive_supplier_disruption
+    scenario_type: progressive_supplier_disruption
+    target_type: supplier
+    target_id: AUTO_PRIMARY_SUPPLIER_ON_FINAL_PATH
+    start_date: 2025-06-15
+    duration_days: 12
+    severity: 1.0
+    description: Progressive supplier disruption with degrade, stop-supply, and partial recovery phases.
+    extra:
+      phases:
+        - phase_type: degraded
+          duration_days: 3
+          capacity_factor: 0.55
+        - phase_type: disrupted
+          duration_days: 5
+        - phase_type: recovering
+          duration_days: 4
+          start_capacity_factor: 0.35
+          end_capacity_factor: 0.85

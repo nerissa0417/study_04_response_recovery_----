@@ -53,7 +53,7 @@ def apply_plot_defaults() -> None:
             "axes.edgecolor": THEME["spine"],
             "axes.labelcolor": THEME["muted"],
             "axes.titlecolor": THEME["text"],
-            "axes.titlesize": 12,
+            "axes.titlesize": 14,
             "axes.titleweight": "semibold",
             "xtick.color": THEME["muted"],
             "ytick.color": THEME["muted"],
@@ -101,7 +101,7 @@ def style_axes(
     ax.spines["bottom"].set_color(THEME["spine"])
     ax.tick_params(colors=THEME["muted"], labelsize=10.5)
     if title:
-        ax.set_title(title, loc="left", pad=12, fontproperties=font_props(size=12.8, weight="semibold"))
+        ax.set_title(title, loc="left", pad=12, fontproperties=font_props(size=14.5, weight="semibold"))
     if ylabel:
         ax.set_ylabel(ylabel, fontproperties=font_props(size=10.8))
     if xlabel:
@@ -128,7 +128,7 @@ def add_figure_header(fig, title: str, subtitle: str | None = None) -> None:
         y=title_y,
         ha="left",
         color=THEME["text"],
-        fontproperties=font_props(size=18, weight="bold"),
+        fontproperties=font_props(size=21, weight="bold"),
         linespacing=1.08,
     )
     if subtitle_text:
@@ -140,7 +140,7 @@ def add_figure_header(fig, title: str, subtitle: str | None = None) -> None:
             ha="left",
             va="top",
             color=THEME["muted"],
-            fontproperties=font_props(size=11.2),
+            fontproperties=font_props(size=12.4),
             linespacing=1.12,
         )
         header_bottom = subtitle_y - subtitle_line_step * len(subtitle_lines)

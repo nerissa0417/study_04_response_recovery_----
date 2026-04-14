@@ -23,8 +23,6 @@ class StandardBundle:
     part_alternatives: pd.DataFrame
     incident_events: pd.DataFrame
     supplier_materials: pd.DataFrame = field(default_factory=pd.DataFrame)
-    supplier_input_materials: pd.DataFrame = field(default_factory=pd.DataFrame)
-    supplier_purchased_materials: pd.DataFrame = field(default_factory=pd.DataFrame)
     supplier_production_plan: pd.DataFrame = field(default_factory=pd.DataFrame)
     supplier_licensed_supply: pd.DataFrame = field(default_factory=pd.DataFrame)
     supplier_potential_supply: pd.DataFrame = field(default_factory=pd.DataFrame)
@@ -45,8 +43,6 @@ class StandardBundle:
         }
         optional_tables = {
             "supplier_materials": self.supplier_materials,
-            "supplier_input_materials": self.supplier_input_materials,
-            "supplier_purchased_materials": self.supplier_purchased_materials,
             "supplier_production_plan": self.supplier_production_plan,
             "supplier_licensed_supply": self.supplier_licensed_supply,
             "supplier_potential_supply": self.supplier_potential_supply,
@@ -163,6 +159,7 @@ class SimulationResult:
     summary: dict[str, Any]
     impacted_paths: list[dict[str, Any]]
     model_bundle: ModelBundle | None = None
+    initial_snapshot: dict[str, Any] | None = None
     network_snapshots: list[dict[str, Any]] = field(default_factory=list)
     policy_events: list[dict[str, Any]] = field(default_factory=list)
 
@@ -172,14 +169,12 @@ class ReportArtifacts:
     output_dir: Path
     history_csv: Path
     policy_events_csv: Path
-    summary_json: Path
     figure_path: Path
     item_history_csv: Path | None = None
     bom_figure_path: Path | None = None
     timeline_figure_path: Path | None = None
     monthly_disrupted_nodes_figure_path: Path | None = None
     propagation_duration_figure_path: Path | None = None
-    dashboard_data_json: Path | None = None
     tables_dir: Path | None = None
     figures_dir: Path | None = None
     summary_csv: Path | None = None
@@ -192,6 +187,8 @@ class ReportArtifacts:
     core_trends_figure_path: Path | None = None
     supplier_network_figure_path: Path | None = None
     material_network_figure_path: Path | None = None
+    frontend_tables_dir: Path | None = None
+    frontend_manifest_csv: Path | None = None
     network_snapshot_dir: Path | None = None
     network_snapshot_paths: list[Path] = field(default_factory=list)
 
@@ -200,7 +197,6 @@ class ReportArtifacts:
 class BatchReportArtifacts:
     output_dir: Path
     summary_csv: Path
-    summary_json: Path
     tables_dir: Path | None = None
     figures_dir: Path | None = None
     network_comparison_csv: Path | None = None

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import random
 from pathlib import Path
 from typing import Any
@@ -96,39 +95,17 @@ def run_monte_carlo_experiments(
 
     samples_csv = tables_dir / "monte_carlo_samples.csv"
     robustness_csv = tables_dir / "robustness_summary.csv"
-    summary_json = output_path / "summary.json"
     robustness_figure = figures_dir / "robustness_comparison.png"
 
     samples_df.to_csv(samples_csv, index=False)
     robustness_df.to_csv(robustness_csv, index=False)
     _plot_robustness_comparison(robustness_df, robustness_figure)
-
-    summary_json.write_text(
-        json.dumps(
-            {
-                "trial_count": int(trials),
-                "scenario_names": scenarios,
-                "policy_profiles": selected_profiles,
-                "artifacts": {
-                    "samples_csv": str(samples_csv),
-                    "robustness_csv": str(robustness_csv),
-                    "robustness_figure": str(robustness_figure),
-                },
-            },
-            ensure_ascii=False,
-            indent=2,
-            default=str,
-        ),
-        encoding="utf-8",
-    )
-
     return {
         "output_dir": str(output_path),
         "standardized_paths": context["standardized_paths"],
         "validation_report": context["validation_report"],
         "samples_csv": str(samples_csv),
         "robustness_csv": str(robustness_csv),
-        "summary_json": str(summary_json),
         "robustness_figure": str(robustness_figure),
     }
 

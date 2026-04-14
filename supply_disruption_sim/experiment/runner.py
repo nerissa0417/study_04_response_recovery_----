@@ -263,7 +263,6 @@ def _serialize_artifacts(artifacts: ReportArtifacts) -> dict[str, Any]:
         "fusion_history_csv": str(artifacts.fusion_history_csv) if artifacts.fusion_history_csv else None,
         "network_history_csv": str(artifacts.network_history_csv) if artifacts.network_history_csv else None,
         "impacted_paths_csv": str(artifacts.impacted_paths_csv) if artifacts.impacted_paths_csv else None,
-        "summary_json": str(artifacts.summary_json),
         "figure_path": str(artifacts.figure_path),
         "impact_figure_path": str(artifacts.impact_figure_path) if artifacts.impact_figure_path else None,
         "bom_figure_path": str(artifacts.bom_figure_path) if artifacts.bom_figure_path else None,
@@ -285,7 +284,6 @@ def _serialize_artifacts(artifacts: ReportArtifacts) -> dict[str, Any]:
         "material_network_figure_path": (
             str(artifacts.material_network_figure_path) if artifacts.material_network_figure_path else None
         ),
-        "dashboard_data_json": str(artifacts.dashboard_data_json) if artifacts.dashboard_data_json else None,
         "network_snapshot_dir": str(artifacts.network_snapshot_dir) if artifacts.network_snapshot_dir else None,
         "network_snapshot_paths": [str(path) for path in artifacts.network_snapshot_paths],
     }

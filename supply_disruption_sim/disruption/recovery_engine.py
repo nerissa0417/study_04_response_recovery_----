@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import copy
 
+import pandas as pd
+
 from supply_disruption_sim.disruption.demand_propagation import propagate_demand
 from supply_disruption_sim.disruption.fusion_engine import fuse_supply_and_demand
 from supply_disruption_sim.disruption.metrics import (
@@ -12,7 +14,6 @@ from supply_disruption_sim.disruption.metrics import (
 from supply_disruption_sim.disruption.propagation_engine import (
     compute_item_supply_statuses,
     propagate_bom_statuses,
-    reflect_supplier_statuses_from_items,
     update_supplier_statuses,
 )
 from supply_disruption_sim.disruption.scenario_injector import inject_scenario_for_day
@@ -38,6 +39,14 @@ def run_simulation(
     history_records: list[dict] = []
     item_records: list[dict] = []
     network_snapshots: list[dict] = []
+    initial_snapshot = None
+    if params.track_network_state:
+        baseline_date = scenario.start_date.normalize() - pd.Timedelta(days=1)
+        initial_snapshot = {
+            "date": baseline_date,
+            "node_state": copy.deepcopy(state.node_state),
+            "edge_state": copy.deepcopy(state.edge_state),
+        }
     bayes = None
     if params.bayesian_enabled or params.mode == "bayesian":
         bayes = BayesianEngine(
@@ -48,14 +57,16 @@ def run_simulation(
 
     for current_date in state.timeline:
         context = inject_scenario_for_day(current_date=current_date, scenario=scenario, model=model)
-        policy_manager.apply_pre(current_date=current_date, state=state, model=model, context=context)
-        context = override_context_with_repairs(context=context, state=state)
         if bayes is not None:
             context = bayes.apply_supplier_network_propagation(
-                context=context,
+                current_date=current_date,
                 state=state,
                 model=model,
+                context=context,
+                scenario=scenario,
             )
+        policy_manager.apply_pre(current_date=current_date, state=state, model=model, context=context)
+        context = override_context_with_repairs(context=context, state=state)
         supplier_capacity_factors = update_supplier_statuses(state=state, context=context, model=model)
         compute_item_supply_statuses(
             current_date=current_date,
@@ -79,10 +90,8 @@ def run_simulation(
             bayes_engine=bayes,
         )
         propagate_bom_statuses(state=state, model=model)
-        propagate_demand(current_date=current_date, state=state, model=model, bayes_engine=None)
+        propagate_demand(current_date=current_date, state=state, model=model)
         fuse_supply_and_demand(state=state, model=model)
-        reflect_supplier_statuses_from_items(state=state, model=model)
-
         history_records.append(build_daily_record(current_date=current_date, state=state, model=model))
         if params.record_item_history:
             item_records.extend(build_item_records(current_date=current_date, state=state, model=model))
@@ -103,4 +112,5 @@ def run_simulation(
         policy_events=copy.deepcopy(state.policy_event_log),
     )
     result.network_snapshots = network_snapshots
+    result.initial_snapshot = initial_snapshot
     return result

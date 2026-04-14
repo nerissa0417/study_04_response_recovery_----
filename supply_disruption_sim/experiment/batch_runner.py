@@ -62,7 +62,6 @@ def run_batch_experiments(
                 "scenario_id": payload["scenario_id"],
                 "policy_profile": policy_profile,
                 "run_output_dir": payload["output_dir"],
-                "summary_json": payload["artifacts"]["summary_json"],
                 "history_csv": payload["artifacts"]["history_csv"],
                 "network_history_csv": payload["artifacts"]["network_history_csv"],
                 "figure_path": payload["artifacts"]["figure_path"],
@@ -79,7 +78,6 @@ def run_batch_experiments(
         "standardized_paths": context["standardized_paths"],
         "validation_report": context["validation_report"],
         "summary_csv": str(batch_artifacts.summary_csv),
-        "summary_json": str(batch_artifacts.summary_json),
         "policy_summary_csv": (
             str(batch_artifacts.policy_summary_csv) if batch_artifacts.policy_summary_csv else None
         ),

@@ -19,6 +19,7 @@ env/
 # Generated simulation outputs
 output/
 *.log
+*.output/
 
 # Local notebooks and temporary files
 .ipynb_checkpoints/
@@ -31,3 +32,6 @@ output/
 .vscode/
 .DS_Store
 Thumbs.db
+
+_zip_compare_src/
+_new_study04_recovery/Input_data/
