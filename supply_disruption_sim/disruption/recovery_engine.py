@@ -47,13 +47,11 @@ def run_simulation(
             "node_state": copy.deepcopy(state.node_state),
             "edge_state": copy.deepcopy(state.edge_state),
         }
-    bayes = None
-    if params.bayesian_enabled or params.mode == "bayesian":
-        bayes = BayesianEngine(
-            config=params.bayesian_config,
-            use_sampling=params.bayesian_use_sampling,
-            random_seed=params.bayesian_random_seed,
-        )
+    bayes = BayesianEngine(
+        config=params.bayesian_config,
+        use_sampling=params.bayesian_use_sampling,
+        random_seed=params.bayesian_random_seed,
+    )
 
     for current_date in state.timeline:
         context = inject_scenario_for_day(current_date=current_date, scenario=scenario, model=model)

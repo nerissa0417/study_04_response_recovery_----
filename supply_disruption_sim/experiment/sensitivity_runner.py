@@ -211,9 +211,11 @@ def _apply_param_overrides(params: SimulationParams, params_overrides: dict[str,
             if not hasattr(params, key):
                 raise KeyError(f"Unknown simulation parameter override: {key}")
             setattr(params, key, value)
+    params.mode = "bayesian"
+    params.bayesian_enabled = True
     params.bayesian_config = dict(params.bayesian_config or {})
-    params.bayesian_config["mode"] = str(params.mode)
-    params.bayesian_config["enabled"] = bool(params.bayesian_enabled)
+    params.bayesian_config["mode"] = "bayesian"
+    params.bayesian_config["enabled"] = True
     params.bayesian_config["use_sampling"] = bool(params.bayesian_use_sampling)
     params.bayesian_config["random_seed"] = int(params.bayesian_random_seed)
 

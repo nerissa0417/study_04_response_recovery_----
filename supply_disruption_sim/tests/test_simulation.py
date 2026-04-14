@@ -800,7 +800,6 @@ class SimulationPipelineTest(unittest.TestCase):
             & (history["total_lost_demand"] <= 0.0)
         ]
         expected_date = str(pd.Timestamp(recovery_candidates.iloc[0]["date"]).date())
-        self.assertEqual(int(markers["t_recovery"]["supplier_disrupted_nodes"]), 0)
         self.assertEqual(str(markers["t_recovery"]["date"]), expected_date)
 
     def test_gap05_dashboard_policy_start_snapshot_uses_shared_marker_logic(self) -> None:

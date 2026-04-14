@@ -9,10 +9,9 @@ simulation:
   scenario: default_single_supplier_disruption
   policy_profile: baseline
   report_profile: minimal
-  mode: deterministic
   bayesian_use_sampling: false
   bayesian_random_seed: 42
-  output_dir: output/run_default
+  output_dir: output/run_bayesian
 
 batch:
   enabled: false
@@ -27,7 +26,6 @@ batch:
     - only_substitution
     - only_priority_repair
   report_profile: minimal
-  mode: deterministic
   bayesian_use_sampling: false
   bayesian_random_seed: 42
   output_dir: output/batch_runs
@@ -44,7 +42,6 @@ sensitivity:
     - priority_repair_lead_days
     - incident_duration_factor
   random_seed: 42
-  mode: deterministic
   bayesian_use_sampling: false
   bayesian_random_seed: 42
   output_dir: output/sensitivity_runs
@@ -58,7 +55,6 @@ monte_carlo:
     - no_priority_repair
   trials: 20
   random_seed: 42
-  mode: deterministic
   bayesian_use_sampling: false
   bayesian_random_seed: 42
   output_dir: output/monte_carlo_runs

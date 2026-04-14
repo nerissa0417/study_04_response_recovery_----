@@ -136,8 +136,8 @@ class SimulationParams:
     priority_repair_max_parallel: int = 1
     priority_repair_rule: str = "supplier_impact"
     priority_repair_key_node_bonus_weight: float = 3.0
-    mode: str = "deterministic"
-    bayesian_enabled: bool = False
+    mode: str = "bayesian"
+    bayesian_enabled: bool = True
     bayesian_use_sampling: bool = False
     bayesian_random_seed: int = 42
     bayesian_config: dict[str, Any] = field(default_factory=dict)

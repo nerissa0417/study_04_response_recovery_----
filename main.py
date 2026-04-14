@@ -43,7 +43,6 @@ def main() -> None:
             output_dir=Path(simulation_cfg["output_dir"]),
             policy_profile=str(simulation_cfg.get("policy_profile", "baseline")),
             report_profile=str(simulation_cfg.get("report_profile", "minimal")),
-            mode=_optional_mode(simulation_cfg),
             bayesian_use_sampling=_optional_bool(simulation_cfg, "bayesian_use_sampling"),
             bayesian_random_seed=_optional_int(simulation_cfg, "bayesian_random_seed"),
             standardized_output_dir=standardized_output_dir,
@@ -58,7 +57,6 @@ def main() -> None:
             output_dir=Path(batch_cfg["output_dir"]),
             policy_profiles=list(batch_cfg.get("policy_profiles", [])) or None,
             report_profile=str(batch_cfg.get("report_profile", "minimal")),
-            mode=_optional_mode(batch_cfg),
             bayesian_use_sampling=_optional_bool(batch_cfg, "bayesian_use_sampling"),
             bayesian_random_seed=_optional_int(batch_cfg, "bayesian_random_seed"),
             standardized_output_dir=standardized_output_dir,
@@ -74,7 +72,6 @@ def main() -> None:
             policy_profile=str(sensitivity_cfg.get("policy_profile", "baseline")),
             parameters=list(sensitivity_cfg.get("parameters", [])) or None,
             random_seed=int(sensitivity_cfg.get("random_seed", 42)),
-            mode=_optional_mode(sensitivity_cfg),
             bayesian_use_sampling=_optional_bool(sensitivity_cfg, "bayesian_use_sampling"),
             bayesian_random_seed=_optional_int(sensitivity_cfg, "bayesian_random_seed"),
             standardized_output_dir=standardized_output_dir,
@@ -90,19 +87,12 @@ def main() -> None:
             policy_profiles=list(monte_carlo_cfg.get("policy_profiles", [])) or None,
             trials=int(monte_carlo_cfg.get("trials", 20)),
             random_seed=int(monte_carlo_cfg.get("random_seed", 42)),
-            mode=_optional_mode(monte_carlo_cfg),
             bayesian_use_sampling=_optional_bool(monte_carlo_cfg, "bayesian_use_sampling"),
             bayesian_random_seed=_optional_int(monte_carlo_cfg, "bayesian_random_seed"),
             standardized_output_dir=standardized_output_dir,
         )
         print("=== MONTE CARLO RESULT ===")
         print(json.dumps(monte_carlo_result, ensure_ascii=False, indent=2, default=str))
-
-
-def _optional_mode(section: dict) -> str | None:
-    value = section.get("mode")
-    return str(value).strip().lower() if value is not None else None
-
 
 def _optional_bool(section: dict, key: str) -> bool | None:
     return bool(section[key]) if key in section else None

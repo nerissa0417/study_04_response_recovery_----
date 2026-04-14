@@ -47,7 +47,7 @@ def generate_report(
     profile = _normalize_report_profile(report_profile)
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
-    _cleanup_legacy_report_files(output_path)
+    _cleanup_obsolete_report_files(output_path)
 
     tables_dir = output_path / "tables"
     figures_dir = output_path / "figures"
@@ -858,11 +858,11 @@ def _attach_policy_comparison_metrics(summary_df: pd.DataFrame) -> pd.DataFrame:
     return enriched
 
 
-def _cleanup_legacy_report_files(output_path: Path) -> None:
-    for legacy_name in ["history.csv", "item_history.csv", "service_level.png"]:
-        legacy_path = output_path / legacy_name
-        if legacy_path.exists():
-            legacy_path.unlink()
+def _cleanup_obsolete_report_files(output_path: Path) -> None:
+    for obsolete_name in ["history.csv", "item_history.csv", "service_level.png"]:
+        obsolete_path = output_path / obsolete_name
+        if obsolete_path.exists():
+            obsolete_path.unlink()
 
 
 def _normalize_report_profile(report_profile: str) -> str:

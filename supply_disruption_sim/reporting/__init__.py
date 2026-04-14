@@ -1,1 +1,1 @@
-"""Reporting utilities for exported CSV, JSON, and figures."""
+"""Reporting utilities for exported CSV tables and figures."""

@@ -15,9 +15,6 @@ from supply_disruption_sim.experiment.sensitivity_runner import (
 )
 
 
-MODE_CHOICES = ["deterministic", "bayesian"]
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Supply disruption simulation prototype")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -29,10 +26,9 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser = subparsers.add_parser("run", help="Run a disruption scenario")
     run_parser.add_argument("--input-dir", default="Input_data")
     run_parser.add_argument("--scenario", default="default_single_supplier_disruption")
-    run_parser.add_argument("--output-dir", default="output/run_default")
+    run_parser.add_argument("--output-dir", default="output/run_bayesian")
     run_parser.add_argument("--policy-profile", default="baseline")
     run_parser.add_argument("--report-profile", choices=["minimal", "full", "paper"], default="minimal")
-    run_parser.add_argument("--mode", choices=MODE_CHOICES, default=None)
     run_parser.add_argument("--bayesian-use-sampling", action=argparse.BooleanOptionalAction, default=None)
     run_parser.add_argument("--bayesian-random-seed", type=int, default=None)
     run_parser.add_argument("--standardized-output-dir", default=None)
@@ -58,7 +54,6 @@ def build_parser() -> argparse.ArgumentParser:
         ],
     )
     batch_parser.add_argument("--report-profile", choices=["minimal", "full", "paper"], default="minimal")
-    batch_parser.add_argument("--mode", choices=MODE_CHOICES, default=None)
     batch_parser.add_argument("--bayesian-use-sampling", action=argparse.BooleanOptionalAction, default=None)
     batch_parser.add_argument("--bayesian-random-seed", type=int, default=None)
     batch_parser.add_argument("--standardized-output-dir", default=None)
@@ -74,7 +69,6 @@ def build_parser() -> argparse.ArgumentParser:
         default=list(DEFAULT_SENSITIVITY_PARAMETER_GRID.keys()),
     )
     sensitivity_parser.add_argument("--random-seed", type=int, default=42)
-    sensitivity_parser.add_argument("--mode", choices=MODE_CHOICES, default=None)
     sensitivity_parser.add_argument("--bayesian-use-sampling", action=argparse.BooleanOptionalAction, default=None)
     sensitivity_parser.add_argument("--bayesian-random-seed", type=int, default=None)
     sensitivity_parser.add_argument("--standardized-output-dir", default=None)
@@ -94,7 +88,6 @@ def build_parser() -> argparse.ArgumentParser:
     )
     monte_carlo_parser.add_argument("--trials", type=int, default=20)
     monte_carlo_parser.add_argument("--random-seed", type=int, default=42)
-    monte_carlo_parser.add_argument("--mode", choices=MODE_CHOICES, default=None)
     monte_carlo_parser.add_argument("--bayesian-use-sampling", action=argparse.BooleanOptionalAction, default=None)
     monte_carlo_parser.add_argument("--bayesian-random-seed", type=int, default=None)
     monte_carlo_parser.add_argument("--standardized-output-dir", default=None)
@@ -115,7 +108,6 @@ def main() -> None:
             Path(args.output_dir),
             policy_profile=args.policy_profile,
             report_profile=args.report_profile,
-            mode=args.mode,
             bayesian_use_sampling=args.bayesian_use_sampling,
             bayesian_random_seed=args.bayesian_random_seed,
             standardized_output_dir=args.standardized_output_dir,
@@ -128,7 +120,6 @@ def main() -> None:
             Path(args.output_dir),
             policy_profiles=args.policy_profiles,
             report_profile=args.report_profile,
-            mode=args.mode,
             bayesian_use_sampling=args.bayesian_use_sampling,
             bayesian_random_seed=args.bayesian_random_seed,
             standardized_output_dir=args.standardized_output_dir,
@@ -142,7 +133,6 @@ def main() -> None:
             policy_profile=args.policy_profile,
             parameters=args.parameters,
             random_seed=args.random_seed,
-            mode=args.mode,
             bayesian_use_sampling=args.bayesian_use_sampling,
             bayesian_random_seed=args.bayesian_random_seed,
             standardized_output_dir=args.standardized_output_dir,
@@ -156,7 +146,6 @@ def main() -> None:
             policy_profiles=args.policy_profiles,
             trials=args.trials,
             random_seed=args.random_seed,
-            mode=args.mode,
             bayesian_use_sampling=args.bayesian_use_sampling,
             bayesian_random_seed=args.bayesian_random_seed,
             standardized_output_dir=args.standardized_output_dir,
@@ -197,7 +186,6 @@ def run_scenario(
     output_dir: Path,
     policy_profile: str = "baseline",
     report_profile: str = "minimal",
-    mode: str | None = None,
     bayesian_use_sampling: bool | None = None,
     bayesian_random_seed: int | None = None,
     standardized_output_dir: str | Path | None = None,
@@ -209,7 +197,6 @@ def run_scenario(
         policy_profile=policy_profile,
         report_profile=report_profile,
         params_overrides=_build_params_overrides(
-            mode=mode,
             bayesian_use_sampling=bayesian_use_sampling,
             bayesian_random_seed=bayesian_random_seed,
         ),
@@ -223,7 +210,6 @@ def run_batch(
     output_dir: Path,
     policy_profiles: list[str] | None = None,
     report_profile: str = "minimal",
-    mode: str | None = None,
     bayesian_use_sampling: bool | None = None,
     bayesian_random_seed: int | None = None,
     standardized_output_dir: str | Path | None = None,
@@ -235,7 +221,6 @@ def run_batch(
         policy_profiles=policy_profiles,
         report_profile=report_profile,
         params_overrides=_build_params_overrides(
-            mode=mode,
             bayesian_use_sampling=bayesian_use_sampling,
             bayesian_random_seed=bayesian_random_seed,
         ),
@@ -250,7 +235,6 @@ def run_sensitivity(
     policy_profile: str = "baseline",
     parameters: list[str] | None = None,
     random_seed: int = 42,
-    mode: str | None = None,
     bayesian_use_sampling: bool | None = None,
     bayesian_random_seed: int | None = None,
     standardized_output_dir: str | Path | None = None,
@@ -268,7 +252,6 @@ def run_sensitivity(
         parameter_grid=parameter_grid,
         random_seed=random_seed,
         params_overrides=_build_params_overrides(
-            mode=mode,
             bayesian_use_sampling=bayesian_use_sampling,
             bayesian_random_seed=bayesian_random_seed,
         ),
@@ -283,7 +266,6 @@ def run_monte_carlo(
     policy_profiles: list[str] | None = None,
     trials: int = 20,
     random_seed: int = 42,
-    mode: str | None = None,
     bayesian_use_sampling: bool | None = None,
     bayesian_random_seed: int | None = None,
     standardized_output_dir: str | Path | None = None,
@@ -296,7 +278,6 @@ def run_monte_carlo(
         trials=trials,
         random_seed=random_seed,
         params_overrides=_build_params_overrides(
-            mode=mode,
             bayesian_use_sampling=bayesian_use_sampling,
             bayesian_random_seed=bayesian_random_seed,
         ),
@@ -306,20 +287,13 @@ def run_monte_carlo(
 
 def _build_params_overrides(
     *,
-    mode: str | None,
     bayesian_use_sampling: bool | None,
     bayesian_random_seed: int | None,
 ) -> dict[str, Any] | None:
     overrides: dict[str, Any] = {}
-    if mode is not None:
-        normalized_mode = str(mode).strip().lower()
-        if normalized_mode not in MODE_CHOICES:
-            raise ValueError(f"Unsupported mode: {mode}")
-        overrides["mode"] = normalized_mode
-        overrides["bayesian_enabled"] = normalized_mode == "bayesian"
-        if normalized_mode != "bayesian":
-            overrides["bayesian_use_sampling"] = False
-    if bayesian_use_sampling is not None and overrides.get("mode", mode) != "deterministic":
+    overrides["mode"] = "bayesian"
+    overrides["bayesian_enabled"] = True
+    if bayesian_use_sampling is not None:
         overrides["bayesian_use_sampling"] = bool(bayesian_use_sampling)
     if bayesian_random_seed is not None:
         overrides["bayesian_random_seed"] = int(bayesian_random_seed)
@@ -347,7 +321,6 @@ if __name__ == "__main__":
                     Path(args.output_dir),
                     policy_profile=args.policy_profile,
                     report_profile=args.report_profile,
-                    mode=args.mode,
                     bayesian_use_sampling=args.bayesian_use_sampling,
                     bayesian_random_seed=args.bayesian_random_seed,
                     standardized_output_dir=args.standardized_output_dir,
@@ -366,7 +339,6 @@ if __name__ == "__main__":
                     Path(args.output_dir),
                     policy_profiles=args.policy_profiles,
                     report_profile=args.report_profile,
-                    mode=args.mode,
                     bayesian_use_sampling=args.bayesian_use_sampling,
                     bayesian_random_seed=args.bayesian_random_seed,
                     standardized_output_dir=args.standardized_output_dir,
@@ -386,7 +358,6 @@ if __name__ == "__main__":
                     policy_profile=args.policy_profile,
                     parameters=args.parameters,
                     random_seed=args.random_seed,
-                    mode=args.mode,
                     bayesian_use_sampling=args.bayesian_use_sampling,
                     bayesian_random_seed=args.bayesian_random_seed,
                     standardized_output_dir=args.standardized_output_dir,
@@ -406,7 +377,6 @@ if __name__ == "__main__":
                     policy_profiles=args.policy_profiles,
                     trials=args.trials,
                     random_seed=args.random_seed,
-                    mode=args.mode,
                     bayesian_use_sampling=args.bayesian_use_sampling,
                     bayesian_random_seed=args.bayesian_random_seed,
                     standardized_output_dir=args.standardized_output_dir,
