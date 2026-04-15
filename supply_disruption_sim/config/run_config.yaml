@@ -6,18 +6,18 @@ standardize:
 
 simulation:
   enabled: true
-  scenario: default_single_supplier_disruption
+  scenario: default_random_distributed_node_disruption
   policy_profile: baseline
   report_profile: minimal
   bayesian_use_sampling: false
   bayesian_random_seed: 42
-  output_dir: output/run_bayesian
+  output_dir: output/run_random_distributed
 
 batch:
   enabled: false
   scenarios:
-    - default_single_supplier_disruption
-    - default_region_disruption
+    - default_random_distributed_node_disruption
+    - default_keynode_distributed_disruption
   policy_profiles:
     - baseline
     - all_policies
@@ -32,7 +32,7 @@ batch:
 
 sensitivity:
   enabled: false
-  scenario: default_single_supplier_disruption
+  scenario: default_random_distributed_node_disruption
   policy_profile: baseline
   parameters:
     - single_source_ratio
@@ -49,7 +49,8 @@ sensitivity:
 monte_carlo:
   enabled: false
   scenarios:
-    - default_single_supplier_disruption
+    - default_random_distributed_node_disruption
+    - default_keynode_distributed_disruption
   policy_profiles:
     - baseline
     - no_priority_repair

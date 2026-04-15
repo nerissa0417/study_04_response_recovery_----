@@ -5,6 +5,8 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
+import pandas as pd
+
 from supply_disruption_sim.data_adapter.raw_loader import load_raw_bundle
 from supply_disruption_sim.data_adapter.standardizer import export_standard_bundle, standardize
 from supply_disruption_sim.data_adapter.validator import validate_standard_bundle
@@ -17,6 +19,7 @@ from supply_disruption_sim.disruption.scenario_loader import (
 from supply_disruption_sim.model.builder import build_model
 from supply_disruption_sim.reporting.report_generator import generate_report
 from supply_disruption_sim.types import ModelBundle, PolicySpec, ReportArtifacts, SimulationParams, SimulationResult
+from supply_disruption_sim.viz.network_trend_plot import build_network_history
 
 
 DEFAULT_POLICY_PROFILES: dict[str, dict[str, dict[str, Any]]] = {
@@ -50,6 +53,15 @@ DEFAULT_POLICY_PROFILES: dict[str, dict[str, dict[str, Any]]] = {
     "no_backup_switch": {"backup_supplier_switch": {"enabled": False}},
     "no_substitution": {"equivalent_material_substitution": {"enabled": False}},
 }
+
+DEFAULT_SINGLE_SCENARIO_COMPARISON_PROFILES = [
+    "baseline",
+    "all_policies",
+    "no_policy",
+    "only_backup_switch",
+    "only_substitution",
+    "only_priority_repair",
+]
 
 
 def prepare_experiment_context(
@@ -96,6 +108,7 @@ def run_experiment(
     custom_policy_profiles: dict[str, dict[str, dict[str, Any]]] | None = None,
     params_overrides: dict[str, Any] | None = None,
     standardized_output_dir: str | Path | None = None,
+    include_parameter_experiments: bool = False,
 ) -> dict[str, Any]:
     context = prepare_experiment_context(
         input_dir=input_dir,
@@ -110,6 +123,7 @@ def run_experiment(
         policy_overrides=policy_overrides,
         custom_policy_profiles=custom_policy_profiles,
         params_overrides=params_overrides,
+        include_parameter_experiments=include_parameter_experiments,
     )
     payload["validation_report"] = context["validation_report"]
     payload["standardized_paths"] = context["standardized_paths"]
@@ -125,6 +139,7 @@ def run_experiment_with_model(
     policy_overrides: dict[str, dict[str, Any]] | None = None,
     custom_policy_profiles: dict[str, dict[str, dict[str, Any]]] | None = None,
     params_overrides: dict[str, Any] | None = None,
+    include_parameter_experiments: bool = False,
 ) -> dict[str, Any]:
     scenario = load_scenario(scenario_name, model)
     params = _build_params(model=model, params_overrides=params_overrides)
@@ -134,7 +149,37 @@ def run_experiment_with_model(
         custom_policy_profiles=custom_policy_profiles,
     )
     result = run_simulation(model=model, scenario=scenario, policies=policies, params=params)
-    artifacts = generate_report(result, output_dir, report_profile=report_profile, params=asdict(params))
+    policy_comparison_summary, policy_comparison_time_series = _build_single_scenario_policy_comparison_outputs(
+        model=model,
+        scenario_name=scenario_name,
+        baseline_result=result,
+        baseline_policy_profile=policy_profile,
+        params=params,
+        custom_policy_profiles=custom_policy_profiles,
+    )
+    parameter_experiment_summary = None
+    parameter_sensitivity_ranking = None
+    if include_parameter_experiments:
+        from supply_disruption_sim.experiment.sensitivity_runner import build_parameter_experiment_outputs
+
+        parameter_experiment_summary, parameter_sensitivity_ranking = build_parameter_experiment_outputs(
+            base_model=model,
+            scenario_name=scenario_name,
+            baseline_result=result,
+            policy_profile=policy_profile,
+            params_overrides=params_overrides,
+            custom_policy_profiles=custom_policy_profiles,
+        )
+    artifacts = generate_report(
+        result,
+        output_dir,
+        report_profile=report_profile,
+        params=asdict(params),
+        policy_comparison_summary=policy_comparison_summary,
+        policy_comparison_time_series=policy_comparison_time_series,
+        parameter_experiment_summary=parameter_experiment_summary,
+        parameter_sensitivity_ranking=parameter_sensitivity_ranking,
+    )
     return _serialize_experiment_payload(
         scenario_name=scenario_name,
         policy_profile=policy_profile,
@@ -268,7 +313,26 @@ def _serialize_artifacts(artifacts: ReportArtifacts) -> dict[str, Any]:
         "figure_path": str(artifacts.figure_path),
         "impact_figure_path": str(artifacts.impact_figure_path) if artifacts.impact_figure_path else None,
         "bom_figure_path": str(artifacts.bom_figure_path) if artifacts.bom_figure_path else None,
+        "demand_figure_path": str(artifacts.demand_figure_path) if artifacts.demand_figure_path else None,
         "timeline_figure_path": str(artifacts.timeline_figure_path) if artifacts.timeline_figure_path else None,
+        "policy_comparison_summary_csv": (
+            str(artifacts.policy_comparison_summary_csv) if artifacts.policy_comparison_summary_csv else None
+        ),
+        "policy_comparison_time_series_csv": (
+            str(artifacts.policy_comparison_time_series_csv) if artifacts.policy_comparison_time_series_csv else None
+        ),
+        "policy_comparison_figure_path": (
+            str(artifacts.policy_comparison_figure_path) if artifacts.policy_comparison_figure_path else None
+        ),
+        "parameter_experiment_summary_csv": (
+            str(artifacts.parameter_experiment_summary_csv) if artifacts.parameter_experiment_summary_csv else None
+        ),
+        "parameter_sensitivity_ranking_csv": (
+            str(artifacts.parameter_sensitivity_ranking_csv) if artifacts.parameter_sensitivity_ranking_csv else None
+        ),
+        "parameter_sensitivity_figure_path": (
+            str(artifacts.parameter_sensitivity_figure_path) if artifacts.parameter_sensitivity_figure_path else None
+        ),
         "monthly_disrupted_nodes_figure_path": (
             str(artifacts.monthly_disrupted_nodes_figure_path)
             if artifacts.monthly_disrupted_nodes_figure_path
@@ -286,6 +350,146 @@ def _serialize_artifacts(artifacts: ReportArtifacts) -> dict[str, Any]:
         "material_network_figure_path": (
             str(artifacts.material_network_figure_path) if artifacts.material_network_figure_path else None
         ),
+        "frontend_tables_dir": str(artifacts.frontend_tables_dir) if artifacts.frontend_tables_dir else None,
+        "frontend_manifest_csv": str(artifacts.frontend_manifest_csv) if artifacts.frontend_manifest_csv else None,
         "network_snapshot_dir": str(artifacts.network_snapshot_dir) if artifacts.network_snapshot_dir else None,
         "network_snapshot_paths": [str(path) for path in artifacts.network_snapshot_paths],
     }
+
+
+def _build_single_scenario_policy_comparison_outputs(
+    *,
+    model: ModelBundle,
+    scenario_name: str,
+    baseline_result: SimulationResult,
+    baseline_policy_profile: str,
+    params: SimulationParams,
+    custom_policy_profiles: dict[str, dict[str, dict[str, Any]]] | None,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    ordered_profiles = list(DEFAULT_SINGLE_SCENARIO_COMPARISON_PROFILES)
+    if baseline_policy_profile not in ordered_profiles:
+        ordered_profiles.append(baseline_policy_profile)
+
+    records: list[dict[str, Any]] = []
+    comparison_frames: list[pd.DataFrame] = []
+    _append_policy_comparison_result(
+        result=baseline_result,
+        policy_profile=baseline_policy_profile,
+        summary_records=records,
+        time_series_frames=comparison_frames,
+    )
+    for comparison_profile in ordered_profiles:
+        if comparison_profile == baseline_policy_profile:
+            continue
+        comparison_scenario = load_scenario(scenario_name, model)
+        comparison_policies = build_policy_set(
+            policy_profile=comparison_profile,
+            custom_policy_profiles=custom_policy_profiles,
+        )
+        comparison_result = run_simulation(
+            model=model,
+            scenario=comparison_scenario,
+            policies=comparison_policies,
+            params=copy.deepcopy(params),
+        )
+        _append_policy_comparison_result(
+            result=comparison_result,
+            policy_profile=comparison_profile,
+            summary_records=records,
+            time_series_frames=comparison_frames,
+        )
+    summary_df = pd.DataFrame(records)
+    time_series_df = (
+        pd.concat(comparison_frames, ignore_index=True)
+        if comparison_frames
+        else pd.DataFrame(columns=_policy_comparison_time_series_columns())
+    )
+    return (
+        summary_df.sort_values(by=["scenario_id", "policy_profile"]).reset_index(drop=True),
+        time_series_df.sort_values(by=["policy_profile", "date", "day_offset"]).reset_index(drop=True),
+    )
+
+
+def _append_policy_comparison_result(
+    *,
+    result: SimulationResult,
+    policy_profile: str,
+    summary_records: list[dict[str, Any]],
+    time_series_frames: list[pd.DataFrame],
+) -> None:
+    summary_records.append(
+        {
+            "scenario_id": result.scenario.scenario_id,
+            "policy_profile": policy_profile,
+            **result.summary,
+        }
+    )
+    time_series_frames.append(
+        _build_policy_comparison_time_series_frame(
+            result=result,
+            policy_profile=policy_profile,
+        )
+    )
+
+
+def _build_policy_comparison_time_series_frame(
+    *,
+    result: SimulationResult,
+    policy_profile: str,
+) -> pd.DataFrame:
+    history = result.history.copy()
+    if history.empty:
+        return pd.DataFrame(columns=_policy_comparison_time_series_columns())
+
+    history["date"] = pd.to_datetime(history["date"])
+    network_history = build_network_history(result)
+    if not network_history.empty:
+        network_history["date"] = pd.to_datetime(network_history["date"])
+        frame = history.merge(network_history, on="date", how="left", suffixes=("", "_network"))
+    else:
+        frame = history.copy()
+
+    frame = frame.reset_index(drop=True)
+    frame["scenario_id"] = result.scenario.scenario_id
+    frame["policy_profile"] = str(policy_profile)
+    frame["day_offset"] = frame.index.astype(int)
+    for column in [
+        "supplier_disrupted_nodes",
+        "material_blocked_nodes",
+        "assembly_blocked_nodes",
+        "product_blocked_nodes",
+    ]:
+        if column not in frame.columns:
+            frame[column] = 0
+        frame[column] = pd.to_numeric(frame[column], errors="coerce").fillna(0).astype(int)
+    frame["downstream_interrupted_nodes"] = (
+        frame["material_blocked_nodes"] + frame["assembly_blocked_nodes"] + frame["product_blocked_nodes"]
+    )
+    frame["total_interrupted_nodes"] = frame["supplier_disrupted_nodes"] + frame["downstream_interrupted_nodes"]
+
+    missing_columns = [column for column in _policy_comparison_time_series_columns() if column not in frame.columns]
+    for column in missing_columns:
+        frame[column] = pd.NA
+    return frame[_policy_comparison_time_series_columns()].copy()
+
+
+def _policy_comparison_time_series_columns() -> list[str]:
+    return [
+        "scenario_id",
+        "policy_profile",
+        "date",
+        "day_offset",
+        "service_level",
+        "system_service_level",
+        "demand_fulfillment_rate",
+        "active_backup_switches",
+        "active_substitutions",
+        "active_priority_repairs",
+        "policy_cumulative_cost",
+        "supplier_disrupted_nodes",
+        "material_blocked_nodes",
+        "assembly_blocked_nodes",
+        "product_blocked_nodes",
+        "downstream_interrupted_nodes",
+        "total_interrupted_nodes",
+    ]

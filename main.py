@@ -67,7 +67,7 @@ def main() -> None:
     if sensitivity_cfg.get("enabled", False):
         sensitivity_result = run_sensitivity(
             input_dir=input_dir,
-            scenario_name=str(sensitivity_cfg.get("scenario", "default_single_supplier_disruption")),
+            scenario_name=str(sensitivity_cfg.get("scenario", "default_random_distributed_node_disruption")),
             output_dir=Path(sensitivity_cfg["output_dir"]),
             policy_profile=str(sensitivity_cfg.get("policy_profile", "baseline")),
             parameters=list(sensitivity_cfg.get("parameters", [])) or None,

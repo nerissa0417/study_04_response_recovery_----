@@ -18,9 +18,11 @@ import matplotlib.pyplot as plt
 from supply_disruption_sim.disruption.recovery_engine import run_simulation
 from supply_disruption_sim.disruption.scenario_loader import load_default_params, load_scenario
 from supply_disruption_sim.experiment.runner import build_policy_set, prepare_experiment_context
+from supply_disruption_sim.labels import parameter_dimension_label, parameter_label, policy_profile_label, scenario_label
 from supply_disruption_sim.model.builder import build_model
 from supply_disruption_sim.reporting.report_generator import generate_report
 from supply_disruption_sim.types import ModelBundle, PolicySpec, ScenarioSpec, SimulationParams, StandardBundle
+from supply_disruption_sim.viz.plot_theme import add_figure_header, finish_figure, font_props, style_axes
 
 
 DEFAULT_SENSITIVITY_PARAMETER_GRID: dict[str, list[float | int]] = {
@@ -38,6 +40,13 @@ DEFAULT_SENSITIVITY_METRICS = [
     "estimated_disruption_loss",
     "policy_total_cost",
 ]
+
+FORMAL_PARAMETER_EXPERIMENT_GRID: dict[str, list[float | int]] = {
+    "backup_coverage": [0.0, 0.5, 1.0],
+    "substitution_availability": [0.0, 0.5, 1.0],
+    "backup_switch_time_days": [3, 7, 14],
+    "priority_repair_lead_days": [2, 5, 8],
+}
 
 
 def run_sensitivity_analysis(
@@ -115,6 +124,61 @@ def run_sensitivity_analysis(
     }
 
 
+def build_parameter_experiment_outputs(
+    *,
+    base_model: ModelBundle,
+    scenario_name: str,
+    baseline_result,
+    policy_profile: str = "baseline",
+    parameter_grid: dict[str, list[float | int]] | None = None,
+    random_seed: int = 42,
+    params_overrides: dict[str, Any] | None = None,
+    custom_policy_profiles: dict[str, dict[str, dict[str, Any]]] | None = None,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    grid = parameter_grid or dict(FORMAL_PARAMETER_EXPERIMENT_GRID)
+    baseline_record = _build_parameter_experiment_record(
+        result=baseline_result,
+        policy_profile=policy_profile,
+        parameter_name="baseline",
+        parameter_value=pd.NA,
+        applied_parameter_value=pd.NA,
+    )
+    records = [baseline_record]
+
+    for parameter_name, values in grid.items():
+        for index, value in enumerate(values):
+            variant_model, scenario, params, policies, applied_parameters = prepare_variant_inputs(
+                base_model=base_model,
+                scenario_name=scenario_name,
+                policy_profile=policy_profile,
+                parameter_values={parameter_name: value},
+                random_seed=random_seed + index,
+                params_overrides=params_overrides,
+                custom_policy_profiles=custom_policy_profiles,
+            )
+            result = run_simulation(
+                model=variant_model,
+                scenario=scenario,
+                policies=policies,
+                params=params,
+            )
+            records.append(
+                _build_parameter_experiment_record(
+                    result=result,
+                    policy_profile=policy_profile,
+                    parameter_name=parameter_name,
+                    parameter_value=value,
+                    applied_parameter_value=applied_parameters.get(parameter_name, value),
+                )
+            )
+
+    runs_df = pd.DataFrame(records)
+    parameter_response_df = _build_parameter_response(runs_df)
+    ranking_df = _rank_sensitivity(parameter_response_df, baseline_record)
+    summary_df = _build_parameter_experiment_summary(runs_df, baseline_record)
+    return summary_df, ranking_df
+
+
 def _run_parameter_variant(
     *,
     base_model: ModelBundle,
@@ -165,6 +229,7 @@ def prepare_variant_inputs(
     parameter_values: dict[str, float | int],
     random_seed: int = 42,
     params_overrides: dict[str, Any] | None = None,
+    custom_policy_profiles: dict[str, dict[str, dict[str, Any]]] | None = None,
 ) -> tuple[ModelBundle, ScenarioSpec, SimulationParams, list[PolicySpec], dict[str, float | int]]:
     bundle = copy.deepcopy(base_model.standard_bundle)
     applied_parameters: dict[str, float | int] = {}
@@ -174,7 +239,10 @@ def prepare_variant_inputs(
     scenario = load_scenario(scenario_name, variant_model)
     params = load_default_params(variant_model)
     _apply_param_overrides(params, params_overrides)
-    policies = build_policy_set(policy_profile=policy_profile)
+    policies = build_policy_set(
+        policy_profile=policy_profile,
+        custom_policy_profiles=custom_policy_profiles,
+    )
 
     if "incident_duration_factor" in parameter_values:
         duration_factor = max(float(parameter_values["incident_duration_factor"]), 0.1)
@@ -528,6 +596,143 @@ def _measure_backup_coverage(bundle: StandardBundle) -> float:
     return backup_items / item_count
 
 
+def _build_parameter_experiment_record(
+    *,
+    result,
+    policy_profile: str,
+    parameter_name: str,
+    parameter_value: float | int | Any,
+    applied_parameter_value: float | int | Any,
+) -> dict[str, Any]:
+    return {
+        "scenario_id": result.scenario.scenario_id,
+        "scenario_name": scenario_label(result.scenario.scenario_id),
+        "policy_profile": policy_profile,
+        "policy_profile_name": policy_profile_label(policy_profile),
+        "parameter_name": parameter_name,
+        "parameter_label": parameter_label(parameter_name),
+        "dimension_label": parameter_dimension_label(parameter_name),
+        "parameter_value": parameter_value,
+        "applied_parameter_value": applied_parameter_value,
+        **result.summary,
+    }
+
+
+def _build_parameter_experiment_summary(
+    runs_df: pd.DataFrame,
+    baseline_row: dict[str, Any],
+) -> pd.DataFrame:
+    if runs_df.empty:
+        return pd.DataFrame(
+            columns=[
+                "scenario_id",
+                "scenario_name",
+                "policy_profile",
+                "policy_profile_name",
+                "dimension_label",
+                "parameter_name",
+                "parameter_label",
+                "parameter_value",
+                "applied_parameter_value",
+                "parameter_value_label",
+                "ttr_days",
+                "failed_days",
+                "affected_days",
+                "avg_system_service_level",
+                "estimated_disruption_loss",
+                "policy_total_cost",
+                "ttr_change_days",
+                "avg_system_service_level_change",
+                "estimated_disruption_loss_change",
+                "policy_total_cost_change",
+            ]
+        )
+
+    working = runs_df.loc[runs_df["parameter_name"] != "baseline"].copy()
+    if working.empty:
+        return pd.DataFrame()
+
+    baseline_ttr = pd.to_numeric(pd.Series([baseline_row.get("ttr_days")]), errors="coerce").iloc[0]
+    baseline_system_service = pd.to_numeric(pd.Series([baseline_row.get("avg_system_service_level")]), errors="coerce").iloc[0]
+    baseline_loss = pd.to_numeric(pd.Series([baseline_row.get("estimated_disruption_loss")]), errors="coerce").iloc[0]
+    baseline_cost = pd.to_numeric(pd.Series([baseline_row.get("policy_total_cost")]), errors="coerce").iloc[0]
+
+    numeric_columns = [
+        "parameter_value",
+        "applied_parameter_value",
+        "ttr_days",
+        "failed_days",
+        "affected_days",
+        "avg_system_service_level",
+        "estimated_disruption_loss",
+        "policy_total_cost",
+    ]
+    for column in numeric_columns:
+        if column in working.columns:
+            working[column] = pd.to_numeric(working[column], errors="coerce")
+
+    working["parameter_value_label"] = working.apply(
+        lambda row: _format_parameter_value(
+            parameter_name=str(row["parameter_name"]),
+            parameter_value=row["applied_parameter_value"]
+            if pd.notna(row["applied_parameter_value"])
+            else row["parameter_value"],
+        ),
+        axis=1,
+    )
+    working["ttr_change_days"] = (working["ttr_days"] - baseline_ttr).round(4)
+    working["avg_system_service_level_change"] = (working["avg_system_service_level"] - baseline_system_service).round(4)
+    working["estimated_disruption_loss_change"] = (working["estimated_disruption_loss"] - baseline_loss).round(4)
+    working["policy_total_cost_change"] = (working["policy_total_cost"] - baseline_cost).round(4)
+    dimension_order = {
+        "节点能力": 0,
+        "协同平台支撑能力": 1,
+        "场景扰动强度": 2,
+    }
+    parameter_order = {name: index for index, name in enumerate(FORMAL_PARAMETER_EXPERIMENT_GRID)}
+    working["dimension_order"] = working["dimension_label"].map(dimension_order).fillna(99)
+    working["parameter_order"] = working["parameter_name"].map(parameter_order).fillna(99)
+    working = working.sort_values(
+        by=["dimension_order", "parameter_order", "parameter_value"],
+        ascending=[True, True, True],
+    )
+    return working[
+        [
+            "scenario_id",
+            "scenario_name",
+            "policy_profile",
+            "policy_profile_name",
+            "dimension_label",
+            "parameter_name",
+            "parameter_label",
+            "parameter_value",
+            "applied_parameter_value",
+            "parameter_value_label",
+            "ttr_days",
+            "failed_days",
+            "affected_days",
+            "avg_system_service_level",
+            "estimated_disruption_loss",
+            "policy_total_cost",
+            "ttr_change_days",
+            "avg_system_service_level_change",
+            "estimated_disruption_loss_change",
+            "policy_total_cost_change",
+        ]
+    ].reset_index(drop=True)
+
+
+def _format_parameter_value(*, parameter_name: str, parameter_value: Any) -> str:
+    if pd.isna(parameter_value):
+        return "基准值"
+    numeric_value = pd.to_numeric(pd.Series([parameter_value]), errors="coerce").iloc[0]
+    if pd.isna(numeric_value):
+        return str(parameter_value)
+    if str(parameter_name) in {"backup_switch_time_days", "priority_repair_lead_days"}:
+        return f"{int(round(float(numeric_value)))}天"
+    return f"{float(numeric_value):.2f}"
+
+
 def _build_parameter_response(runs_df: pd.DataFrame) -> pd.DataFrame:
     if runs_df.empty:
         return pd.DataFrame()
@@ -576,19 +781,47 @@ def _rank_sensitivity(parameter_response_df: pd.DataFrame, baseline_row: dict[st
 def _plot_sensitivity_ranking(sensitivity_ranking_df: pd.DataFrame, figure_path: Path) -> None:
     if sensitivity_ranking_df.empty:
         return
-    fig, ax = plt.subplots(figsize=(9, 4.5))
-    ax.barh(
-        sensitivity_ranking_df["parameter_name"],
-        sensitivity_ranking_df["sensitivity_score"],
-        color="#C8553D",
+    working = sensitivity_ranking_df.copy()
+    working["parameter_label"] = working["parameter_name"].map(parameter_label)
+    fig, ax = plt.subplots(figsize=(10.2, 4.8))
+    fig.patch.set_facecolor("#FFFFFF")
+    fig.suptitle(
+        "参数敏感度排序",
+        x=0.08,
+        y=0.98,
+        ha="left",
+        color="#12263A",
+        fontproperties=font_props(size=19, weight="bold"),
     )
-    ax.set_title("参数敏感度排序")
-    ax.set_xlabel("综合敏感度分数")
-    ax.grid(axis="x", alpha=0.25)
+    fig.text(
+        0.08,
+        0.90,
+        "比较不同能力参数对恢复结果的综合影响强弱",
+        ha="left",
+        va="top",
+        color="#5B6B7A",
+        fontproperties=font_props(size=12.2),
+    )
+    fig.subplots_adjust(left=0.22, right=0.95, bottom=0.14, top=0.78)
+    ax.barh(
+        working["parameter_label"],
+        working["sensitivity_score"],
+        color="#2563EB",
+        alpha=0.92,
+    )
+    style_axes(ax, xlabel="综合敏感度得分", ylabel="参数维度", grid_axis="x")
     ax.invert_yaxis()
-    fig.tight_layout()
-    fig.savefig(figure_path, dpi=160)
-    plt.close(fig)
+    for index, value in enumerate(pd.to_numeric(working["sensitivity_score"], errors="coerce").fillna(0.0)):
+        ax.text(
+            float(value) + 0.01,
+            index,
+            f"{float(value):.3f}",
+            va="center",
+            ha="left",
+            color="#12263A",
+            fontproperties=font_props(size=9.4),
+        )
+    finish_figure(fig, figure_path, top=0.93, tight=False)
 
 
 def _slugify(value: str) -> str:

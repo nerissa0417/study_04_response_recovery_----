@@ -11,6 +11,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from supply_disruption_sim.labels import policy_profile_label, scenario_label, scenario_policy_run_label
 from supply_disruption_sim.types import SimulationResult
 from supply_disruption_sim.viz.marker_selection import select_marker_dates
 from supply_disruption_sim.viz.plot_theme import (
@@ -24,6 +25,8 @@ from supply_disruption_sim.viz.plot_theme import (
     format_date_axis,
     integer_ticks,
     legend_style,
+    policy_profile_color_map,
+    policy_profile_linestyle_map,
     qualitative_color_map,
     style_axes,
 )
@@ -82,6 +85,19 @@ NETWORK_COMPARISON_COLUMNS = [
     "product_blocked_nodes",
     "bom_edge_disrupted",
     "alternative_edge_substituted",
+]
+
+POLICY_COMPARISON_TREND_COLUMNS = [
+    "scenario_id",
+    "policy_profile",
+    "date",
+    "day_offset",
+    "supplier_disrupted_nodes",
+    "material_blocked_nodes",
+    "assembly_blocked_nodes",
+    "product_blocked_nodes",
+    "downstream_interrupted_nodes",
+    "total_interrupted_nodes",
 ]
 def build_network_history(result: SimulationResult) -> pd.DataFrame:
     base_dates = pd.to_datetime(result.history.get("date", pd.Series(dtype="datetime64[ns]")))
@@ -207,7 +223,7 @@ def export_core_metric_trends(result: SimulationResult, figure_path: str | Path)
                 "ylabel": "影响规模",
                 "series": [
                     ("supply_unavailable_items", "供应不可用物料", "#C44536"),
-                    ("total_backlog_demand", "累计积压需求", "#E9A03B"),
+                    ("total_backlog_demand", "积压需求总量", "#E9A03B"),
                     ("fused_failed_items", "融合失败物料", "#7F1D1D"),
                 ],
             },
@@ -232,6 +248,57 @@ def export_core_metric_trends(result: SimulationResult, figure_path: str | Path)
                     ("backup_supplier_switch_cumulative_cost", "备用切换累计成本", "#2A9D8F"),
                     ("equivalent_material_substitution_cumulative_cost", "替代料累计成本", "#E76F51"),
                     ("priority_repair_cumulative_cost", "优先修复累计成本", "#264653"),
+                ],
+            },
+        ],
+    )
+
+
+def export_demand_propagation_trends(
+    result: SimulationResult,
+    figure_path: str | Path,
+) -> Path | None:
+    history = result.history.copy()
+    if history.empty:
+        return None
+    history["date"] = pd.to_datetime(history["date"])
+    return export_panel_trend_figure(
+        history=history,
+        figure_path=figure_path,
+        title="需求传播趋势",
+        scenario_start=result.scenario.start_date.normalize(),
+        panels=[
+            {
+                "title": "需求请求与兑现",
+                "ylabel": "需求量",
+                "series": [
+                    ("total_requested_demand", "总请求需求", "#577590"),
+                    ("total_fulfilled_demand", "已满足需求", "#2A9D8F"),
+                ],
+            },
+            {
+                "title": "未满足需求总量",
+                "ylabel": "需求量",
+                "series": [
+                    ("total_backlog_demand", "积压需求总量", "#E9A03B"),
+                    ("total_lost_demand", "损失需求总量", "#C44536"),
+                ],
+            },
+            {
+                "title": "需求后果节点数",
+                "ylabel": "节点数",
+                "series": [
+                    ("demand_backlog_items", "积压物料数", "#D4A72C"),
+                    ("demand_lost_items", "损失物料数", "#8C1C13"),
+                    ("demand_backlog_products", "积压产品数", "#43AA8B"),
+                    ("demand_lost_products", "损失产品数", "#6A040F"),
+                ],
+            },
+            {
+                "title": "需求满足率",
+                "ylabel": "满足率",
+                "series": [
+                    ("demand_fulfillment_rate", "需求满足率", "#5B6CFA"),
                 ],
             },
         ],
@@ -323,10 +390,10 @@ def export_material_network_trends(
                 ],
             },
             {
-                "title": "BOM 与替代边变化",
+                "title": "物料清单与替代边变化",
                 "ylabel": "边数",
                 "series": [
-                    ("bom_edge_disrupted", "BOM 中断边", "#6A040F"),
+                    ("bom_edge_disrupted", "物料清单中断边", "#6A040F"),
                     ("alternative_edge_substituted", "替代边已启用", "#6D597A"),
                 ],
             },
@@ -365,7 +432,7 @@ def export_panel_trend_figure(
     subtitle = f"自动聚焦扰动影响窗口 | 场景开始：{pd.Timestamp(scenario_start).date()}"
     add_figure_header(fig, title, subtitle)
     plot_top = max(0.67, min(0.82, float(getattr(fig, "_codex_header_layout_top", 0.85)) - 0.02))
-    fig.subplots_adjust(left=0.09, right=0.82, bottom=0.085, top=plot_top, hspace=0.36)
+    fig.subplots_adjust(left=0.09, right=0.75, bottom=0.085, top=plot_top, hspace=0.36)
 
     for ax, panel in zip(axes, panels):
         _plot_lines(
@@ -380,6 +447,129 @@ def export_panel_trend_figure(
         if focus_window is not None:
             ax.set_xlim(focus_window)
         format_date_axis(ax)
+
+    axes[-1].set_xlabel("日期", fontproperties=font_props())
+    return finish_figure(fig, figure_path, top=0.93, tight=False)
+
+
+def export_policy_comparison_trends(
+    comparison_frame: pd.DataFrame,
+    figure_path: str | Path,
+    *,
+    scenario_start: pd.Timestamp | None = None,
+) -> Path | None:
+    if comparison_frame.empty:
+        return None
+
+    frame = comparison_frame.copy()
+    for column in POLICY_COMPARISON_TREND_COLUMNS:
+        if column not in frame.columns:
+            frame[column] = pd.NA
+    frame["date"] = pd.to_datetime(frame["date"])
+    numeric_columns = [
+        "supplier_disrupted_nodes",
+        "material_blocked_nodes",
+        "assembly_blocked_nodes",
+        "product_blocked_nodes",
+        "downstream_interrupted_nodes",
+        "total_interrupted_nodes",
+    ]
+    for column in numeric_columns:
+        frame[column] = pd.to_numeric(frame[column], errors="coerce").fillna(0)
+    if frame["downstream_interrupted_nodes"].eq(0).all():
+        frame["downstream_interrupted_nodes"] = (
+            frame["material_blocked_nodes"] + frame["assembly_blocked_nodes"] + frame["product_blocked_nodes"]
+        )
+    if frame["total_interrupted_nodes"].eq(0).all():
+        frame["total_interrupted_nodes"] = frame["supplier_disrupted_nodes"] + frame["downstream_interrupted_nodes"]
+
+    ordered_profiles = [
+        "baseline",
+        "all_policies",
+        "no_policy",
+        "only_backup_switch",
+        "only_substitution",
+        "only_priority_repair",
+        "no_priority_repair",
+        "no_backup_switch",
+        "no_substitution",
+    ]
+    observed_profiles = frame["policy_profile"].dropna().astype(str).unique().tolist()
+    profile_order = ordered_profiles + [profile for profile in observed_profiles if profile not in ordered_profiles]
+    frame["policy_profile"] = pd.Categorical(frame["policy_profile"].astype(str), categories=profile_order, ordered=True)
+    frame = frame.sort_values(["policy_profile", "date", "day_offset"]).reset_index(drop=True)
+
+    scenario_ids = frame["scenario_id"].dropna().astype(str).unique().tolist()
+    scenario_name = scenario_label(scenario_ids[0]) if scenario_ids else "当前情境"
+    overlap_note = _build_overlapping_profile_note(frame)
+    focus_window = compute_time_focus_window(
+        frame,
+        value_columns=["total_interrupted_nodes", "supplier_disrupted_nodes", "downstream_interrupted_nodes"],
+        scenario_start=scenario_start,
+    )
+
+    fig, axes = plt.subplots(3, 1, figsize=(14.6, 10.6), sharex=True)
+    subtitle = f"{scenario_name}：固定同一中断情境，对比不同恢复策略下中断节点的演化轨迹"
+    if overlap_note:
+        subtitle = f"{subtitle}；{overlap_note}"
+    add_figure_header(
+        fig,
+        "不同恢复策略下中断节点数对比",
+        subtitle,
+    )
+    plot_top = max(0.68, min(0.83, float(getattr(fig, "_codex_header_layout_top", 0.86)) - 0.02))
+    fig.subplots_adjust(left=0.09, right=0.74, bottom=0.09, top=plot_top, hspace=0.34)
+
+    panel_specs = [
+        ("total_interrupted_nodes", "全链中断节点总数", "节点数"),
+        ("supplier_disrupted_nodes", "供应商中断节点数", "节点数"),
+        ("downstream_interrupted_nodes", "物料/装配/产品阻断节点数", "节点数"),
+    ]
+    color_map = policy_profile_color_map(profile_order)
+    linestyle_map = policy_profile_linestyle_map(profile_order)
+    legend_handles = []
+    legend_labels = []
+
+    for ax, (metric, title, ylabel) in zip(axes, panel_specs):
+        for policy_profile, group in frame.groupby("policy_profile", dropna=False, sort=False, observed=True):
+            if pd.isna(policy_profile):
+                continue
+            working = group.sort_values(["date", "day_offset"])
+            profile_key = str(policy_profile)
+            color = color_map.get(profile_key, "#334155")
+            line, = ax.plot(
+                working["date"],
+                pd.to_numeric(working[metric], errors="coerce").fillna(0),
+                linewidth=2.6,
+                label=policy_profile_label(profile_key),
+                color=color,
+                alpha=0.96,
+                linestyle=linestyle_map.get(profile_key, "-"),
+            )
+            if metric == "total_interrupted_nodes":
+                legend_handles.append(line)
+                legend_labels.append(policy_profile_label(profile_key))
+        style_axes(ax, title=title, ylabel=ylabel, grid_axis="y")
+        integer_ticks(ax)
+        if focus_window is not None:
+            ax.set_xlim(focus_window)
+        if scenario_start is not None:
+            add_scenario_marker(ax, pd.Timestamp(scenario_start), label="冲击开始")
+        format_date_axis(ax)
+
+    if legend_handles:
+        fig.legend(
+            legend_handles,
+            legend_labels,
+            loc="center left",
+            bbox_to_anchor=(0.765, 0.5),
+            frameon=True,
+            fancybox=True,
+            framealpha=0.95,
+            edgecolor="#CBD5E1",
+            facecolor="#FFFFFF",
+            prop=font_props(size=10.0),
+        )
 
     axes[-1].set_xlabel("日期", fontproperties=font_props())
     return finish_figure(fig, figure_path, top=0.93, tight=False)
@@ -409,7 +599,10 @@ def build_network_comparison_frame(summary_df: pd.DataFrame) -> pd.DataFrame:
         comparison = comparison.reset_index(drop=True)
         comparison["scenario_id"] = str(getattr(row, "scenario_id"))
         comparison["policy_profile"] = str(getattr(row, "policy_profile"))
-        comparison["run_label"] = f"{getattr(row, 'scenario_id')} | {getattr(row, 'policy_profile')}"
+        comparison["run_label"] = scenario_policy_run_label(
+            str(getattr(row, "scenario_id")),
+            str(getattr(row, "policy_profile")),
+        )
         comparison["day_offset"] = comparison.index.astype(int)
         records.extend(
             comparison[[column for column in NETWORK_COMPARISON_COLUMNS if column in comparison.columns]]
@@ -432,7 +625,7 @@ def export_timeline_comparison_figure(network_comparison: pd.DataFrame, figure_p
         metrics=[
             ("service_level", "产品服务水平"),
             ("system_service_level", "系统服务水平"),
-            ("total_backlog_demand", "总积压需求"),
+            ("total_backlog_demand", "积压需求总量"),
         ],
         title="批量时间轴对比",
     )
@@ -464,7 +657,7 @@ def export_material_network_comparison_figure(
         metrics=[
             ("material_affected_nodes", "受影响物料"),
             ("material_blocked_nodes", "阻断物料"),
-            ("bom_edge_disrupted", "BOM 中断边"),
+            ("bom_edge_disrupted", "物料清单中断边"),
         ],
         title="批量物料网络对比",
     )
@@ -509,7 +702,7 @@ def _export_batch_comparison_figure(
                     working["day_offset"],
                     values,
                     linewidth=2.4,
-                    label=str(policy_profile),
+                    label=policy_profile_label(str(policy_profile)),
                     color=color_map.get(str(policy_profile)),
                     alpha=0.95,
                 )
@@ -520,12 +713,12 @@ def _export_batch_comparison_figure(
                             ax,
                             int(working.loc[last_index, "day_offset"]),
                             float(values.loc[last_index]),
-                            str(policy_profile),
+                            policy_profile_label(str(policy_profile)),
                             color=color_map.get(str(policy_profile), "#334155"),
                         )
             style_axes(
                 ax,
-                title=f"{scenario_id} | {metric_title}",
+                title=f"{scenario_label(scenario_id)} | {metric_title}",
                 xlabel="相对天数",
                 ylabel=metric_title,
                 grid_axis="y",
@@ -591,7 +784,7 @@ def _plot_lines(
             rate_like = False
         drawn = True
     style_axes(ax, title=title, ylabel=ylabel, grid_axis="y")
-    ax.margins(x=0.02, y=0.14)
+    ax.margins(x=0.045, y=0.14)
     if drawn and rate_like and visible_columns:
         ax.set_ylim(-0.03, 1.05)
     if drawn and _is_integer_panel(frame, visible_columns):
@@ -614,7 +807,7 @@ def _plot_lines(
         legend_style(
             ax,
             loc="upper left",
-            bbox_to_anchor=(1.01, 1.0),
+            bbox_to_anchor=(1.10, 1.0),
             fontsize=9.6 if len(visible_columns) >= 5 else 10.2,
         )
 
@@ -690,7 +883,43 @@ def _normalize_edge_token(value: Any) -> str:
 
 def _build_profile_colors(frame: pd.DataFrame) -> dict[str, Any]:
     profiles = frame["policy_profile"].dropna().astype(str).unique().tolist()
-    return qualitative_color_map(profiles)
+    return policy_profile_color_map(profiles)
+
+
+def _build_overlapping_profile_note(frame: pd.DataFrame) -> str | None:
+    if frame.empty or "policy_profile" not in frame.columns:
+        return None
+
+    signatures: dict[tuple[tuple[str, float], ...], list[str]] = {}
+    for policy_profile, group in frame.groupby("policy_profile", dropna=False, sort=False, observed=True):
+        if pd.isna(policy_profile):
+            continue
+        working = group.sort_values(["date", "day_offset"])
+        signature = tuple(
+            (
+                str(pd.Timestamp(date_value).date()),
+                round(float(value), 6),
+            )
+            for date_value, value in zip(
+                working["date"],
+                pd.to_numeric(working["total_interrupted_nodes"], errors="coerce").fillna(0.0),
+            )
+        )
+        signatures.setdefault(signature, []).append(str(policy_profile))
+
+    overlapping_groups = [
+        profiles
+        for profiles in signatures.values()
+        if len(profiles) > 1
+    ]
+    if not overlapping_groups:
+        return None
+
+    rendered_groups = [
+        "与".join(policy_profile_label(profile) for profile in profiles)
+        for profiles in overlapping_groups
+    ]
+    return f"{'；'.join(rendered_groups)}轨迹重合"
 
 
 def _looks_like_rate_column(column: str, values: pd.Series) -> bool:

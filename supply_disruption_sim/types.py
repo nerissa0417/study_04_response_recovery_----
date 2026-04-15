@@ -172,7 +172,14 @@ class ReportArtifacts:
     figure_path: Path
     item_history_csv: Path | None = None
     bom_figure_path: Path | None = None
+    demand_figure_path: Path | None = None
     timeline_figure_path: Path | None = None
+    policy_comparison_summary_csv: Path | None = None
+    policy_comparison_time_series_csv: Path | None = None
+    policy_comparison_figure_path: Path | None = None
+    parameter_experiment_summary_csv: Path | None = None
+    parameter_sensitivity_ranking_csv: Path | None = None
+    parameter_sensitivity_figure_path: Path | None = None
     monthly_disrupted_nodes_figure_path: Path | None = None
     propagation_duration_figure_path: Path | None = None
     tables_dir: Path | None = None

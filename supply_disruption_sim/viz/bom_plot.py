@@ -98,8 +98,8 @@ def export_bom_impact_plot(result: SimulationResult, figure_path: str | Path) ->
 
     add_figure_header(
         fig,
-        f"BOM 影响路径图",
-        f"展示前 {len(prioritized)} 条关键传播路径，按 BOM 层级从左到右规整排布",
+        "物料清单影响路径图",
+        f"展示前 {len(prioritized)} 条关键传播路径，按物料清单层级从左到右规整排布",
     )
     fig.patch.set_facecolor("#FFFFFF")
 
@@ -558,7 +558,7 @@ def _draw_sidebar(*, info_ax, graph: nx.DiGraph, path_count: int) -> None:
         0.0,
         0.08,
         "说明\n"
-        "列位置代表 BOM 层级\n"
+        "列位置代表物料清单层级\n"
         "节点按上游依赖关系排序\n"
         "尽量减少跨层交叉",
         transform=info_ax.transAxes,

@@ -49,8 +49,6 @@ standardization:
   synthetic_switch_time_days: 7
   synthetic_qualification_time_days: 5
   synthetic_backup_capacity_factor: 0.7
-  temporary_key_item_count: 8
-  temporary_key_random_seed: 42
 incident_duration_days:
   交付延误: 5
   断供: 14

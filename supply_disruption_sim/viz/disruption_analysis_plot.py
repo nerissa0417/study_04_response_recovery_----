@@ -11,6 +11,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from supply_disruption_sim.labels import policy_profile_label, scenario_label, scenario_policy_run_label
 from supply_disruption_sim.types import SimulationResult
 from supply_disruption_sim.viz.plot_theme import (
     add_figure_header,
@@ -376,10 +377,10 @@ def export_monthly_disrupted_nodes_comparison_figure(
                 linewidth=2.4,
                 marker="o",
                 markersize=4.8,
-                label=str(policy_profile),
+                label=policy_profile_label(str(policy_profile)),
                 color=color_map.get(str(policy_profile)),
             )
-        style_axes(ax, title=f"{scenario_id} | 月度中断节点", ylabel="节点数", grid_axis="y")
+        style_axes(ax, title=f"{scenario_label(scenario_id)} | 月度中断节点", ylabel="节点数", grid_axis="y")
         ax.set_xticks(list(x_lookup.values()))
         ax.set_xticklabels(month_labels, fontproperties=font_props(size=10))
         integer_ticks(ax)
@@ -401,7 +402,10 @@ def export_batch_propagation_duration_comparison_figure(
         return None
 
     frame = summary_df.copy()
-    frame["run_label"] = frame["scenario_id"].astype(str) + " | " + frame["policy_profile"].astype(str)
+    frame["run_label"] = frame.apply(
+        lambda row: scenario_policy_run_label(str(row["scenario_id"]), str(row["policy_profile"])),
+        axis=1,
+    )
     fig, axes = plt.subplots(len(available_metrics), 1, figsize=(14.0, max(3.45 * len(available_metrics), 6.7)), squeeze=False)
     color_map = _build_profile_color_map(frame["policy_profile"].astype(str).tolist())
     ordered = frame.sort_values(["scenario_id", "policy_profile"]).reset_index(drop=True)
@@ -420,7 +424,7 @@ def export_batch_propagation_duration_comparison_figure(
         plt.setp(ax.get_xticklabels(), rotation=16, ha="right")
         integer_ticks(ax)
 
-    axes[-1][0].set_xlabel("场景 | 策略", fontproperties=font_props())
+    axes[-1][0].set_xlabel("情境与策略组合", fontproperties=font_props())
     return finish_figure(fig, figure_path, top=0.92, tight=False)
 
 

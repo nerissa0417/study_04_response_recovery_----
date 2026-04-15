@@ -31,7 +31,7 @@ def override_context_with_repairs(context: dict, state: SimState) -> dict:
     patched = {
         "disrupted_suppliers": set(context["disrupted_suppliers"]),
         "degraded_suppliers": dict(context["degraded_suppliers"]),
-        "material_shortages": set(context["material_shortages"]),
+        "disrupted_items": set(context.get("disrupted_items", set())),
         "disrupted_supply_edges": set(context.get("disrupted_supply_edges", set())),
         "degraded_supply_edges": dict(context.get("degraded_supply_edges", {})),
     }
@@ -39,7 +39,7 @@ def override_context_with_repairs(context: dict, state: SimState) -> dict:
         patched["disrupted_suppliers"].discard(supplier_id)
         patched["degraded_suppliers"].pop(supplier_id, None)
     for item_id in state.repair_active_items:
-        patched["material_shortages"].discard(item_id)
+        patched["disrupted_items"].discard(item_id)
     return patched
 
 
@@ -126,7 +126,7 @@ def _schedule_material_repairs(
     context: dict,
 ) -> None:
     candidates = sorted(
-        set(context["material_shortages"]),
+        set(context.get("disrupted_items", set())),
         key=lambda item_id: _score_item(model, item_id, policy.priority_rule),
         reverse=True,
     )

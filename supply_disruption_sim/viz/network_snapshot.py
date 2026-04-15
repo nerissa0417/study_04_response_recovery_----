@@ -28,6 +28,7 @@ from supply_disruption_sim.viz.state_colormap import (
 
 
 NODE_EDGE_COLOR = "#22313F"
+KEY_NODE_EDGE_COLOR = "#FF2DAA"
 EDGE_ALPHA = {
     "active": 0.72,
     "backup_active": 0.96,
@@ -108,10 +109,10 @@ def render_network_snapshot(
     figure_path: Path,
     title: str,
 ) -> None:
-    fig = plt.figure(figsize=(25.0, 15.8))
-    ax = fig.add_axes([0.10, 0.11, 0.73, 0.73])
-    node_legend_ax = fig.add_axes([0.83, 0.56, 0.14, 0.22])
-    status_legend_ax = fig.add_axes([0.83, 0.28, 0.14, 0.26])
+    fig = plt.figure(figsize=(30.0, 22.0))
+    ax = fig.add_axes([0.08, 0.10, 0.76, 0.78])
+    node_legend_ax = fig.add_axes([0.85, 0.58, 0.13, 0.22])
+    status_legend_ax = fig.add_axes([0.85, 0.30, 0.13, 0.26])
     fig.patch.set_facecolor("#FFFFFF")
     ax.set_facecolor("#FFFFFF")
     node_legend_ax.set_facecolor("#FFFFFF")
@@ -175,11 +176,11 @@ def render_network_snapshot(
                 node_color="none",
                 node_shape=node_shape_for_type(node_type),
                 node_size=[
-                    _node_size(node_key=node_key, node_type=node_type, snapshot=snapshot) * 1.24
+                    _node_size(node_key=node_key, node_type=node_type, snapshot=snapshot) * 1.16
                     for node_key in key_node_keys
                 ],
-                edgecolors="#F59E0B",
-                linewidths=3.8,
+                edgecolors=KEY_NODE_EDGE_COLOR,
+                linewidths=2.5,
                 alpha=1.0,
                 ax=ax,
             )
@@ -207,7 +208,7 @@ def _draw_header(*, fig, title: str, snapshot: dict, summary: dict[str, int]) ->
         (
             f"供应商中断数：{summary['supplier_disrupted_nodes']} ｜ "
             f"物料受影响数：{summary['material_affected_nodes']} ｜ "
-            f"BOM 中断边数：{summary['bom_edge_disrupted']} ｜ "
+            f"物料清单中断边数：{summary['bom_edge_disrupted']} ｜ "
             f"备用供应边激活数：{summary['supply_edge_backup_active']}"
         ),
         ha="left",
@@ -225,7 +226,7 @@ def _draw_structure_notes(*, fig) -> None:
         "alpha": 0.98,
     }
     text_style = font_props(size=13) or {}
-    fig.text(0.205, 0.865, "上游：BOM 网络（从左到右）", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
+    fig.text(0.205, 0.865, "上游：物料清单网络（从左到右）", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
     fig.text(0.02, 0.54, "中部：物料-供应商映射关系", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
     fig.text(0.02, 0.17, "下部：供应商网络", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
     fig.text(0.84, 0.23, "供应关系映射仅显示到零件/原材料", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
@@ -261,6 +262,7 @@ def _draw_legends(*, node_legend_ax, status_legend_ax) -> None:
         Line2D([0], [0], marker="s", color="w", label="物料/零件", markerfacecolor="#7F8C8D", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.5, markersize=16),
         Line2D([0], [0], marker="D", color="w", label="装配件", markerfacecolor="#7F8C8D", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.5, markersize=16),
         Line2D([0], [0], marker="^", color="w", label="产品", markerfacecolor="#7F8C8D", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.5, markersize=16),
+        Line2D([0], [0], marker="o", color="w", label="关键节点", markerfacecolor="#FFFFFF", markeredgecolor=KEY_NODE_EDGE_COLOR, markeredgewidth=2.5, markersize=16),
     ]
     state_handles = [
         Line2D([0], [0], marker="o", color="w", label="可用", markerfacecolor="#2E8B57", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.4, markersize=16),
@@ -312,8 +314,7 @@ def _node_size(*, node_key: str, node_type: str, snapshot: dict) -> float:
 
 
 def _node_line_width(*, node_key: str, snapshot: dict) -> float:
-    node_state = snapshot.get("node_state", {}).get(node_key, {})
-    return 2.4 if bool(node_state.get("is_key_node", False)) else 1.6
+    return 1.6
 
 
 def _configure_axes_bounds(*, ax, positions: dict[str, tuple[float, float]]) -> None:

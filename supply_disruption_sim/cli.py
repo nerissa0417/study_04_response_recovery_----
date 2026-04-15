@@ -25,10 +25,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     run_parser = subparsers.add_parser("run", help="Run a disruption scenario")
     run_parser.add_argument("--input-dir", default="Input_data")
-    run_parser.add_argument("--scenario", default="default_single_supplier_disruption")
-    run_parser.add_argument("--output-dir", default="output/run_bayesian")
+    run_parser.add_argument("--scenario", default="default_random_distributed_node_disruption")
+    run_parser.add_argument("--output-dir", default="output/run_random_distributed")
     run_parser.add_argument("--policy-profile", default="baseline")
     run_parser.add_argument("--report-profile", choices=["minimal", "full", "paper"], default="minimal")
+    run_parser.add_argument("--parameter-experiments", action=argparse.BooleanOptionalAction, default=True)
     run_parser.add_argument("--bayesian-use-sampling", action=argparse.BooleanOptionalAction, default=None)
     run_parser.add_argument("--bayesian-random-seed", type=int, default=None)
     run_parser.add_argument("--standardized-output-dir", default=None)
@@ -39,7 +40,7 @@ def build_parser() -> argparse.ArgumentParser:
     batch_parser.add_argument(
         "--scenarios",
         nargs="+",
-        default=["default_single_supplier_disruption", "default_region_disruption"],
+        default=["default_random_distributed_node_disruption", "default_keynode_distributed_disruption"],
     )
     batch_parser.add_argument(
         "--policy-profiles",
@@ -60,7 +61,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     sensitivity_parser = subparsers.add_parser("sensitivity", help="Run parameter sensitivity analysis")
     sensitivity_parser.add_argument("--input-dir", default="Input_data")
-    sensitivity_parser.add_argument("--scenario", default="default_single_supplier_disruption")
+    sensitivity_parser.add_argument("--scenario", default="default_random_distributed_node_disruption")
     sensitivity_parser.add_argument("--output-dir", default="output/sensitivity_runs")
     sensitivity_parser.add_argument("--policy-profile", default="baseline")
     sensitivity_parser.add_argument(
@@ -79,7 +80,7 @@ def build_parser() -> argparse.ArgumentParser:
     monte_carlo_parser.add_argument(
         "--scenarios",
         nargs="+",
-        default=["default_single_supplier_disruption"],
+        default=["default_random_distributed_node_disruption", "default_keynode_distributed_disruption"],
     )
     monte_carlo_parser.add_argument(
         "--policy-profiles",
@@ -108,6 +109,7 @@ def main() -> None:
             Path(args.output_dir),
             policy_profile=args.policy_profile,
             report_profile=args.report_profile,
+            include_parameter_experiments=args.parameter_experiments,
             bayesian_use_sampling=args.bayesian_use_sampling,
             bayesian_random_seed=args.bayesian_random_seed,
             standardized_output_dir=args.standardized_output_dir,
@@ -186,6 +188,7 @@ def run_scenario(
     output_dir: Path,
     policy_profile: str = "baseline",
     report_profile: str = "minimal",
+    include_parameter_experiments: bool = True,
     bayesian_use_sampling: bool | None = None,
     bayesian_random_seed: int | None = None,
     standardized_output_dir: str | Path | None = None,
@@ -196,6 +199,7 @@ def run_scenario(
         output_dir=output_dir,
         policy_profile=policy_profile,
         report_profile=report_profile,
+        include_parameter_experiments=include_parameter_experiments,
         params_overrides=_build_params_overrides(
             bayesian_use_sampling=bayesian_use_sampling,
             bayesian_random_seed=bayesian_random_seed,

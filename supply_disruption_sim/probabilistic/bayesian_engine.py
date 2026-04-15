@@ -28,7 +28,7 @@ class BayesianEngine:
         patched = {
             "disrupted_suppliers": set(context.get("disrupted_suppliers", set())),
             "degraded_suppliers": dict(context.get("degraded_suppliers", {})),
-            "material_shortages": set(context.get("material_shortages", set())),
+            "disrupted_items": set(context.get("disrupted_items", set())),
             "disrupted_supply_edges": set(context.get("disrupted_supply_edges", set())),
             "degraded_supply_edges": dict(context.get("degraded_supply_edges", {})),
         }

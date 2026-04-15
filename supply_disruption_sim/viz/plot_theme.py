@@ -44,6 +44,30 @@ QUALITATIVE_COLORS = [
     "#277DA1",
 ]
 
+POLICY_PROFILE_COLORS = {
+    "baseline": "#0F766E",
+    "all_policies": "#2563EB",
+    "no_policy": "#C44536",
+    "only_backup_switch": "#D97706",
+    "only_substitution": "#9333EA",
+    "only_priority_repair": "#0891B2",
+    "no_priority_repair": "#7C6A0A",
+    "no_backup_switch": "#C2410C",
+    "no_substitution": "#4F46E5",
+}
+
+POLICY_PROFILE_LINESTYLES = {
+    "baseline": "-",
+    "all_policies": "--",
+    "no_policy": "-",
+    "only_backup_switch": "-.",
+    "only_substitution": ":",
+    "only_priority_repair": (0, (5, 1.4)),
+    "no_priority_repair": (0, (3, 1.6)),
+    "no_backup_switch": (0, (6, 1.6, 1.2, 1.6)),
+    "no_substitution": (0, (4, 1.3, 1.1, 1.3)),
+}
+
 
 def apply_plot_defaults() -> None:
     plt.rcParams.update(
@@ -169,36 +193,6 @@ def finish_figure(
     plt.close(fig)
     return output
 
-
-def format_date_axis(ax) -> None:
-    locator = mdates.AutoDateLocator(minticks=4, maxticks=7)
-    formatter = mdates.ConciseDateFormatter(locator)
-    ax.xaxis.set_major_locator(locator)
-    ax.xaxis.set_major_formatter(formatter)
-
-
-def add_scenario_marker(ax, scenario_start: pd.Timestamp, label: str = "场景开始") -> None:
-    marker_date = pd.Timestamp(scenario_start)
-    ax.axvline(marker_date, color=THEME["accent"], linestyle=(0, (3, 2)), linewidth=1.4, alpha=0.9)
-    ymin, ymax = ax.get_ylim()
-    ax.text(
-        marker_date,
-        ymax - (ymax - ymin) * 0.06,
-        label,
-        color=THEME["accent"],
-        fontsize=9.2,
-        ha="left",
-        va="top",
-        bbox={
-            "facecolor": "#FFF1F2",
-            "edgecolor": "#F8B4BD",
-            "boxstyle": "round,pad=0.22",
-            "alpha": 0.9,
-        },
-        fontproperties=font_props(size=9.2),
-    )
-
-
 def legend_style(
     ax,
     *,
@@ -267,7 +261,7 @@ def annotate_series_endpoint(
 ) -> None:
     x_ratio, y_ratio = _normalized_point_position(ax, x_value, y_value)
     if x_offset is None:
-        x_offset = -22 if x_ratio >= 0.88 else (-12 if x_ratio >= 0.75 else 8)
+        x_offset = -34 if x_ratio >= 0.9 else (-24 if x_ratio >= 0.76 else 8)
     if y_offset is None:
         if y_ratio <= 0.12:
             y_offset = 14
@@ -296,7 +290,7 @@ def annotate_series_endpoint(
             "boxstyle": "round,pad=0.22",
             "alpha": 0.92,
         },
-        fontproperties=font_props(size=9.4),
+        fontproperties=font_props(size=8.8),
         annotation_clip=False,
     )
 
@@ -305,7 +299,7 @@ def annotate_series_endpoints(
     ax,
     endpoints: Sequence[tuple[Any, float, str, str]],
     *,
-    min_gap_px: float = 18.0,
+    min_gap_px: float = 32.0,
 ) -> None:
     if not endpoints:
         return
@@ -319,7 +313,7 @@ def annotate_series_endpoints(
     for x_value, y_value, text, color in endpoints:
         _, y_ratio = _normalized_point_position(ax, x_value, y_value)
         x_ratio, _ = _normalized_point_position(ax, x_value, y_value)
-        base_x_offset = -22 if x_ratio >= 0.88 else (-12 if x_ratio >= 0.75 else 8)
+        base_x_offset = -34 if x_ratio >= 0.9 else (-24 if x_ratio >= 0.76 else 8)
         if y_ratio <= 0.12:
             base_y_offset = 14.0
         elif y_ratio <= 0.2:
@@ -364,45 +358,6 @@ def annotate_series_endpoints(
             x_offset=int(round(entry["base_x_offset"])),
             y_offset=int(round(entry["base_y_offset"] + y_delta_points)),
         )
-
-
-def _wrap_header_text(text: str | None, *, width: int) -> list[str]:
-    if text is None:
-        return []
-    raw = str(text).strip()
-    if not raw:
-        return []
-    scenario_suffix = re.search(r"([A-Za-z0-9]+(?:_[A-Za-z0-9]+)+)$", raw)
-    if scenario_suffix is not None and len(raw) > width:
-        prefix_text = raw[: scenario_suffix.start()].rstrip()
-        suffix_text = scenario_suffix.group(1).strip()
-        if prefix_text and suffix_text:
-            return [prefix_text, suffix_text]
-    for delimiter in ("：", ":"):
-        if delimiter in raw and len(raw) > width:
-            prefix, suffix = raw.split(delimiter, 1)
-            prefix_line = f"{prefix}{delimiter}".strip()
-            suffix_text = suffix.strip()
-            if prefix_line and suffix_text:
-                remaining = textwrap.wrap(
-                    suffix_text,
-                    width=width,
-                    break_long_words=True,
-                    break_on_hyphens=False,
-                    replace_whitespace=False,
-                    drop_whitespace=False,
-                )
-                return [prefix_line] + (remaining or [suffix_text])
-    wrapped = textwrap.wrap(
-        raw,
-        width=width,
-        break_long_words=True,
-        break_on_hyphens=False,
-        replace_whitespace=False,
-        drop_whitespace=False,
-    )
-    return wrapped or [raw]
-
 
 def _header_wrap_width(fig, *, chars_per_inch: float, minimum: int, maximum: int) -> int:
     figure_width = float(fig.get_size_inches()[0]) if fig is not None else 12.0
@@ -511,3 +466,92 @@ def qualitative_color_map(labels: Iterable[str]) -> dict[str, str]:
         label: QUALITATIVE_COLORS[index % len(QUALITATIVE_COLORS)]
         for index, label in enumerate(unique_labels)
     }
+
+
+def policy_profile_color_map(labels: Iterable[str]) -> dict[str, str]:
+    unique_labels = [str(label) for label in labels]
+    fallback_map = qualitative_color_map(unique_labels)
+    return {
+        label: POLICY_PROFILE_COLORS.get(label, fallback_map.get(label, QUALITATIVE_COLORS[0]))
+        for label in unique_labels
+    }
+
+
+def policy_profile_linestyle_map(labels: Iterable[str]) -> dict[str, Any]:
+    return {
+        str(label): POLICY_PROFILE_LINESTYLES.get(str(label), "-")
+        for label in labels
+    }
+
+
+def format_date_axis(ax) -> None:
+    locator = mdates.AutoDateLocator(minticks=4, maxticks=7)
+    formatter = mdates.DateFormatter("%Y-%m-%d")
+    ax.xaxis.set_major_locator(locator)
+    ax.xaxis.set_major_formatter(formatter)
+    tick_font = font_props(size=10.0)
+    for label in ax.get_xticklabels():
+        if tick_font is not None:
+            label.set_fontproperties(tick_font)
+        label.set_rotation(0)
+        label.set_horizontalalignment("center")
+
+
+def add_scenario_marker(ax, scenario_start: pd.Timestamp, label: str = "场景开始") -> None:
+    marker_date = pd.Timestamp(scenario_start)
+    ax.axvline(marker_date, color=THEME["accent"], linestyle=(0, (3, 2)), linewidth=1.4, alpha=0.9)
+    ymin, ymax = ax.get_ylim()
+    ax.text(
+        marker_date,
+        ymax - (ymax - ymin) * 0.06,
+        label,
+        color=THEME["accent"],
+        fontsize=9.2,
+        ha="left",
+        va="top",
+        bbox={
+            "facecolor": "#FFF1F2",
+            "edgecolor": "#F8B4BD",
+            "boxstyle": "round,pad=0.22",
+            "alpha": 0.9,
+        },
+        fontproperties=font_props(size=9.2),
+    )
+
+
+def _wrap_header_text(text: str | None, *, width: int) -> list[str]:
+    if text is None:
+        return []
+    raw = str(text).strip()
+    if not raw:
+        return []
+    scenario_suffix = re.search(r"([A-Za-z0-9]+(?:_[A-Za-z0-9]+)+)$", raw)
+    if scenario_suffix is not None and len(raw) > width:
+        prefix_text = raw[: scenario_suffix.start()].rstrip()
+        suffix_text = scenario_suffix.group(1).strip()
+        if prefix_text and suffix_text:
+            return [prefix_text, suffix_text]
+    for delimiter in ("：", ":"):
+        if delimiter in raw and len(raw) > width:
+            prefix, suffix = raw.split(delimiter, 1)
+            prefix_line = f"{prefix}{delimiter}".strip()
+            suffix_text = suffix.strip()
+            if prefix_line and suffix_text:
+                remaining = textwrap.wrap(
+                    suffix_text,
+                    width=width,
+                    break_long_words=True,
+                    break_on_hyphens=False,
+                    replace_whitespace=False,
+                    drop_whitespace=False,
+                )
+                return [prefix_line] + (remaining or [suffix_text])
+    wrapped = textwrap.wrap(
+        raw,
+        width=width,
+        break_long_words=True,
+        break_on_hyphens=False,
+        replace_whitespace=False,
+        drop_whitespace=False,
+    )
+    return wrapped or [raw]

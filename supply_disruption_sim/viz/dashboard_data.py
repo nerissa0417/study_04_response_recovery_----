@@ -5,6 +5,7 @@ from typing import Any
 
 import pandas as pd
 
+from supply_disruption_sim.labels import policy_type_label, scenario_label, scenario_type_label
 from supply_disruption_sim.types import SimulationResult
 from supply_disruption_sim.viz.bom_plot import select_impacted_paths
 from supply_disruption_sim.viz.network_trend_plot import build_network_markers
@@ -16,6 +17,7 @@ def export_dashboard_tables(
     *,
     artifact_paths: dict[str, str] | None = None,
     network_history: pd.DataFrame | None = None,
+    extra_frames: dict[str, pd.DataFrame] | None = None,
 ) -> dict[str, Path]:
     payload = build_dashboard_payload(
         result=result,
@@ -37,6 +39,8 @@ def export_dashboard_tables(
         "policy_events": pd.DataFrame(payload["policy_events"]),
         "artifact_paths": _build_artifact_paths_frame(payload["artifact_paths"]),
     }
+    if extra_frames:
+        frames.update(extra_frames)
 
     paths: dict[str, Path] = {}
     manifest_rows: list[dict[str, Any]] = []
@@ -77,6 +81,7 @@ def build_dashboard_payload(
         network_frame["date"] = pd.to_datetime(network_frame["date"])
     kpis = {
         "scenario_id": result.scenario.scenario_id,
+        "scenario_name": scenario_label(result.scenario.scenario_id),
         "target_id": result.summary.get("target_id"),
         "ttr_days": result.summary.get("ttr_days"),
         "propagation_duration_months": result.summary.get("propagation_duration_months"),
@@ -99,7 +104,9 @@ def build_dashboard_payload(
     return {
         "scenario": {
             "scenario_id": result.scenario.scenario_id,
+            "scenario_name": scenario_label(result.scenario.scenario_id),
             "scenario_type": result.scenario.scenario_type,
+            "scenario_type_name": scenario_type_label(result.scenario.scenario_type),
             "target_type": result.scenario.target_type,
             "target_id": result.scenario.target_id,
             "start_date": str(result.scenario.start_date.date()),
@@ -138,7 +145,7 @@ def build_dashboard_payload(
         "network_time_series": _build_network_time_series(network_frame),
         "network_markers": network_markers,
         "top_impacted_paths": select_impacted_paths(result, limit=12),
-        "policy_events": result.policy_events,
+        "policy_events": _build_policy_events(result.policy_events),
         "artifact_paths": artifact_paths,
     }
 
@@ -147,6 +154,8 @@ def _build_time_series(history: pd.DataFrame) -> list[dict[str, Any]]:
     columns = [
         "date",
         "service_level",
+        "total_requested_demand",
+        "total_fulfilled_demand",
         "demand_fulfillment_rate",
         "system_service_level",
         "supply_degraded_items",
@@ -154,12 +163,14 @@ def _build_time_series(history: pd.DataFrame) -> list[dict[str, Any]]:
         "supply_effective_degraded_items",
         "supply_effective_unavailable_items",
         "total_backlog_demand",
+        "total_lost_demand",
         "fused_failed_items",
         "affected_key_items",
         "failed_key_items",
         "disrupted_key_suppliers",
         "policy_cumulative_cost",
         "active_backup_switches",
+        "active_substitutions",
         "active_priority_repairs",
     ]
     available = [column for column in columns if column in history.columns]
@@ -200,17 +211,29 @@ def _build_artifact_paths_frame(artifact_paths: dict[str, Any]) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def _build_policy_events(policy_events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for event in policy_events:
+        record = dict(event)
+        if "policy_type" in record:
+            record["policy_type_name"] = policy_type_label(str(record["policy_type"]))
+        records.append(record)
+    return records
+
+
 def _dataset_description(dataset_name: str) -> str:
     descriptions = {
-        "scenario": "Scenario metadata for the current run.",
-        "summary": "Full one-row simulation summary for business review.",
-        "kpis": "Headline KPI cards for the web overview section.",
-        "policy_start_snapshot": "Strategy-start-day metrics shown in the disruption overview panel.",
-        "time_series": "Daily business and supply KPI time series.",
-        "network_time_series": "Daily network node and edge counts for charts.",
-        "network_markers": "Shared marker dates for baseline, first visible shock, raw supply peak, policy start and business recovery.",
-        "top_impacted_paths": "Top impacted BOM paths for path and table views.",
-        "policy_events": "Recovery policy events for timeline and audit views.",
-        "artifact_paths": "Resolved paths to figures and related generated assets.",
+        "scenario": "当前运行情境的基础信息与中文情境名称。",
+        "summary": "当前运行的完整单行汇总结果，用于页面概览与分析复核。",
+        "kpis": "首页概览所需的核心指标卡片数据。",
+        "policy_start_snapshot": "恢复策略启动当天的关键指标快照。",
+        "time_series": "业务层、供给层、需求层与恢复动作的日度时间序列。",
+        "network_time_series": "网络节点与边状态的日度统计序列。",
+        "network_markers": "统一时间标记点，包括基线、首次冲击、供应峰值、策略启动和业务恢复。",
+        "top_impacted_paths": "用于路径图和表格展示的关键受影响物料清单路径。",
+        "policy_events": "恢复策略事件时间线及中文策略名称。",
+        "artifact_paths": "前端展示所需图像与衍生文件的实际输出路径。",
+        "parameter_experiment_summary": "参数扰动分析结果表，按能力维度和参数取值汇总恢复表现。",
+        "parameter_sensitivity_ranking": "不同能力参数对恢复效果的综合敏感度排序结果。",
     }
     return descriptions.get(dataset_name, "")

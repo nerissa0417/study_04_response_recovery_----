@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import matplotlib
 import pandas as pd
@@ -10,6 +11,7 @@ matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 
+from supply_disruption_sim.labels import parameter_label, policy_profile_label, scenario_label
 from supply_disruption_sim.types import BatchReportArtifacts, ReportArtifacts, SimulationResult
 from supply_disruption_sim.viz.bom_plot import export_bom_impact_plot
 from supply_disruption_sim.viz.dashboard_data import export_dashboard_tables
@@ -26,13 +28,24 @@ from supply_disruption_sim.viz.network_trend_plot import (
     build_network_comparison_frame,
     build_network_history,
     export_core_metric_trends,
+    export_demand_propagation_trends,
     export_material_network_comparison_figure,
     export_material_network_trends,
+    export_policy_comparison_trends,
     export_supplier_network_comparison_figure,
     export_supplier_network_trends,
     export_timeline_comparison_figure,
 )
 from supply_disruption_sim.viz.timeline_plot import export_timeline_plot
+from supply_disruption_sim.viz.plot_theme import (
+    add_figure_header,
+    add_value_labels,
+    finish_figure,
+    font_props,
+    format_date_axis,
+    legend_style,
+    style_axes,
+)
 
 CHINESE_FONT_NAME = configure_matplotlib_chinese_font()
 
@@ -43,6 +56,10 @@ def generate_report(
     *,
     report_profile: str = "minimal",
     params: dict[str, Any] | None = None,
+    policy_comparison_summary: pd.DataFrame | None = None,
+    policy_comparison_time_series: pd.DataFrame | None = None,
+    parameter_experiment_summary: pd.DataFrame | None = None,
+    parameter_sensitivity_ranking: pd.DataFrame | None = None,
 ) -> ReportArtifacts:
     profile = _normalize_report_profile(report_profile)
     output_path = Path(output_dir)
@@ -71,6 +88,13 @@ def generate_report(
     impact_figure_path = figures_dir / "impact_overview.png"
     bom_figure_path = figures_dir / "bom_impact_paths.png"
     timeline_figure_path = figures_dir / "timeline_overview.png"
+    demand_trends_figure_path = figures_dir / "demand_propagation_trends.png"
+    policy_comparison_summary_csv = tables_dir / "policy_comparison_summary.csv"
+    policy_comparison_time_series_csv = tables_dir / "policy_comparison_time_series.csv"
+    policy_comparison_figure_path = figures_dir / "policy_comparison.png"
+    parameter_experiment_summary_csv = tables_dir / "parameter_experiment_summary.csv"
+    parameter_sensitivity_ranking_csv = tables_dir / "parameter_sensitivity_ranking.csv"
+    parameter_sensitivity_figure_path = figures_dir / "parameter_sensitivity_ranking.png"
     monthly_disrupted_nodes_figure_path = figures_dir / "monthly_disrupted_nodes.png"
     propagation_duration_figure_path = figures_dir / "propagation_duration_comparison.png"
     core_trends_figure_path = figures_dir / "core_metric_trends.png"
@@ -92,6 +116,13 @@ def generate_report(
             impact_figure_path,
             bom_figure_path,
             timeline_figure_path,
+            demand_trends_figure_path,
+            policy_comparison_summary_csv,
+            policy_comparison_time_series_csv,
+            policy_comparison_figure_path,
+            parameter_experiment_summary_csv,
+            parameter_sensitivity_ranking_csv,
+            parameter_sensitivity_figure_path,
             monthly_disrupted_nodes_figure_path,
             propagation_duration_figure_path,
             core_trends_figure_path,
@@ -117,7 +148,7 @@ def generate_report(
     rendered_fusion_history_csv = None
     rendered_service_level_path = None
     rendered_impact_figure_path = None
-    rendered_timeline_path = None
+    rendered_timeline_path = export_timeline_plot(result, timeline_figure_path)
     rendered_monthly_disrupted_nodes_path = export_monthly_disrupted_nodes_figure(
         result,
         network_history,
@@ -142,9 +173,37 @@ def generate_report(
         rendered_service_level_path = figure_path
         rendered_impact_figure_path = impact_figure_path
     rendered_bom_path = export_bom_impact_plot(result, bom_figure_path)
-    if _includes_full_outputs(profile):
-        rendered_timeline_path = export_timeline_plot(result, timeline_figure_path)
     rendered_core_trends_path = export_core_metric_trends(result, core_trends_figure_path)
+    rendered_demand_trends_path = export_demand_propagation_trends(
+        result,
+        demand_trends_figure_path,
+    )
+    rendered_policy_comparison_summary_csv = None
+    rendered_policy_comparison_time_series_csv = None
+    rendered_policy_comparison_figure_path = None
+    rendered_parameter_experiment_summary_csv = None
+    rendered_parameter_sensitivity_ranking_csv = None
+    rendered_parameter_sensitivity_figure_path = None
+    if policy_comparison_summary is not None and not policy_comparison_summary.empty:
+        policy_comparison_frame = _attach_policy_comparison_metrics(policy_comparison_summary)
+        policy_comparison_frame.to_csv(policy_comparison_summary_csv, index=False)
+        rendered_policy_comparison_summary_csv = policy_comparison_summary_csv
+    if policy_comparison_time_series is not None and not policy_comparison_time_series.empty:
+        policy_comparison_time_series.to_csv(policy_comparison_time_series_csv, index=False)
+        rendered_policy_comparison_time_series_csv = policy_comparison_time_series_csv
+        rendered_policy_comparison_figure_path = export_policy_comparison_trends(
+            policy_comparison_time_series,
+            policy_comparison_figure_path,
+            scenario_start=result.scenario.start_date.normalize(),
+        )
+    if parameter_experiment_summary is not None and not parameter_experiment_summary.empty:
+        parameter_experiment_summary.to_csv(parameter_experiment_summary_csv, index=False)
+        rendered_parameter_experiment_summary_csv = parameter_experiment_summary_csv
+    if parameter_sensitivity_ranking is not None and not parameter_sensitivity_ranking.empty:
+        parameter_sensitivity_ranking.to_csv(parameter_sensitivity_ranking_csv, index=False)
+        rendered_parameter_sensitivity_ranking_csv = parameter_sensitivity_ranking_csv
+        _plot_parameter_sensitivity_ranking(parameter_sensitivity_ranking, parameter_sensitivity_figure_path)
+        rendered_parameter_sensitivity_figure_path = parameter_sensitivity_figure_path
     rendered_supplier_network_path = export_supplier_network_trends(
         result,
         network_history,
@@ -170,6 +229,13 @@ def generate_report(
             "impact_figure": rendered_impact_figure_path,
             "bom_figure": rendered_bom_path,
             "timeline_figure": rendered_timeline_path,
+            "demand_propagation_trends_figure": rendered_demand_trends_path,
+            "policy_comparison_summary_csv": rendered_policy_comparison_summary_csv,
+            "policy_comparison_time_series_csv": rendered_policy_comparison_time_series_csv,
+            "policy_comparison_figure": rendered_policy_comparison_figure_path,
+            "parameter_experiment_summary_csv": rendered_parameter_experiment_summary_csv,
+            "parameter_sensitivity_ranking_csv": rendered_parameter_sensitivity_ranking_csv,
+            "parameter_sensitivity_figure": rendered_parameter_sensitivity_figure_path,
             "monthly_disrupted_nodes_figure": rendered_monthly_disrupted_nodes_path,
             "propagation_duration_figure": rendered_propagation_duration_path,
             "core_metric_trends_figure": rendered_core_trends_path,
@@ -179,11 +245,17 @@ def generate_report(
         }
     )
     artifact_paths["frontend_tables_dir"] = str(frontend_tables_dir)
+    frontend_extra_frames: dict[str, pd.DataFrame] = {}
+    if parameter_experiment_summary is not None and not parameter_experiment_summary.empty:
+        frontend_extra_frames["parameter_experiment_summary"] = parameter_experiment_summary.copy()
+    if parameter_sensitivity_ranking is not None and not parameter_sensitivity_ranking.empty:
+        frontend_extra_frames["parameter_sensitivity_ranking"] = parameter_sensitivity_ranking.copy()
     frontend_table_paths = export_dashboard_tables(
         result,
         frontend_tables_dir,
         artifact_paths=artifact_paths,
         network_history=network_history,
+        extra_frames=frontend_extra_frames or None,
     )
     artifact_paths["frontend_manifest_csv"] = str(frontend_table_paths["manifest"])
     return ReportArtifacts(
@@ -202,7 +274,14 @@ def generate_report(
         figure_path=rendered_core_trends_path or core_trends_figure_path,
         impact_figure_path=rendered_impact_figure_path,
         bom_figure_path=rendered_bom_path,
+        demand_figure_path=rendered_demand_trends_path,
         timeline_figure_path=rendered_timeline_path,
+        policy_comparison_summary_csv=rendered_policy_comparison_summary_csv,
+        policy_comparison_time_series_csv=rendered_policy_comparison_time_series_csv,
+        policy_comparison_figure_path=rendered_policy_comparison_figure_path,
+        parameter_experiment_summary_csv=rendered_parameter_experiment_summary_csv,
+        parameter_sensitivity_ranking_csv=rendered_parameter_sensitivity_ranking_csv,
+        parameter_sensitivity_figure_path=rendered_parameter_sensitivity_figure_path,
         monthly_disrupted_nodes_figure_path=rendered_monthly_disrupted_nodes_path,
         propagation_duration_figure_path=rendered_propagation_duration_path,
         core_trends_figure_path=rendered_core_trends_path,
@@ -292,10 +371,10 @@ def generate_batch_report(
     rendered_paper_parameter_dimension_csv = None
     rendered_paper_tradeoff_figure_path = None
     rendered_paper_summary_figure_path = None
+    _plot_batch_comparison(policy_summary, group_key="policy_profile", figure_path=comparison_figure_path)
+    rendered_policy_comparison_path = comparison_figure_path
     if _includes_full_outputs(profile):
-        _plot_batch_comparison(policy_summary, group_key="policy_profile", figure_path=comparison_figure_path)
         _plot_batch_comparison(scenario_summary, group_key="scenario_id", figure_path=scenario_figure_path)
-        rendered_policy_comparison_path = comparison_figure_path
         rendered_scenario_comparison_path = scenario_figure_path
     if _includes_paper_outputs(profile):
         paper_scenario_policy.to_csv(paper_scenario_policy_csv, index=False)
@@ -375,65 +454,6 @@ def generate_batch_report(
         paper_summary_figure_path=rendered_paper_summary_figure_path,
     )
 
-
-def _plot_service_level(result: SimulationResult, figure_path: Path) -> None:
-    fig, ax = plt.subplots(figsize=(10, 4))
-    ax.plot(
-        result.history["date"],
-        result.history["service_level"],
-        color="#0F6F5C",
-        linewidth=2,
-        label="产品服务水平",
-    )
-    if "demand_fulfillment_rate" in result.history:
-        ax.plot(
-            result.history["date"],
-            result.history["demand_fulfillment_rate"],
-            color="#F28C28",
-            linewidth=1.8,
-            label="需求满足率",
-        )
-    if "system_service_level" in result.history:
-        ax.plot(
-            result.history["date"],
-            result.history["system_service_level"],
-            color="#7A4EAB",
-            linewidth=1.8,
-            label="融合服务水平",
-        )
-    ax.set_title(f"服务水平曲线：{result.scenario.scenario_id}")
-    ax.set_xlabel("日期")
-    ax.set_ylabel("服务水平")
-    ax.set_ylim(-0.05, 1.05)
-    ax.grid(alpha=0.3)
-    ax.legend(loc="lower left")
-    fig.autofmt_xdate()
-    fig.tight_layout()
-    fig.savefig(figure_path, dpi=160)
-    plt.close(fig)
-
-
-def _plot_impact_overview(result: SimulationResult, figure_path: Path) -> None:
-    fig, ax = plt.subplots(figsize=(10, 4))
-    series = [
-        ("供应不可用物料数", "supply_effective_unavailable_items", "#9E2A2B"),
-        ("总积压需求", "total_backlog_demand", "#E09F3E"),
-        ("融合失败物料数", "fused_failed_items", "#540B0E"),
-    ]
-    for label, column, color in series:
-        if column in result.history:
-            ax.plot(result.history["date"], result.history[column], linewidth=2, label=label, color=color)
-    ax.set_title(f"影响概览：{result.scenario.scenario_id}")
-    ax.set_xlabel("日期")
-    ax.set_ylabel("影响强度")
-    ax.grid(alpha=0.3)
-    ax.legend(loc="upper right")
-    fig.autofmt_xdate()
-    fig.tight_layout()
-    fig.savefig(figure_path, dpi=160)
-    plt.close(fig)
-
-
 def _select_supply_history(history: pd.DataFrame) -> pd.DataFrame:
     columns = [
         "date",
@@ -497,44 +517,6 @@ def _select_fusion_history(history: pd.DataFrame) -> pd.DataFrame:
         "root_cause_mixed_products",
     ]
     return history[[column for column in columns if column in history.columns]].copy()
-
-
-def _aggregate_batch(summary_df: pd.DataFrame, group_key: str) -> pd.DataFrame:
-    if summary_df.empty or group_key not in summary_df.columns:
-        return pd.DataFrame(columns=[group_key, "experiment_count"])
-    numeric_columns = summary_df.select_dtypes(include="number").columns.tolist()
-    aggregated = (
-        summary_df.groupby(group_key, dropna=False)[numeric_columns]
-        .mean(numeric_only=True)
-        .round(4)
-        .reset_index()
-    )
-    counts = summary_df.groupby(group_key, dropna=False).size().rename("experiment_count").reset_index()
-    return counts.merge(aggregated, on=group_key, how="left")
-
-
-def _plot_batch_comparison(summary_df: pd.DataFrame, group_key: str, figure_path: Path) -> None:
-    fig, axes = plt.subplots(2, 3, figsize=(15, 8))
-    metrics = [
-        ("average_service_level", "平均服务水平"),
-        ("ttr_days", "恢复时间（天）"),
-        ("policy_total_cost", "平均策略成本"),
-        ("benefit_vs_reference", "相对参考收益"),
-        ("net_benefit_vs_reference", "相对参考净收益"),
-        ("policy_cost_benefit_ratio_vs_reference", "相对参考成本收益比"),
-    ]
-    for ax, (metric, title) in zip(axes.flat, metrics):
-        if metric not in summary_df.columns or summary_df.empty:
-            ax.set_axis_off()
-            continue
-        ax.bar(summary_df[group_key].astype(str), summary_df[metric], color="#2A6F97")
-        ax.set_title(title)
-        ax.tick_params(axis="x", rotation=20)
-        ax.grid(axis="y", alpha=0.25)
-    fig.tight_layout()
-    fig.savefig(figure_path, dpi=160)
-    plt.close(fig)
-
 
 def _build_paper_scenario_policy_table(summary_df: pd.DataFrame) -> pd.DataFrame:
     columns = [
@@ -703,71 +685,6 @@ def _build_paper_parameter_dimension_table(summary_df: pd.DataFrame) -> pd.DataF
             )
     return pd.DataFrame(records)
 
-
-def _plot_paper_tradeoff(summary_df: pd.DataFrame, figure_path: Path) -> None:
-    if summary_df.empty or not {"policy_total_cost", "estimated_disruption_loss"}.issubset(summary_df.columns):
-        return
-    fig, ax = plt.subplots(figsize=(10, 6))
-    scenario_ids = summary_df["scenario_id"].astype(str).unique().tolist() if "scenario_id" in summary_df.columns else ["all"]
-    cmap = plt.get_cmap("tab10", max(len(scenario_ids), 1))
-    color_map = {scenario_id: cmap(index) for index, scenario_id in enumerate(scenario_ids)}
-
-    for _, row in summary_df.iterrows():
-        scenario_id = str(row.get("scenario_id", "all"))
-        ax.scatter(
-            float(row["policy_total_cost"]),
-            float(row["estimated_disruption_loss"]),
-            color=color_map.get(scenario_id),
-            s=80,
-            alpha=0.85,
-        )
-        ax.annotate(
-            str(row.get("policy_profile", "")),
-            (float(row["policy_total_cost"]), float(row["estimated_disruption_loss"])),
-            textcoords="offset points",
-            xytext=(6, 4),
-            fontsize=8,
-        )
-
-    handles = [
-        plt.Line2D([0], [0], marker="o", color="w", label=scenario_id, markerfacecolor=color_map[scenario_id], markersize=8)
-        for scenario_id in scenario_ids
-    ]
-    if handles:
-        ax.legend(handles=handles, loc="upper right")
-    ax.set_title("论文摘要图：策略成本-损失权衡")
-    ax.set_xlabel("策略总成本")
-    ax.set_ylabel("估计中断损失")
-    ax.grid(alpha=0.25)
-    fig.tight_layout()
-    fig.savefig(figure_path, dpi=160)
-    plt.close(fig)
-
-
-def _plot_paper_summary_panel(summary_df: pd.DataFrame, figure_path: Path) -> None:
-    if summary_df.empty or not {"scenario_id", "policy_profile"}.issubset(summary_df.columns):
-        return
-    labels = summary_df.apply(lambda row: f"{row['scenario_id']}\n{row['policy_profile']}", axis=1)
-    metrics = [
-        ("average_service_level", "平均服务水平"),
-        ("ttr_days", "恢复时间"),
-        ("estimated_disruption_loss", "估计中断损失"),
-        ("net_benefit_vs_reference", "相对参考净收益"),
-    ]
-    fig, axes = plt.subplots(2, 2, figsize=(14, 9))
-    for ax, (metric, title) in zip(axes.flat, metrics):
-        if metric not in summary_df.columns:
-            ax.set_axis_off()
-            continue
-        ax.bar(labels, summary_df[metric], color="#5C80BC")
-        ax.set_title(title)
-        ax.tick_params(axis="x", rotation=18)
-        ax.grid(axis="y", alpha=0.25)
-    fig.tight_layout()
-    fig.savefig(figure_path, dpi=160)
-    plt.close(fig)
-
-
 def _normalize_series(series: pd.Series, *, higher_is_better: bool) -> pd.Series:
     numeric = pd.to_numeric(series, errors="coerce")
     if numeric.dropna().empty:
@@ -904,3 +821,243 @@ def _clear_directory(directory: Path) -> None:
     for path in directory.iterdir():
         if path.is_file():
             path.unlink()
+
+
+def _plot_parameter_sensitivity_ranking(sensitivity_ranking_df: pd.DataFrame, figure_path: Path) -> None:
+    if sensitivity_ranking_df.empty:
+        return
+    working = sensitivity_ranking_df.copy()
+    working["parameter_label"] = working["parameter_name"].map(parameter_label)
+    fig, ax = plt.subplots(figsize=(10.2, 4.8))
+    fig.patch.set_facecolor("#FFFFFF")
+    fig.suptitle(
+        "参数敏感度排序",
+        x=0.08,
+        y=0.98,
+        ha="left",
+        color="#12263A",
+        fontproperties=font_props(size=19, weight="bold"),
+    )
+    fig.text(
+        0.08,
+        0.90,
+        "比较不同能力参数对恢复结果的综合影响强弱",
+        ha="left",
+        va="top",
+        color="#5B6B7A",
+        fontproperties=font_props(size=12.2),
+    )
+    fig.subplots_adjust(left=0.22, right=0.95, bottom=0.14, top=0.78)
+    ax.barh(
+        working["parameter_label"],
+        pd.to_numeric(working["sensitivity_score"], errors="coerce").fillna(0.0),
+        color="#2563EB",
+        alpha=0.92,
+    )
+    style_axes(ax, xlabel="综合敏感度得分", ylabel="参数维度", grid_axis="x")
+    ax.invert_yaxis()
+    for index, value in enumerate(pd.to_numeric(working["sensitivity_score"], errors="coerce").fillna(0.0)):
+        ax.text(
+            float(value) + 0.01,
+            index,
+            f"{float(value):.3f}",
+            va="center",
+            ha="left",
+            color="#12263A",
+            fontproperties=font_props(size=9.4),
+        )
+    finish_figure(fig, figure_path, top=0.93, tight=False)
+
+
+def _plot_service_level(result: SimulationResult, figure_path: Path) -> None:
+    history = result.history.copy()
+    history["date"] = pd.to_datetime(history["date"])
+    fig, ax = plt.subplots(figsize=(10.8, 4.8))
+    ax.plot(history["date"], history["service_level"], color="#0F766E", linewidth=2.4, label="产品服务水平")
+    if "demand_fulfillment_rate" in history.columns:
+        ax.plot(history["date"], history["demand_fulfillment_rate"], color="#D97706", linewidth=2.0, label="需求满足率")
+    if "system_service_level" in history.columns:
+        ax.plot(history["date"], history["system_service_level"], color="#5B6CFA", linewidth=2.0, label="系统服务水平")
+    style_axes(ax, title="服务水平曲线", xlabel="日期", ylabel="服务水平", grid_axis="y")
+    ax.set_ylim(-0.03, 1.05)
+    format_date_axis(ax)
+    legend_style(ax, loc="upper left", bbox_to_anchor=(1.01, 1.0))
+    fig.subplots_adjust(left=0.1, right=0.8, bottom=0.18, top=0.9)
+    fig.savefig(figure_path, dpi=160)
+    plt.close(fig)
+
+
+def _plot_impact_overview(result: SimulationResult, figure_path: Path) -> None:
+    history = result.history.copy()
+    history["date"] = pd.to_datetime(history["date"])
+    fig, ax = plt.subplots(figsize=(10.8, 4.8))
+    series = [
+        ("有效不可用物料", "supply_effective_unavailable_items", "#9E2A2B"),
+        ("积压需求总量", "total_backlog_demand", "#E09F3E"),
+        ("融合失败物料", "fused_failed_items", "#540B0E"),
+    ]
+    for label, column, color in series:
+        if column in history.columns:
+            ax.plot(history["date"], history[column], linewidth=2.2, label=label, color=color)
+    style_axes(ax, title="影响概览", xlabel="日期", ylabel="影响强度", grid_axis="y")
+    format_date_axis(ax)
+    legend_style(ax, loc="upper left", bbox_to_anchor=(1.01, 1.0))
+    fig.subplots_adjust(left=0.1, right=0.8, bottom=0.18, top=0.9)
+    fig.savefig(figure_path, dpi=160)
+    plt.close(fig)
+
+
+def _plot_batch_comparison(summary_df: pd.DataFrame, group_key: str, figure_path: Path) -> None:
+    fig, axes = plt.subplots(2, 3, figsize=(15.2, 8.4))
+    metrics = [
+        ("average_service_level", "平均服务水平"),
+        ("ttr_days", "恢复时间（天）"),
+        ("policy_total_cost", "平均策略成本"),
+        ("benefit_vs_reference", "相对参考收益"),
+        ("net_benefit_vs_reference", "相对参考净收益"),
+        ("policy_cost_benefit_ratio_vs_reference", "相对参考成本收益比"),
+    ]
+    label_series = summary_df[group_key].astype(str) if group_key in summary_df.columns else pd.Series(dtype="object")
+    if group_key == "policy_profile":
+        labels = [policy_profile_label(value) for value in label_series]
+        x_label = "策略方案"
+        header_subtitle = "比较同一情境下不同恢复策略组合在恢复效率、成本与收益上的差异"
+    elif group_key == "scenario_id":
+        labels = [scenario_label(value) for value in label_series]
+        x_label = "情境类型"
+        header_subtitle = "比较不同情境下系统恢复表现的总体差异"
+    else:
+        labels = label_series.tolist()
+        x_label = "分组"
+        header_subtitle = None
+
+    for ax, (metric, title) in zip(axes.flat, metrics):
+        if metric not in summary_df.columns or summary_df.empty:
+            ax.set_axis_off()
+            continue
+        values = pd.to_numeric(summary_df[metric], errors="coerce").fillna(0.0)
+        ax.bar(labels, values, color="#2A6F97", alpha=0.92, edgecolor="#FFFFFF", linewidth=0.9)
+        style_axes(ax, title=title, xlabel=x_label, ylabel=title, grid_axis="y")
+        ax.tick_params(axis="x", rotation=18)
+        add_value_labels(ax)
+    add_figure_header(fig, "策略效果汇总对比", header_subtitle)
+    plot_top = max(0.69, min(0.84, float(getattr(fig, "_codex_header_layout_top", 0.87)) - 0.02))
+    fig.subplots_adjust(left=0.08, right=0.97, bottom=0.16, top=plot_top, hspace=0.42, wspace=0.28)
+    fig.savefig(figure_path, dpi=160)
+    plt.close(fig)
+
+
+def _plot_paper_tradeoff(summary_df: pd.DataFrame, figure_path: Path) -> None:
+    if summary_df.empty or not {"policy_total_cost", "estimated_disruption_loss"}.issubset(summary_df.columns):
+        return
+    fig, ax = plt.subplots(figsize=(10.2, 6.2))
+    scenario_ids = summary_df["scenario_id"].astype(str).unique().tolist() if "scenario_id" in summary_df.columns else ["all"]
+    cmap = plt.get_cmap("tab10", max(len(scenario_ids), 1))
+    color_map = {scenario_id: cmap(index) for index, scenario_id in enumerate(scenario_ids)}
+
+    for _, row in summary_df.iterrows():
+        scenario_id = str(row.get("scenario_id", "all"))
+        ax.scatter(
+            float(row["policy_total_cost"]),
+            float(row["estimated_disruption_loss"]),
+            color=color_map.get(scenario_id),
+            s=80,
+            alpha=0.85,
+        )
+        ax.annotate(
+            policy_profile_label(str(row.get("policy_profile", ""))),
+            (float(row["policy_total_cost"]), float(row["estimated_disruption_loss"])),
+            textcoords="offset points",
+            xytext=(6, 4),
+            fontproperties=font_props(size=8.6),
+            color="#12263A",
+        )
+
+    handles = [
+        plt.Line2D(
+            [0],
+            [0],
+            marker="o",
+            color="w",
+            label=scenario_label(scenario_id),
+            markerfacecolor=color_map[scenario_id],
+            markersize=8,
+        )
+        for scenario_id in scenario_ids
+    ]
+    if handles:
+        ax.legend(handles=handles, loc="upper left", bbox_to_anchor=(1.01, 1.0), prop=font_props(size=9.6))
+    style_axes(ax, title="策略成本与损失权衡", xlabel="策略总成本", ylabel="估计中断损失", grid_axis="both")
+    fig.subplots_adjust(left=0.11, right=0.8, bottom=0.12, top=0.9)
+    fig.savefig(figure_path, dpi=160)
+    plt.close(fig)
+
+
+def _plot_paper_summary_panel(summary_df: pd.DataFrame, figure_path: Path) -> None:
+    if summary_df.empty or not {"scenario_id", "policy_profile"}.issubset(summary_df.columns):
+        return
+    labels = summary_df.apply(
+        lambda row: f"{scenario_label(str(row['scenario_id']))}\n{policy_profile_label(str(row['policy_profile']))}",
+        axis=1,
+    )
+    metrics = [
+        ("average_service_level", "平均服务水平"),
+        ("ttr_days", "恢复时间"),
+        ("estimated_disruption_loss", "估计中断损失"),
+        ("net_benefit_vs_reference", "相对参考净收益"),
+    ]
+    fig, axes = plt.subplots(2, 2, figsize=(14.2, 9.2))
+    for ax, (metric, title) in zip(axes.flat, metrics):
+        if metric not in summary_df.columns:
+            ax.set_axis_off()
+            continue
+        ax.bar(labels, summary_df[metric], color="#5C80BC", alpha=0.92, edgecolor="#FFFFFF", linewidth=0.9)
+        style_axes(ax, title=title, ylabel=title, grid_axis="y")
+        ax.tick_params(axis="x", rotation=18)
+    add_figure_header(fig, "论文摘要指标面板", "用于快速比较不同情境与策略组合在关键指标上的差异")
+    plot_top = max(0.69, min(0.84, float(getattr(fig, "_codex_header_layout_top", 0.87)) - 0.02))
+    fig.subplots_adjust(left=0.08, right=0.97, bottom=0.15, top=plot_top, hspace=0.42, wspace=0.26)
+    fig.savefig(figure_path, dpi=160)
+    plt.close(fig)
+
+
+def _aggregate_batch(summary_df: pd.DataFrame, group_key: str) -> pd.DataFrame:
+    if summary_df.empty or group_key not in summary_df.columns:
+        return pd.DataFrame(columns=[group_key, "experiment_count"])
+
+    working = summary_df.copy()
+    if group_key == "policy_profile":
+        ordered_profiles = [
+            "baseline",
+            "all_policies",
+            "no_policy",
+            "only_backup_switch",
+            "only_substitution",
+            "only_priority_repair",
+            "no_priority_repair",
+            "no_backup_switch",
+            "no_substitution",
+        ]
+        observed_profiles = working[group_key].astype(str).tolist()
+        categories = ordered_profiles + [profile for profile in observed_profiles if profile not in ordered_profiles]
+        working[group_key] = pd.Categorical(working[group_key].astype(str), categories=categories, ordered=True)
+    elif group_key == "scenario_id":
+        ordered_scenarios = [
+            "default_random_distributed_node_disruption",
+            "default_keynode_distributed_disruption",
+        ]
+        observed_scenarios = working[group_key].astype(str).tolist()
+        categories = ordered_scenarios + [scenario for scenario in observed_scenarios if scenario not in ordered_scenarios]
+        working[group_key] = pd.Categorical(working[group_key].astype(str), categories=categories, ordered=True)
+
+    numeric_columns = working.select_dtypes(include="number").columns.tolist()
+    aggregated = (
+        working.groupby(group_key, dropna=False, sort=False)[numeric_columns]
+        .mean(numeric_only=True)
+        .round(4)
+        .reset_index()
+    )
+    counts = working.groupby(group_key, dropna=False, sort=False).size().rename("experiment_count").reset_index()
+    result = counts.merge(aggregated, on=group_key, how="left")
+    result[group_key] = result[group_key].astype(str)
+    return result

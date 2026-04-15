@@ -53,6 +53,21 @@ def propagate_supply_to_items(
     disrupted_supply_edges = set(context.get("disrupted_supply_edges", set()))
     degraded_supply_edges = dict(context.get("degraded_supply_edges", {}))
     for item_id, item_row in items.iterrows():
+        if item_id in context.get("disrupted_items", set()):
+            state.item_inbound_factor[item_id] = 0.0
+            state.item_supply_status[item_id] = "unavailable"
+            state.supply_state["items"][item_id] = "unavailable"
+            update_item_node_state(state, item_id, supply_status="unavailable")
+            _update_supply_edges(
+                state=state,
+                item_id=item_id,
+                primary_supplier_ids=[],
+                active_backup_supplier_id=None,
+                item_supply_status="unavailable",
+                context=context,
+            )
+            continue
+
         if item_id in assembly_items:
             state.item_inbound_factor[item_id] = 1.0
             state.item_supply_status[item_id] = "available"
@@ -62,14 +77,13 @@ def propagate_supply_to_items(
 
         demand = float(item_row["avg_daily_demand"])
         inventory = float(state.item_inventory[item_id])
-        direct_shortage = item_id in context["material_shortages"]
         primary_rows = model.supply_map.primary_rows(item_id)
         backup_rows = model.supply_map.backup_rows(item_id)
 
         has_backup = not backup_rows.empty or item_id in state.backup_active
         primary_factor = 0.0
         primary_supplier_ids: list[str] = []
-        if not direct_shortage and not primary_rows.empty:
+        if not primary_rows.empty:
             for row in primary_rows.itertuples(index=False):
                 primary_supplier_ids.append(str(row.supplier_id))
                 edge_ref = (str(row.supplier_id), str(item_id))
@@ -96,7 +110,7 @@ def propagate_supply_to_items(
         backup_factor = 0.0
         active_backup = state.backup_active.get(item_id)
         active_backup_supplier_id = None
-        if not direct_shortage and active_backup:
+        if active_backup:
             active_backup_supplier_id = active_backup["supplier_id"]
             edge_ref = (str(active_backup_supplier_id), str(item_id))
             if edge_ref in disrupted_supply_edges:

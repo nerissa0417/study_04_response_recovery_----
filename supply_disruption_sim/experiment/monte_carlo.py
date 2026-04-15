@@ -12,6 +12,7 @@ matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 
+from supply_disruption_sim.labels import policy_profile_label, scenario_label
 from supply_disruption_sim.experiment.runner import prepare_experiment_context
 from supply_disruption_sim.experiment.sensitivity_runner import prepare_variant_inputs
 from supply_disruption_sim.disruption.recovery_engine import run_simulation
@@ -167,7 +168,6 @@ def _build_robustness_summary(samples_df: pd.DataFrame) -> pd.DataFrame:
         records.append(record)
     return pd.DataFrame(records).sort_values(by=["scenario_id", "policy_profile"]).reset_index(drop=True)
 
-
 def _plot_robustness_comparison(robustness_df: pd.DataFrame, figure_path: Path) -> None:
     if robustness_df.empty:
         return
@@ -177,15 +177,18 @@ def _plot_robustness_comparison(robustness_df: pd.DataFrame, figure_path: Path) 
         ("estimated_disruption_loss_mean", "平均中断损失"),
         ("service_level_target_hit_rate", "服务水平达标率"),
     ]
-    fig, axes = plt.subplots(2, 2, figsize=(13, 8))
-    labels = robustness_df.apply(lambda row: f"{row['scenario_id']}|{row['policy_profile']}", axis=1)
+    fig, axes = plt.subplots(2, 2, figsize=(13.2, 8.2))
+    labels = robustness_df.apply(
+        lambda row: f"{scenario_label(str(row['scenario_id']))}\n{policy_profile_label(str(row['policy_profile']))}",
+        axis=1,
+    )
     for ax, (metric, title) in zip(axes.flat, metrics):
         if metric not in robustness_df.columns:
             ax.set_axis_off()
             continue
-        ax.bar(labels, robustness_df[metric], color="#2A6F97")
+        ax.bar(labels, robustness_df[metric], color="#2A6F97", alpha=0.92, edgecolor="#FFFFFF", linewidth=0.9)
         ax.set_title(title)
-        ax.tick_params(axis="x", rotation=20)
+        ax.tick_params(axis="x", rotation=18)
         ax.grid(axis="y", alpha=0.25)
     fig.tight_layout()
     fig.savefig(figure_path, dpi=160)

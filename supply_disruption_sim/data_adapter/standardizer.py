@@ -13,8 +13,6 @@ from supply_disruption_sim.types import RawBundle, StandardBundle
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG_PATH = PACKAGE_ROOT / "config" / "default_params.yaml"
-DEFAULT_TEMPORARY_KEY_ITEM_COUNT = 8
-DEFAULT_TEMPORARY_KEY_RANDOM_SEED = 42
 
 
 def standardize(raw_bundle: RawBundle, rules: dict | None = None) -> StandardBundle:
@@ -66,16 +64,9 @@ def standardize(raw_bundle: RawBundle, rules: dict | None = None) -> StandardBun
     )
 
     final_products = items.loc[items["is_final_product"], "item_id"].tolist()
-    default_supplier_id = _suggest_default_supplier(
-        items=items,
-        bom_edges=bom_edges,
-        supply_map=supply_map,
-        final_product_id=final_products[0] if final_products else None,
-    )
     metadata = {
         "source_dir": str(raw_bundle.source_dir),
         "final_product_ids": final_products,
-        "default_disruption_supplier_id": default_supplier_id,
         "augmented_backup_items": augmentation_meta["augmented_backup_items"],
         "external_supply_item_levels": external_supply_meta["external_supply_item_levels"],
         "external_supply_items_with_bom": external_supply_meta["external_supply_items_with_bom"],
@@ -708,11 +699,11 @@ def _enrich_items(items: pd.DataFrame, bom_edges: pd.DataFrame, config: dict) ->
     items["demand_state_default"] = "stable"
     items["fused_state_default"] = "active"
     items["visual_status_default"] = "available"
-    items["is_key_node"] = items["is_critical_material"].astype(bool)
-    items["critical_tier"] = items["is_key_node"].map({True: "key", False: "general"})
-    items["critical_score"] = items["is_key_node"].astype(float)
-    items["critical_reason"] = items["is_critical_material"].map({True: "原始物料表标记为关键物料", False: ""})
-    items["critical_source"] = items["is_critical_material"].map({True: "original_data", False: "default"})
+    items["is_key_node"] = False
+    items["critical_tier"] = "general"
+    items["critical_score"] = 0.0
+    items["critical_reason"] = ""
+    items["critical_source"] = "default"
     return items
 
 
@@ -1010,6 +1001,27 @@ def _standardize_incident_events(tables: dict[str, pd.DataFrame], config: dict) 
 
 
 def _load_optional_critical_nodes(source_dir: Path) -> pd.DataFrame | None:
+    keynodes_dir = Path(source_dir) / "keynodes"
+    if keynodes_dir.exists() and keynodes_dir.is_dir():
+        ranking_frames: list[pd.DataFrame] = []
+        for candidate in sorted(keynodes_dir.glob("*.csv")):
+            if not candidate.is_file():
+                continue
+            frame = pd.read_csv(candidate)
+            if frame.empty:
+                continue
+            frame = frame.copy()
+            frame["source_filename"] = f"keynodes/{candidate.name}"
+            if "node_type" not in frame.columns:
+                frame["node_type"] = _infer_keynode_file_node_type(frame=frame, filename=candidate.name)
+            ranking_frames.append(frame)
+        if ranking_frames:
+            combined = pd.concat(ranking_frames, ignore_index=True)
+            combined.attrs["source_filename"] = ";".join(
+                f"keynodes/{path.name}" for path in sorted(keynodes_dir.glob("*.csv")) if path.is_file()
+            )
+            return combined
+
     candidate_names = [
         "Critical_Node_Table.csv",
         "critical_nodes.csv",
@@ -1023,6 +1035,22 @@ def _load_optional_critical_nodes(source_dir: Path) -> pd.DataFrame | None:
             frame.attrs["source_filename"] = candidate.name
             return frame
     return None
+
+
+def _infer_keynode_file_node_type(*, frame: pd.DataFrame, filename: str) -> str | pd.Series:
+    lower_name = filename.lower()
+    if "supplier" in lower_name:
+        return "supplier"
+    if "bom" in lower_name or "material" in lower_name or "item" in lower_name:
+        return "item"
+    node_ids = frame.get("node_id", pd.Series("", index=frame.index)).astype(str).str.upper()
+    return node_ids.str.startswith("SID").map({True: "supplier", False: "item"})
+
+
+def _truthy_series(series: pd.Series) -> pd.Series:
+    normalized = series.astype(str).str.strip().str.lower()
+    numeric = pd.to_numeric(series, errors="coerce")
+    return numeric.fillna(0).ne(0) | normalized.isin({"true", "yes", "y", "key", "critical", "是", "关键"})
 
 
 def _apply_critical_node_labels(
@@ -1051,25 +1079,7 @@ def _apply_critical_node_labels(
     _reset_critical_node_labels(suppliers)
 
     if critical_nodes is None or critical_nodes.empty:
-        standardization_config = config.get("standardization", {})
-        return (
-            _apply_temporary_random_key_items(
-                items=items,
-                count=int(
-                    standardization_config.get(
-                        "temporary_key_item_count",
-                        DEFAULT_TEMPORARY_KEY_ITEM_COUNT,
-                    )
-                ),
-                random_seed=int(
-                    standardization_config.get(
-                        "temporary_key_random_seed",
-                        DEFAULT_TEMPORARY_KEY_RANDOM_SEED,
-                    )
-                ),
-            ),
-            suppliers,
-        )
+        return items, suppliers
 
     normalized = critical_nodes.copy()
     normalized.columns = [str(column).strip() for column in normalized.columns]
@@ -1092,28 +1102,56 @@ def _apply_critical_node_labels(
     }
     normalized = normalized.rename(columns={src: dst for src, dst in rename_map.items() if src in normalized.columns})
     if "node_id" not in normalized.columns:
-        return (
-            _apply_temporary_random_key_items(
-                items=items,
-                count=DEFAULT_TEMPORARY_KEY_ITEM_COUNT,
-                random_seed=DEFAULT_TEMPORARY_KEY_RANDOM_SEED,
-            ),
-            suppliers,
-        )
+        return items, suppliers
+
+    if "is_critical" in normalized.columns:
+        normalized = normalized.loc[_truthy_series(normalized["is_critical"])].copy()
+    if normalized.empty:
+        return items, suppliers
 
     if "node_type" not in normalized.columns:
         normalized["node_type"] = "item"
     if "critical_tier" not in normalized.columns:
         normalized["critical_tier"] = "key"
     if "critical_score" not in normalized.columns:
-        normalized["critical_score"] = 1.0
+        normalized["critical_score"] = pd.NA
+    for score_column in ("bom_score", "supplier_score", "fusion_score", "weighted_degree"):
+        if score_column in normalized.columns:
+            normalized["critical_score"] = normalized["critical_score"].fillna(
+                pd.to_numeric(normalized[score_column], errors="coerce")
+            )
+    normalized["critical_score"] = normalized["critical_score"].fillna(1.0)
     if "critical_reason" not in normalized.columns:
-        normalized["critical_reason"] = "手工关键节点清单"
+        normalized["critical_reason"] = "关键节点清单"
 
-    normalized["node_id"] = normalized["node_id"].astype(str)
-    normalized["node_type"] = normalized["node_type"].astype(str).str.lower().replace({"material": "item", "product": "item"})
-    normalized["critical_tier"] = normalized["critical_tier"].astype(str).str.lower().replace({"critical": "key", "核心": "key", "关键": "key"})
+    normalized["node_id"] = normalized["node_id"].astype(str).str.strip()
+    normalized = normalized.loc[normalized["node_id"].ne("")]
+    normalized["node_type"] = (
+        normalized["node_type"]
+        .astype(str)
+        .str.strip()
+        .str.lower()
+        .replace({"material": "item", "part": "item", "assembly": "item", "product": "item", "bom": "item"})
+    )
+    inferred_supplier = normalized["node_id"].str.upper().str.startswith("SID")
+    inferred_item = normalized["node_id"].str.upper().str.startswith("MID")
+    normalized.loc[inferred_supplier, "node_type"] = "supplier"
+    normalized.loc[inferred_item, "node_type"] = "item"
+    normalized["critical_tier"] = (
+        normalized["critical_tier"]
+        .astype(str)
+        .str.lower()
+        .replace({"critical": "key", "核心": "key", "关键": "key", "true": "key", "1": "key"})
+    )
+    normalized.loc[~normalized["critical_tier"].eq("key"), "critical_tier"] = "key"
     normalized["critical_score"] = pd.to_numeric(normalized["critical_score"], errors="coerce").fillna(1.0)
+    if "source_filename" not in normalized.columns:
+        normalized["source_filename"] = critical_nodes.attrs.get("source_filename", "critical_nodes")
+
+    normalized = (
+        normalized.sort_values(["node_type", "node_id", "critical_score"], ascending=[True, True, False])
+        .drop_duplicates(["node_type", "node_id"], keep="first")
+    )
 
     item_meta = normalized.loc[normalized["node_type"].eq("item")].set_index("node_id").to_dict("index")
     supplier_meta = normalized.loc[normalized["node_type"].eq("supplier")].set_index("node_id").to_dict("index")
@@ -1126,8 +1164,8 @@ def _apply_critical_node_labels(
         items.at[idx, "is_key_node"] = str(meta.get("critical_tier", "general")) == "key"
         items.at[idx, "critical_tier"] = str(meta.get("critical_tier", "general"))
         items.at[idx, "critical_score"] = float(meta.get("critical_score", 1.0))
-        items.at[idx, "critical_reason"] = str(meta.get("critical_reason", "手工关键节点清单"))
-        items.at[idx, "critical_source"] = "manual_list"
+        items.at[idx, "critical_reason"] = str(meta.get("critical_reason", "关键节点清单"))
+        items.at[idx, "critical_source"] = str(meta.get("source_filename", "keynodes"))
 
     for idx, row in suppliers.iterrows():
         supplier_id = str(row["supplier_id"])
@@ -1137,8 +1175,8 @@ def _apply_critical_node_labels(
         suppliers.at[idx, "is_key_node"] = str(meta.get("critical_tier", "general")) == "key"
         suppliers.at[idx, "critical_tier"] = str(meta.get("critical_tier", "general"))
         suppliers.at[idx, "critical_score"] = float(meta.get("critical_score", 1.0))
-        suppliers.at[idx, "critical_reason"] = str(meta.get("critical_reason", "手工关键节点清单"))
-        suppliers.at[idx, "critical_source"] = "manual_list"
+        suppliers.at[idx, "critical_reason"] = str(meta.get("critical_reason", "关键节点清单"))
+        suppliers.at[idx, "critical_source"] = str(meta.get("source_filename", "keynodes"))
 
     return items, suppliers
 
@@ -1149,36 +1187,6 @@ def _reset_critical_node_labels(frame: pd.DataFrame) -> None:
     frame["critical_score"] = 0.0
     frame["critical_reason"] = ""
     frame["critical_source"] = "default"
-
-
-def _apply_temporary_random_key_items(
-    *,
-    items: pd.DataFrame,
-    count: int,
-    random_seed: int,
-) -> pd.DataFrame:
-    if count <= 0 or items.empty:
-        return items
-
-    candidates = items.loc[~items["is_final_product"].astype(bool)].copy()
-    if candidates.empty:
-        return items
-
-    chosen = (
-        candidates.sort_values("item_id")
-        .sample(n=min(count, len(candidates)), random_state=random_seed)
-        ["item_id"]
-        .astype(str)
-        .tolist()
-    )
-    chosen_set = set(chosen)
-    mask = items["item_id"].astype(str).isin(chosen_set)
-    items.loc[mask, "is_key_node"] = True
-    items.loc[mask, "critical_tier"] = "key"
-    items.loc[mask, "critical_score"] = 1.0
-    items.loc[mask, "critical_reason"] = "temporary random non-final item"
-    items.loc[mask, "critical_source"] = "temporary_random"
-    return items
 
 
 def _augment_backup_cases(
@@ -1273,40 +1281,3 @@ def _augment_backup_cases(
         supply_map = pd.concat([supply_map, pd.DataFrame(augmented_rows)], ignore_index=True)
 
     return supply_map, {"augmented_backup_items": assigned_items}
-
-
-def _suggest_default_supplier(
-    items: pd.DataFrame,
-    bom_edges: pd.DataFrame,
-    supply_map: pd.DataFrame,
-    final_product_id: str | None,
-) -> str | None:
-    if final_product_id is None:
-        return None
-    graph = nx.DiGraph()
-    for row in bom_edges.itertuples(index=False):
-        graph.add_edge(row.child_item_id, row.parent_item_id)
-    related_items = set(nx.ancestors(graph, final_product_id))
-    if not related_items:
-        related_items = set(nx.descendants(graph, final_product_id))
-        related_items.add(final_product_id)
-    candidate_items = items.loc[items["item_id"].isin(related_items)].copy()
-    if candidate_items.empty:
-        return None
-    backup_counts = supply_map.groupby("item_id")["is_backup"].sum().astype(int).to_dict()
-    candidate_items["has_backup"] = candidate_items["item_id"].map(lambda item_id: backup_counts.get(item_id, 0) > 0)
-    primary_rows = supply_map.loc[supply_map["is_primary"] & supply_map["item_id"].isin(related_items), ["item_id", "supplier_id"]]
-    supplier_breadth = primary_rows.groupby("supplier_id")["item_id"].nunique().to_dict()
-    item_supplier = primary_rows.drop_duplicates("item_id").set_index("item_id")["supplier_id"].to_dict()
-    candidate_items["primary_supplier_breadth"] = candidate_items["item_id"].map(
-        lambda item_id: supplier_breadth.get(item_supplier.get(item_id, ""), 999)
-    )
-    candidate_items = candidate_items.sort_values(
-        by=["has_backup", "primary_supplier_breadth", "is_critical_material", "avg_daily_demand", "initial_inventory_qty"],
-        ascending=[False, True, False, False, True],
-    )
-    for item_id in candidate_items["item_id"]:
-        rows = supply_map.loc[(supply_map["item_id"] == item_id) & (supply_map["is_primary"])]
-        if not rows.empty:
-            return str(rows.sort_values("share", ascending=False).iloc[0]["supplier_id"])
-    return None

@@ -7,6 +7,25 @@ import networkx as nx
 from supply_disruption_sim.types import ModelBundle
 
 
+BOM_X_POSITIONS = {
+    "material": 2.8,
+    "part": 9.0,
+    "assembly": 15.2,
+    "product": 21.4,
+}
+
+BOM_Y_RANGES = {
+    "material": (11.4, 32.0),
+    "part": (11.8, 32.4),
+    "assembly": (12.8, 31.2),
+    "product": (17.0, 25.8),
+}
+
+OTHER_ITEM_Y_RANGE = (12.0, 31.4)
+SUPPLIER_Y_RANGE = (0.4, 8.0)
+BOM_COLUMN_X_VALUES = list(BOM_X_POSITIONS.values())
+
+
 def build_export_graph(model: ModelBundle) -> tuple[nx.DiGraph, dict[str, tuple[float, float]]]:
     graph = nx.DiGraph()
 
@@ -94,13 +113,6 @@ def _build_separated_network_positions(model: ModelBundle) -> dict[str, tuple[fl
         bom_edges.groupby("child_item_id")["parent_item_id"].apply(lambda series: sorted(series.astype(str).tolist())).to_dict()
     )
     item_anchor_lookup = _build_item_anchor_lookup(items, parent_lookup)
-    bom_x_positions = {
-        "material": 2.4,
-        "part": 7.4,
-        "assembly": 12.4,
-        "product": 17.4,
-    }
-
     item_y_lookup: dict[str, float] = {}
     for item_level in level_order:
         level_frame = items.loc[items["item_level"] == item_level].copy()
@@ -111,11 +123,12 @@ def _build_separated_network_positions(model: ModelBundle) -> dict[str, tuple[fl
             f"item:{row.item_id}": float(item_anchor_lookup.get(str(row.item_id), 0.0))
             for row in level_frame.itertuples(index=False)
         }
+        y_min, y_max = BOM_Y_RANGES[item_level]
         level_positions = _column_positions(
             node_keys=node_keys,
-            x=bom_x_positions[item_level],
-            y_min=10.0,
-            y_max=19.2,
+            x=BOM_X_POSITIONS[item_level],
+            y_min=y_min,
+            y_max=y_max,
             anchors=anchors,
         )
         positions.update(level_positions)
@@ -129,8 +142,8 @@ def _build_separated_network_positions(model: ModelBundle) -> dict[str, tuple[fl
             _column_positions(
                 node_keys=other_keys,
                 x=8.5,
-                y_min=10.4,
-                y_max=18.4,
+                y_min=OTHER_ITEM_Y_RANGE[0],
+                y_max=OTHER_ITEM_Y_RANGE[1],
             )
         )
 
@@ -151,18 +164,18 @@ def _build_separated_network_positions(model: ModelBundle) -> dict[str, tuple[fl
             supplier_id,
         ),
     )
-    supplier_columns = _split_into_columns(ordered_supplier_ids, columns=5)
+    supplier_columns = _split_into_columns(ordered_supplier_ids, columns=len(BOM_COLUMN_X_VALUES))
     max_rows = max((len(column) for column in supplier_columns), default=0)
     for column_index, supplier_ids in enumerate(supplier_columns):
         if not supplier_ids:
             continue
-        x_coord = 2.4 + column_index * 3.55
+        x_coord = BOM_COLUMN_X_VALUES[column_index]
         anchors = {f"supplier:{supplier_id}": supplier_anchor_lookup.get(supplier_id, 0.0) for supplier_id in supplier_ids}
         column_positions = _column_positions(
             node_keys=[f"supplier:{supplier_id}" for supplier_id in supplier_ids],
             x=x_coord,
-            y_min=1.0,
-            y_max=6.6,
+            y_min=SUPPLIER_Y_RANGE[0],
+            y_max=SUPPLIER_Y_RANGE[1],
             anchors=anchors,
             row_slots=max_rows or None,
         )
