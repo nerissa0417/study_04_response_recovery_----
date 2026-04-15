@@ -140,8 +140,6 @@ def _resolve_auto_value(value, model: ModelBundle):
     if not isinstance(value, str):
         return value
 
-    if value == "AUTO_FINAL_PATH_SUPPLIERS":
-        return _resolve_final_path_suppliers(model)
     if value == "AUTO_KEY_SUPPLIERS":
         return _resolve_key_suppliers(model)
     return value
@@ -168,19 +166,6 @@ def _normalize_scenario_target(
         return ",".join(target_supplier_ids), scenario_extra
 
     return str(resolved_target), scenario_extra
-
-
-def _resolve_final_path_suppliers(model: ModelBundle) -> list[str]:
-    final_products = model.standard_bundle.metadata.get("final_product_ids", [])
-    final_product_id = final_products[0] if final_products else None
-    if final_product_id is None:
-        return []
-    ancestors = set(model.bom_graph.ancestors_of(final_product_id))
-    rows = model.standard_bundle.supplier_item_map.loc[
-        model.standard_bundle.supplier_item_map["item_id"].isin(ancestors)
-        & model.standard_bundle.supplier_item_map["is_primary"]
-    ]
-    return sorted(rows["supplier_id"].astype(str).unique().tolist())
 
 
 def _resolve_key_suppliers(model: ModelBundle) -> list[str]:

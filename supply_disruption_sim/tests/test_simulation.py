@@ -65,6 +65,39 @@ class SimulationPipelineTest(unittest.TestCase):
         final_products = self.standard_bundle.metadata["final_product_ids"]
         self.assertEqual(final_products, ["MID0006"])
 
+    def test_key_nodes_are_loaded_from_keynodes_directory(self) -> None:
+        keynodes_dir = INPUT_DIR / "keynodes"
+        bom_nodes = pd.read_csv(keynodes_dir / "monthly_v2_bom_rankings_by_month.csv")
+        supplier_nodes = pd.read_csv(keynodes_dir / "monthly_v2_supplier_rankings_by_month.csv")
+        expected_items = sorted(
+            bom_nodes.loc[
+                pd.to_numeric(bom_nodes["is_critical"], errors="coerce").fillna(0).astype(int).eq(1),
+                "node_id",
+            ]
+            .astype(str)
+            .unique()
+            .tolist()
+        )
+        expected_suppliers = sorted(
+            supplier_nodes.loc[
+                pd.to_numeric(supplier_nodes["is_critical"], errors="coerce").fillna(0).astype(int).eq(1),
+                "node_id",
+            ]
+            .astype(str)
+            .unique()
+            .tolist()
+        )
+        self.assertEqual(sorted(self.standard_bundle.metadata["critical_item_ids"]), expected_items)
+        self.assertEqual(sorted(self.standard_bundle.metadata["critical_supplier_ids"]), expected_suppliers)
+        self.assertEqual(
+            set(self.standard_bundle.items.loc[self.standard_bundle.items["is_key_node"], "critical_source"]),
+            {"keynodes/monthly_v2_bom_rankings_by_month.csv"},
+        )
+        self.assertEqual(
+            set(self.standard_bundle.suppliers.loc[self.standard_bundle.suppliers["is_key_node"], "critical_source"]),
+            {"keynodes/monthly_v2_supplier_rankings_by_month.csv"},
+        )
+
     def test_augmented_backup_cases_exist(self) -> None:
         backup_items = self.standard_bundle.supplier_item_map.loc[
             self.standard_bundle.supplier_item_map["is_backup"], "item_id"
@@ -394,30 +427,17 @@ class SimulationPipelineTest(unittest.TestCase):
     def test_gap02_multi_supplier_scenario_runs(self) -> None:
         scenario = self._load_critical_scenario()
         self.assertEqual(scenario.target_type, "supplier_group")
-        self.assertEqual(len(scenario.extra.get("target_supplier_ids", [])), 15)
+        self.assertEqual(
+            sorted(scenario.extra.get("target_supplier_ids", [])),
+            sorted(self.standard_bundle.metadata["critical_supplier_ids"]),
+        )
         result = run_simulation(self.model, scenario, load_default_policies(), load_default_params(self.model))
         self.assertGreaterEqual(int(result.history["disrupted_suppliers"].max()), 2)
 
-    def test_gap02_auto_final_path_suppliers_include_all_current_sources(self) -> None:
-        bundle = copy.deepcopy(self.standard_bundle)
-        final_product_id = bundle.metadata["final_product_ids"][0]
-        related_items = set(self.model.bom_graph.ancestors_of(final_product_id))
-        if not related_items:
-            related_items = set(self.model.bom_graph.descendants_of(final_product_id))
-        related_items.add(final_product_id)
-        rows = bundle.supplier_item_map.copy()
-        candidate = rows.loc[
-            rows["item_id"].isin(related_items) & rows["is_backup"].astype(bool)
-        ].iloc[0]
-        primary_mask = (rows["item_id"] == candidate["item_id"]) & rows["is_primary"].astype(bool)
-        rows.loc[primary_mask, "share"] = 0.6
-        rows.loc[candidate.name, "is_backup"] = False
-        rows.loc[candidate.name, "is_current_source"] = True
-        rows.loc[candidate.name, "share"] = 0.4
-        bundle.supplier_item_map = rows
-        model = build_model(bundle)
-        scenario = load_scenario(DEFAULT_CRITICAL_SCENARIO, model)
-        self.assertIn(str(candidate["supplier_id"]), scenario.extra.get("target_supplier_ids", []))
+    def test_gap02_keynode_scenario_uses_listed_key_suppliers(self) -> None:
+        scenario = self._load_critical_scenario()
+        listed_key_suppliers = set(self.standard_bundle.metadata["critical_supplier_ids"])
+        self.assertEqual(set(scenario.extra.get("target_supplier_ids", [])), listed_key_suppliers)
 
     def test_gap02_bayesian_occurrence_is_not_applied_in_main_loop(self) -> None:
         scenario = self._load_random_scenario()
