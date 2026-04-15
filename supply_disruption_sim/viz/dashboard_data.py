@@ -204,10 +204,18 @@ def _build_network_markers_frame(network_markers: dict[str, Any]) -> pd.DataFram
 
 
 def _build_artifact_paths_frame(artifact_paths: dict[str, Any]) -> pd.DataFrame:
-    rows = [
-        {"artifact_name": str(name), "artifact_path": str(path)}
-        for name, path in artifact_paths.items()
-    ]
+    rows: list[dict[str, str]] = []
+    for name, path in artifact_paths.items():
+        if isinstance(path, (list, tuple, set)):
+            for index, item in enumerate(path):
+                rows.append(
+                    {
+                        "artifact_name": f"{str(name)}_{index}",
+                        "artifact_path": str(item),
+                    }
+                )
+            continue
+        rows.append({"artifact_name": str(name), "artifact_path": str(path)})
     return pd.DataFrame(rows)
 
 
@@ -233,6 +241,9 @@ def _dataset_description(dataset_name: str) -> str:
         "top_impacted_paths": "用于路径图和表格展示的关键受影响物料清单路径。",
         "policy_events": "恢复策略事件时间线及中文策略名称。",
         "artifact_paths": "前端展示所需图像与衍生文件的实际输出路径。",
+        "network_snapshots": "网络快照清单，逐张列出快照标识、标题、日期与图片路径。",
+        "policy_comparison_summary": "不同恢复策略组合的汇总对比表。",
+        "policy_comparison_time_series": "不同恢复策略组合下中断节点数的日级对比时间序列。",
         "parameter_experiment_summary": "参数扰动分析结果表，按能力维度和参数取值汇总恢复表现。",
         "parameter_sensitivity_ranking": "不同能力参数对恢复效果的综合敏感度排序结果。",
     }

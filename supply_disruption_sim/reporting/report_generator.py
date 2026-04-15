@@ -23,7 +23,10 @@ from supply_disruption_sim.viz.disruption_analysis_plot import (
     summarize_propagation_durations,
 )
 from supply_disruption_sim.viz.font_config import configure_matplotlib_chinese_font
-from supply_disruption_sim.viz.network_snapshot import export_network_snapshots
+from supply_disruption_sim.viz.network_snapshot import (
+    build_network_snapshot_catalog,
+    export_network_snapshots,
+)
 from supply_disruption_sim.viz.network_trend_plot import (
     build_network_comparison_frame,
     build_network_history,
@@ -167,6 +170,7 @@ def generate_report(
         rendered_demand_history_csv = demand_history_csv
         rendered_fusion_history_csv = fusion_history_csv
     snapshot_paths = export_network_snapshots(result, snapshot_dir)
+    snapshot_catalog_df = pd.DataFrame(build_network_snapshot_catalog(result, snapshot_paths))
     if _includes_full_outputs(profile):
         _plot_service_level(result, figure_path)
         _plot_impact_overview(result, impact_figure_path)
@@ -241,19 +245,25 @@ def generate_report(
             "core_metric_trends_figure": rendered_core_trends_path,
             "supplier_network_trends_figure": rendered_supplier_network_path,
             "material_network_trends_figure": rendered_material_network_path,
-            "network_snapshot_paths": [str(path) for path in snapshot_paths],
+            **_build_network_snapshot_artifact_paths(snapshot_catalog_df),
         }
     )
     artifact_paths["frontend_tables_dir"] = str(frontend_tables_dir)
     frontend_extra_frames: dict[str, pd.DataFrame] = {}
+    if policy_comparison_summary is not None and not policy_comparison_summary.empty:
+        frontend_extra_frames["policy_comparison_summary"] = _attach_policy_comparison_metrics(policy_comparison_summary)
+    if policy_comparison_time_series is not None and not policy_comparison_time_series.empty:
+        frontend_extra_frames["policy_comparison_time_series"] = policy_comparison_time_series.copy()
     if parameter_experiment_summary is not None and not parameter_experiment_summary.empty:
         frontend_extra_frames["parameter_experiment_summary"] = parameter_experiment_summary.copy()
     if parameter_sensitivity_ranking is not None and not parameter_sensitivity_ranking.empty:
         frontend_extra_frames["parameter_sensitivity_ranking"] = parameter_sensitivity_ranking.copy()
+    if not snapshot_catalog_df.empty:
+        frontend_extra_frames["network_snapshots"] = snapshot_catalog_df.copy()
     frontend_table_paths = export_dashboard_tables(
         result,
         frontend_tables_dir,
-        artifact_paths=artifact_paths,
+        artifact_paths=_select_frontend_artifact_paths(artifact_paths),
         network_history=network_history,
         extra_frames=frontend_extra_frames or None,
     )
@@ -807,6 +817,29 @@ def _compact_artifact_paths(artifact_paths: dict[str, object]) -> dict[str, obje
             continue
         compacted[key] = value
     return compacted
+
+
+def _build_network_snapshot_artifact_paths(snapshot_catalog_df: pd.DataFrame) -> dict[str, str]:
+    if snapshot_catalog_df.empty:
+        return {}
+    rows = snapshot_catalog_df.loc[snapshot_catalog_df["figure_path"].astype(str).str.len() > 0]
+    return {
+        f"network_snapshot_{str(row.snapshot_name)}": str(row.figure_path)
+        for row in rows.itertuples(index=False)
+    }
+
+
+def _select_frontend_artifact_paths(artifact_paths: dict[str, object]) -> dict[str, str]:
+    frontend_artifact_paths: dict[str, str] = {}
+    for key, value in artifact_paths.items():
+        if key.startswith("network_snapshot_"):
+            continue
+        if not isinstance(value, str):
+            continue
+        if Path(value).suffix.lower() != ".png":
+            continue
+        frontend_artifact_paths[key] = value
+    return frontend_artifact_paths
 
 
 def _clear_paths(paths: list[Path]) -> None:

@@ -16,6 +16,7 @@ from supply_disruption_sim.disruption.scenario_loader import (
     load_default_policies,
     load_scenario,
 )
+from supply_disruption_sim.labels import policy_profile_label
 from supply_disruption_sim.model.builder import build_model
 from supply_disruption_sim.reporting.report_generator import generate_report
 from supply_disruption_sim.types import ModelBundle, PolicySpec, ReportArtifacts, SimulationParams, SimulationResult
@@ -421,6 +422,7 @@ def _append_policy_comparison_result(
         {
             "scenario_id": result.scenario.scenario_id,
             "policy_profile": policy_profile,
+            "policy_label": policy_profile_label(policy_profile),
             **result.summary,
         }
     )
@@ -452,6 +454,7 @@ def _build_policy_comparison_time_series_frame(
     frame = frame.reset_index(drop=True)
     frame["scenario_id"] = result.scenario.scenario_id
     frame["policy_profile"] = str(policy_profile)
+    frame["policy_label"] = policy_profile_label(policy_profile)
     frame["day_offset"] = frame.index.astype(int)
     for column in [
         "supplier_disrupted_nodes",
@@ -477,6 +480,7 @@ def _policy_comparison_time_series_columns() -> list[str]:
     return [
         "scenario_id",
         "policy_profile",
+        "policy_label",
         "date",
         "day_offset",
         "service_level",

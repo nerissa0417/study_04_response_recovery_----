@@ -502,14 +502,23 @@ class SimulationPipelineTest(unittest.TestCase):
             self.assertIn("parameter_sensitivity_figure_path", artifacts)
             self.assertIn("supplier_network_figure_path", artifacts)
             self.assertIn("material_network_figure_path", artifacts)
+            frontend_manifest = pd.read_csv(Path(artifacts["frontend_tables_dir"]) / "manifest.csv")
+            self.assertIn("network_snapshots", set(frontend_manifest["dataset_name"]))
+            self.assertIn("policy_comparison_summary", set(frontend_manifest["dataset_name"]))
+            self.assertIn("policy_comparison_time_series", set(frontend_manifest["dataset_name"]))
             frontend_artifact_paths = pd.read_csv(Path(artifacts["frontend_tables_dir"]) / "artifact_paths.csv")
-            self.assertIn("policy_comparison_summary_csv", set(frontend_artifact_paths["artifact_name"]))
-            self.assertIn("policy_comparison_time_series_csv", set(frontend_artifact_paths["artifact_name"]))
+            self.assertNotIn("network_snapshot_paths", set(frontend_artifact_paths["artifact_name"]))
             self.assertIn("policy_comparison_figure", set(frontend_artifact_paths["artifact_name"]))
-            self.assertIn("parameter_experiment_summary_csv", set(frontend_artifact_paths["artifact_name"]))
-            self.assertIn("parameter_sensitivity_ranking_csv", set(frontend_artifact_paths["artifact_name"]))
             self.assertIn("parameter_sensitivity_figure", set(frontend_artifact_paths["artifact_name"]))
+            self.assertNotIn("policy_comparison_summary_csv", set(frontend_artifact_paths["artifact_name"]))
+            self.assertNotIn("policy_comparison_time_series_csv", set(frontend_artifact_paths["artifact_name"]))
+            self.assertNotIn("parameter_experiment_summary_csv", set(frontend_artifact_paths["artifact_name"]))
+            self.assertNotIn("parameter_sensitivity_ranking_csv", set(frontend_artifact_paths["artifact_name"]))
+            self.assertTrue((Path(artifacts["frontend_tables_dir"]) / "policy_comparison_summary.csv").exists())
+            self.assertTrue((Path(artifacts["frontend_tables_dir"]) / "policy_comparison_time_series.csv").exists())
+            self.assertTrue((Path(artifacts["frontend_tables_dir"]) / "network_snapshots.csv").exists())
             comparison_time_series = pd.read_csv(artifacts["policy_comparison_time_series_csv"])
+            self.assertIn("policy_label", comparison_time_series.columns)
             self.assertIn("total_interrupted_nodes", comparison_time_series.columns)
             self.assertIn("downstream_interrupted_nodes", comparison_time_series.columns)
             parameter_summary = pd.read_csv(artifacts["parameter_experiment_summary_csv"])
@@ -706,6 +715,7 @@ class SimulationPipelineTest(unittest.TestCase):
                     "time_series",
                     "network_time_series",
                     "network_markers",
+                    "network_snapshots",
                     "top_impacted_paths",
                     "policy_events",
                     "artifact_paths",
@@ -713,6 +723,7 @@ class SimulationPipelineTest(unittest.TestCase):
             )
             network_markers = pd.read_csv(Path(artifacts.frontend_tables_dir) / "network_markers.csv")
             artifact_paths = pd.read_csv(Path(artifacts.frontend_tables_dir) / "artifact_paths.csv")
+            network_snapshots = pd.read_csv(Path(artifacts.frontend_tables_dir) / "network_snapshots.csv")
             time_series = pd.read_csv(Path(artifacts.frontend_tables_dir) / "time_series.csv")
             self.assertEqual(
                 set(network_markers["marker_name"]),
@@ -720,15 +731,22 @@ class SimulationPipelineTest(unittest.TestCase):
             )
             t0_date = network_markers.loc[network_markers["marker_name"] == "t0", "date"].iloc[0]
             self.assertEqual(str(t0_date), str((scenario.start_date.normalize() - pd.Timedelta(days=1)).date()))
-            self.assertIn("network_history_csv", set(artifact_paths["artifact_name"]))
             self.assertIn("core_metric_trends_figure", set(artifact_paths["artifact_name"]))
             self.assertIn("demand_propagation_trends_figure", set(artifact_paths["artifact_name"]))
             self.assertIn("timeline_figure", set(artifact_paths["artifact_name"]))
             self.assertIn("supplier_network_trends_figure", set(artifact_paths["artifact_name"]))
             self.assertIn("material_network_trends_figure", set(artifact_paths["artifact_name"]))
+            self.assertNotIn("network_snapshot_paths", set(artifact_paths["artifact_name"]))
             self.assertIn("monthly_disrupted_nodes_figure", set(artifact_paths["artifact_name"]))
             self.assertIn("propagation_duration_figure", set(artifact_paths["artifact_name"]))
-            self.assertIn("frontend_tables_dir", set(artifact_paths["artifact_name"]))
+            self.assertNotIn("network_history_csv", set(artifact_paths["artifact_name"]))
+            self.assertNotIn("frontend_tables_dir", set(artifact_paths["artifact_name"]))
+            self.assertEqual(
+                set(network_snapshots["snapshot_name"]),
+                {"t0", "t_start", "t_supply_peak", "t_policy_start", "t_recovery"},
+            )
+            self.assertIn("snapshot_title", network_snapshots.columns)
+            self.assertIn("figure_path", network_snapshots.columns)
             self.assertIn("propagation_duration_months", pd.read_csv(Path(artifacts.frontend_tables_dir) / "summary.csv").columns)
             self.assertIn("propagation_stop_date", pd.read_csv(Path(artifacts.frontend_tables_dir) / "summary.csv").columns)
             self.assertIn("total_requested_demand", time_series.columns)

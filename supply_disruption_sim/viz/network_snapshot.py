@@ -1,6 +1,7 @@
 ﻿from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import matplotlib
 
@@ -68,6 +69,29 @@ def export_network_snapshots(result: SimulationResult, output_dir: str | Path) -
     return rendered_paths
 
 
+def build_network_snapshot_catalog(
+    result: SimulationResult,
+    snapshot_paths: list[Path] | None = None,
+) -> list[dict[str, Any]]:
+    snapshot_specs = select_snapshot_points(result)
+    path_lookup = {
+        Path(path).stem.removesuffix("_network"): str(path)
+        for path in (snapshot_paths or [])
+    }
+    records: list[dict[str, Any]] = []
+    for label, snapshot in snapshot_specs.items():
+        records.append(
+            {
+                "snapshot_name": label,
+                "snapshot_title": SNAPSHOT_TITLES.get(label, f"{label.upper()} 网络快照"),
+                "snapshot_date": str(pd.Timestamp(snapshot["date"]).date()),
+                "figure_file_name": f"{label}_network.png",
+                "figure_path": path_lookup.get(label, ""),
+            }
+        )
+    return records
+
+
 def select_snapshot_points(result: SimulationResult) -> dict[str, dict]:
     snapshots_by_date = {
         str(snapshot["date"].date() if hasattr(snapshot["date"], "date") else snapshot["date"]): snapshot
@@ -110,9 +134,9 @@ def render_network_snapshot(
     title: str,
 ) -> None:
     fig = plt.figure(figsize=(30.0, 22.0))
-    ax = fig.add_axes([0.08, 0.10, 0.76, 0.78])
-    node_legend_ax = fig.add_axes([0.85, 0.58, 0.13, 0.22])
-    status_legend_ax = fig.add_axes([0.85, 0.30, 0.13, 0.26])
+    ax = fig.add_axes([0.065, 0.10, 0.76, 0.78])
+    node_legend_ax = fig.add_axes([0.84, 0.58, 0.14, 0.22])
+    status_legend_ax = fig.add_axes([0.84, 0.30, 0.14, 0.26])
     fig.patch.set_facecolor("#FFFFFF")
     ax.set_facecolor("#FFFFFF")
     node_legend_ax.set_facecolor("#FFFFFF")
@@ -226,10 +250,10 @@ def _draw_structure_notes(*, fig) -> None:
         "alpha": 0.98,
     }
     text_style = font_props(size=13) or {}
-    fig.text(0.205, 0.865, "上游：物料清单网络（从左到右）", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
-    fig.text(0.02, 0.54, "中部：物料-供应商映射关系", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
-    fig.text(0.02, 0.17, "下部：供应商网络", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
-    fig.text(0.84, 0.23, "供应关系映射仅显示到零件/原材料", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
+    fig.text(0.22, 0.865, "上游：物料清单网络（从左到右）", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
+    fig.text(0.025, 0.54, "中部：物料-供应商映射关系", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
+    fig.text(0.025, 0.17, "下部：供应商网络", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
+    fig.text(0.825, 0.23, "供应关系映射仅显示到零件/原材料", ha="left", va="center", color="#475569", bbox=note_style, **text_style)
 
 
 def _draw_all_labels(*, ax, graph: nx.DiGraph, positions: dict[str, tuple[float, float]], snapshot: dict) -> None:
@@ -305,12 +329,12 @@ def _draw_legends(*, node_legend_ax, status_legend_ax) -> None:
 def _node_size(*, node_key: str, node_type: str, snapshot: dict) -> float:
     node_state = snapshot.get("node_state", {}).get(node_key, {})
     if node_type == "supplier":
-        return 940.0 if bool(node_state.get("is_key_node", False)) else 840.0
+        return 1080.0 if bool(node_state.get("is_key_node", False)) else 980.0
     if node_type == "product":
-        return 1020.0
+        return 1180.0
     if node_type == "assembly":
-        return 950.0
-    return 900.0
+        return 1100.0
+    return 1040.0
 
 
 def _node_line_width(*, node_key: str, snapshot: dict) -> float:

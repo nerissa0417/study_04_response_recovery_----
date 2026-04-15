@@ -8,22 +8,26 @@ from supply_disruption_sim.types import ModelBundle
 
 
 BOM_X_POSITIONS = {
-    "material": 2.8,
-    "part": 9.0,
-    "assembly": 15.2,
-    "product": 21.4,
+    "material": 3.4,
+    "part": 8.8,
+    "assembly": 14.0,
+    "product": 19.4,
 }
+BOM_LEVEL_ORDER = list(BOM_X_POSITIONS)
+BOM_NETWORK_CENTER = (min(BOM_X_POSITIONS.values()) + max(BOM_X_POSITIONS.values())) / 2.0
 
 BOM_Y_RANGES = {
-    "material": (11.4, 32.0),
-    "part": (11.8, 32.4),
-    "assembly": (12.8, 31.2),
-    "product": (17.0, 25.8),
+    "material": (12.0, 31.6),
+    "part": (12.2, 31.8),
+    "assembly": (13.0, 31.0),
+    "product": (17.4, 25.6),
 }
 
-OTHER_ITEM_Y_RANGE = (12.0, 31.4)
-SUPPLIER_Y_RANGE = (0.4, 8.0)
-BOM_COLUMN_X_VALUES = list(BOM_X_POSITIONS.values())
+OTHER_ITEM_Y_RANGE = (12.4, 31.0)
+SUPPLIER_Y_RANGE = (0.8, 7.6)
+SUPPLIER_TARGET_ROWS_PER_COLUMN = 7
+SUPPLIER_MAX_COLUMNS = 3
+SUPPLIER_NETWORK_WIDTH = max(BOM_X_POSITIONS.values()) - min(BOM_X_POSITIONS.values())
 
 
 def build_export_graph(model: ModelBundle) -> tuple[nx.DiGraph, dict[str, tuple[float, float]]]:
@@ -93,28 +97,27 @@ def build_export_graph(model: ModelBundle) -> tuple[nx.DiGraph, dict[str, tuple[
 
 
 def _compose_label(entity_id: str, display_name: str, is_key_node: bool) -> str:
-    prefix = "★ " if is_key_node else ""
-    name = textwrap.shorten(str(display_name), width=16, placeholder="…")
+    prefix = "关键 " if is_key_node else ""
+    name = textwrap.shorten(str(display_name), width=16, placeholder="...")
     return f"{prefix}{entity_id}\n{name}"
 
 
 def _compose_short_label(entity_id: str, display_name: str, is_key_node: bool) -> str:
-    prefix = "★ " if is_key_node else ""
-    name = textwrap.shorten(str(display_name), width=10, placeholder="…")
+    prefix = "关键 " if is_key_node else ""
+    name = textwrap.shorten(str(display_name), width=10, placeholder="...")
     return f"{prefix}{entity_id}\n{name}"
 
 
 def _build_separated_network_positions(model: ModelBundle) -> dict[str, tuple[float, float]]:
     positions: dict[str, tuple[float, float]] = {}
     items = model.standard_bundle.items.sort_values(["item_level", "item_id"])
-    level_order = ["material", "part", "assembly", "product"]
     bom_edges = model.standard_bundle.bom_edges
     parent_lookup = (
         bom_edges.groupby("child_item_id")["parent_item_id"].apply(lambda series: sorted(series.astype(str).tolist())).to_dict()
     )
     item_anchor_lookup = _build_item_anchor_lookup(items, parent_lookup)
     item_y_lookup: dict[str, float] = {}
-    for item_level in level_order:
+    for item_level in BOM_LEVEL_ORDER:
         level_frame = items.loc[items["item_level"] == item_level].copy()
         if level_frame.empty:
             continue
@@ -135,7 +138,7 @@ def _build_separated_network_positions(model: ModelBundle) -> dict[str, tuple[fl
         for node_key, (_, y_coord) in level_positions.items():
             item_y_lookup[node_key.removeprefix("item:")] = y_coord
 
-    other_frame = items.loc[~items["item_level"].isin(level_order)].copy()
+    other_frame = items.loc[~items["item_level"].isin(BOM_LEVEL_ORDER)].copy()
     if not other_frame.empty:
         other_keys = [f"item:{item_id}" for item_id in other_frame["item_id"].astype(str).tolist()]
         positions.update(
@@ -164,12 +167,14 @@ def _build_separated_network_positions(model: ModelBundle) -> dict[str, tuple[fl
             supplier_id,
         ),
     )
-    supplier_columns = _split_into_columns(ordered_supplier_ids, columns=len(BOM_COLUMN_X_VALUES))
+    supplier_column_count = _supplier_column_count(len(ordered_supplier_ids))
+    supplier_columns = _split_into_columns(ordered_supplier_ids, columns=supplier_column_count)
+    supplier_x_values = _supplier_column_x_values(len(supplier_columns))
     max_rows = max((len(column) for column in supplier_columns), default=0)
     for column_index, supplier_ids in enumerate(supplier_columns):
         if not supplier_ids:
             continue
-        x_coord = BOM_COLUMN_X_VALUES[column_index]
+        x_coord = supplier_x_values[column_index]
         anchors = {f"supplier:{supplier_id}": supplier_anchor_lookup.get(supplier_id, 0.0) for supplier_id in supplier_ids}
         column_positions = _column_positions(
             node_keys=[f"supplier:{supplier_id}" for supplier_id in supplier_ids],
@@ -217,10 +222,7 @@ def _column_positions(
 ) -> dict[str, tuple[float, float]]:
     if not node_keys:
         return {}
-    if anchors:
-        ordered_keys = sorted(node_keys, key=lambda node_key: (anchors.get(node_key, 0.0), node_key))
-    else:
-        ordered_keys = sorted(node_keys)
+    ordered_keys = _ordered_node_keys(node_keys, anchors)
     if row_slots is not None and row_slots > len(ordered_keys):
         slot_positions = [
             y_max - idx * ((y_max - y_min) / max(row_slots - 1, 1))
@@ -235,6 +237,12 @@ def _column_positions(
         return {ordered_keys[0]: (x, (y_min + y_max) / 2.0)}
     step = (y_max - y_min) / max(len(ordered_keys) - 1, 1)
     return {node_key: (x, y_max - idx * step) for idx, node_key in enumerate(ordered_keys)}
+
+
+def _ordered_node_keys(node_keys: list[str], anchors: dict[str, float] | None = None) -> list[str]:
+    if anchors:
+        return sorted(node_keys, key=lambda node_key: (anchors.get(node_key, 0.0), node_key))
+    return sorted(node_keys)
 
 
 def _build_supplier_level_lookup(model: ModelBundle) -> dict[str, int]:
@@ -261,16 +269,36 @@ def _build_supplier_level_lookup(model: ModelBundle) -> dict[str, int]:
     return level_lookup
 
 
+def _supplier_column_count(supplier_count: int) -> int:
+    if supplier_count <= 0:
+        return 0
+    needed_columns = (supplier_count + SUPPLIER_TARGET_ROWS_PER_COLUMN - 1) // SUPPLIER_TARGET_ROWS_PER_COLUMN
+    return min(SUPPLIER_MAX_COLUMNS, max(1, needed_columns))
+
+
+def _supplier_column_x_values(column_count: int) -> list[float]:
+    if column_count <= 0:
+        return []
+    if column_count == 1:
+        return [BOM_NETWORK_CENTER]
+    left = BOM_NETWORK_CENTER - SUPPLIER_NETWORK_WIDTH / 2.0
+    step = SUPPLIER_NETWORK_WIDTH / max(column_count - 1, 1)
+    return [left + index * step for index in range(column_count)]
+
+
 def _split_into_columns(node_ids: list[str], columns: int = 5) -> list[list[str]]:
     if not node_ids:
         return []
     bucket_count = min(columns, len(node_ids))
-    bucket_size = (len(node_ids) + bucket_count - 1) // bucket_count
-    return [
-        node_ids[index * bucket_size : (index + 1) * bucket_size]
-        for index in range(bucket_count)
-        if node_ids[index * bucket_size : (index + 1) * bucket_size]
-    ]
+    base_size, remainder = divmod(len(node_ids), bucket_count)
+    buckets: list[list[str]] = []
+    start_index = 0
+    for column_index in range(bucket_count):
+        bucket_size = base_size + (1 if column_index < remainder else 0)
+        end_index = start_index + bucket_size
+        buckets.append(node_ids[start_index:end_index])
+        start_index = end_index
+    return buckets
 
 
 def _evenly_spaced_indices(count: int, total_slots: int) -> list[int]:
