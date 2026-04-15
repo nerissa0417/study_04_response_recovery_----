@@ -52,7 +52,7 @@ LEVEL_SECTION_GAP = {
     "product": 0.0,
 }
 LAYOUT_START_X = 1.6
-SAME_LEVEL_EDGE_CURVE = 0.08
+SAME_LEVEL_EDGE_CURVE = 0.18
 
 
 def export_bom_impact_plot(result: SimulationResult, figure_path: str | Path) -> Path | None:
@@ -248,6 +248,9 @@ def _same_level_stage_lookup(
     graph: nx.DiGraph,
     node_levels: dict[str, str],
 ) -> tuple[dict[str, int], dict[str, int]]:
+    # The BOM path figure uses a single-column layout per level:
+    # material -> part -> assembly -> product. Same-level relations are
+    # expressed by curved edges rather than additional horizontal columns.
     stage_lookup: dict[str, int] = {node: 0 for node in graph.nodes}
     stage_count_by_level: dict[str, int] = {}
     for level in LEVEL_ORDER:
@@ -256,23 +259,8 @@ def _same_level_stage_lookup(
             for node in graph.nodes
             if node_levels.get(node, graph.nodes[node].get("item_level", "part")) == level
         ]
-        if not level_nodes:
-            continue
-        same_level_graph = nx.DiGraph()
-        same_level_graph.add_nodes_from(level_nodes)
-        same_level_graph.add_edges_from(
-            (source, target)
-            for source, target in graph.edges
-            if source in same_level_graph and target in same_level_graph
-        )
-        if not nx.is_directed_acyclic_graph(same_level_graph):
+        if level_nodes:
             stage_count_by_level[level] = 1
-            continue
-        for node in nx.topological_sort(same_level_graph):
-            predecessor_stages = [stage_lookup[upstream] + 1 for upstream in same_level_graph.predecessors(node)]
-            if predecessor_stages:
-                stage_lookup[node] = max(stage_lookup[node], max(predecessor_stages))
-        stage_count_by_level[level] = max(stage_lookup[node] for node in level_nodes) + 1
     return stage_lookup, stage_count_by_level
 
 
@@ -414,15 +402,9 @@ def _edge_connectionstyle(
 ) -> str:
     if not same_level:
         return "arc3,rad=0.0"
-    horizontal_delta = abs(target[0] - source[0])
-    if horizontal_delta >= 0.8:
-        return "arc3,rad=0.0"
     vertical_delta = target[1] - source[1]
     direction = 1.0 if vertical_delta <= 0 else -1.0
-    curve = SAME_LEVEL_EDGE_CURVE
-    if abs(vertical_delta) < 2.0:
-        curve *= 0.75
-    return f"arc3,rad={direction * curve:.3f}"
+    return f"arc3,rad={direction * SAME_LEVEL_EDGE_CURVE:.3f}"
 
 
 def _preferred_dimension(*, current: str | None, candidate: str) -> str:
