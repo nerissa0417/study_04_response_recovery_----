@@ -19,7 +19,7 @@ from supply_disruption_sim.viz.plot_theme import THEME, add_figure_header, finis
 DIMENSION_STYLES = {
     "fusion": {"color": "#C8553D", "label": "融合影响"},
     "supply": {"color": "#2A6F97", "label": "供应影响"},
-    "demand": {"color": "#E09F3E", "label": "需求影响"},
+    "demand": {"color": "#F59E0B", "label": "需求影响"},
 }
 DIMENSION_ORDER = ["fusion", "supply", "demand"]
 PATH_PRIORITY = {
@@ -32,7 +32,7 @@ PATH_PRIORITY = {
 }
 
 LEVEL_STYLES = {
-    "material": {"shape": "s", "color": "#F6BD60", "label": "原材料"},
+    "material": {"shape": "s", "color": "#E9C46A", "label": "原材料"},
     "part": {"shape": "o", "color": "#84A59D", "label": "零件"},
     "assembly": {"shape": "D", "color": "#F28482", "label": "装配"},
     "product": {"shape": "^", "color": "#5C80BC", "label": "产品"},

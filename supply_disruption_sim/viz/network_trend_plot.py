@@ -99,6 +99,11 @@ POLICY_COMPARISON_TREND_COLUMNS = [
     "downstream_interrupted_nodes",
     "total_interrupted_nodes",
 ]
+
+ENDPOINT_LABEL_X_OFFSET = -18
+ENDPOINT_LABEL_MIN_GAP_PX = 26.0
+
+
 def build_network_history(result: SimulationResult) -> pd.DataFrame:
     base_dates = pd.to_datetime(result.history.get("date", pd.Series(dtype="datetime64[ns]")))
     snapshot_map = {
@@ -214,38 +219,40 @@ def export_core_metric_trends(result: SimulationResult, figure_path: str | Path)
                 "ylabel": "服务水平",
                 "series": [
                     ("service_level", "产品服务水平", "#0F766E"),
-                    ("demand_fulfillment_rate", "需求满足率", "#D97706"),
-                    ("system_service_level", "系统服务水平", "#5B6CFA"),
+                    ("demand_fulfillment_rate", "需求满足率", "#2563EB"),
+                    ("system_service_level", "系统服务水平", "#7C3AED"),
                 ],
             },
             {
                 "title": "中断影响强度",
                 "ylabel": "影响规模",
                 "series": [
-                    ("supply_unavailable_items", "供应不可用物料", "#C44536"),
-                    ("total_backlog_demand", "积压需求总量", "#E9A03B"),
-                    ("fused_failed_items", "融合失败物料", "#7F1D1D"),
+                    ("supply_unavailable_items", "供应不可用物料", "#C2410C"),
+                    ("total_backlog_demand", "积压需求总量", "#D97706"),
+                    ("fused_failed_items", "融合失败物料", "#6D28D9"),
                 ],
             },
             {
                 "title": "关键节点与策略动作",
                 "ylabel": "节点 / 动作数",
+                "annotate_endpoints": False,
                 "series": [
-                    ("disrupted_suppliers", "中断供应商", "#D1495B"),
-                    ("degraded_suppliers", "降级供应商", "#F6BD60"),
-                    ("disrupted_key_suppliers", "中断关键供应商", "#8C1C13"),
-                    ("affected_key_items", "受影响关键物料", "#C9A227"),
-                    ("failed_key_items", "失败关键物料", "#5F0F40"),
-                    ("active_backup_switches", "激活备用切换", "#277DA1"),
-                    ("active_priority_repairs", "激活优先修复", "#577590"),
+                    ("disrupted_suppliers", "中断供应商", "#E11D48"),
+                    ("degraded_suppliers", "降级供应商", "#EAB308"),
+                    ("disrupted_key_suppliers", "中断关键供应商", "#9D174D"),
+                    ("affected_key_items", "受影响关键物料", "#65A30D"),
+                    ("failed_key_items", "失败关键物料", "#A21CAF"),
+                    ("active_backup_switches", "激活备用切换", "#0B8F72"),
+                    ("active_priority_repairs", "激活优先修复", "#0284C7"),
                 ],
             },
             {
                 "title": "策略累计成本",
                 "ylabel": "累计成本",
+                "annotate_endpoints": False,
                 "series": [
-                    ("policy_cumulative_cost", "累计策略成本", "#3D5A80"),
-                    ("backup_supplier_switch_cumulative_cost", "备用切换累计成本", "#2A9D8F"),
+                    ("policy_cumulative_cost", "累计策略成本", "#334155"),
+                    ("backup_supplier_switch_cumulative_cost", "备用切换累计成本", "#16A34A"),
                     ("equivalent_material_substitution_cumulative_cost", "替代料累计成本", "#E76F51"),
                     ("priority_repair_cumulative_cost", "优先修复累计成本", "#264653"),
                 ],
@@ -272,33 +279,33 @@ def export_demand_propagation_trends(
                 "title": "需求请求与兑现",
                 "ylabel": "需求量",
                 "series": [
-                    ("total_requested_demand", "总请求需求", "#577590"),
-                    ("total_fulfilled_demand", "已满足需求", "#2A9D8F"),
+                    ("total_requested_demand", "总请求需求", "#64748B"),
+                    ("total_fulfilled_demand", "已满足需求", "#10B981"),
                 ],
             },
             {
                 "title": "未满足需求总量",
                 "ylabel": "需求量",
                 "series": [
-                    ("total_backlog_demand", "积压需求总量", "#E9A03B"),
-                    ("total_lost_demand", "损失需求总量", "#C44536"),
+                    ("total_backlog_demand", "积压需求总量", "#D97706"),
+                    ("total_lost_demand", "损失需求总量", "#DC2626"),
                 ],
             },
             {
                 "title": "需求后果节点数",
                 "ylabel": "节点数",
                 "series": [
-                    ("demand_backlog_items", "积压物料数", "#D4A72C"),
-                    ("demand_lost_items", "损失物料数", "#8C1C13"),
-                    ("demand_backlog_products", "积压产品数", "#43AA8B"),
-                    ("demand_lost_products", "损失产品数", "#6A040F"),
+                    ("demand_backlog_items", "积压物料数", "#A16207"),
+                    ("demand_lost_items", "损失物料数", "#991B1B"),
+                    ("demand_backlog_products", "积压产品数", "#059669"),
+                    ("demand_lost_products", "损失产品数", "#4C1D95"),
                 ],
             },
             {
                 "title": "需求满足率",
                 "ylabel": "满足率",
                 "series": [
-                    ("demand_fulfillment_rate", "需求满足率", "#5B6CFA"),
+                    ("demand_fulfillment_rate", "需求满足率", "#2563EB"),
                 ],
             },
         ],
@@ -324,26 +331,29 @@ def export_supplier_network_trends(
                 "title": "供应商节点状态",
                 "ylabel": "节点数",
                 "series": [
-                    ("supplier_available_nodes", "可用供应商", "#2A9D8F"),
-                    ("supplier_degraded_nodes", "降级供应商", "#E9C46A"),
-                    ("supplier_disrupted_nodes", "中断供应商", "#D62828"),
+                    ("supplier_available_nodes", "可用供应商", "#14B8A6"),
+                    ("supplier_degraded_nodes", "降级供应商", "#EAB308"),
+                    ("supplier_disrupted_nodes", "中断供应商", "#E11D48"),
                 ],
             },
             {
                 "title": "供应商网络边状态",
                 "ylabel": "边数",
                 "series": [
-                    ("supplier_network_active_edges", "供应商网络活跃边", "#577590"),
-                    ("supplier_network_disrupted_edges", "供应商网络中断边", "#A4133C"),
+                    ("supplier_network_active_edges", "供应商网络活跃边", "#4F46E5"),
+                    ("supplier_network_disrupted_edges", "供应商网络中断边", "#B91C1C"),
                 ],
             },
             {
                 "title": "供应映射与备用路径",
                 "ylabel": "边数",
+                "endpoint_annotation_overrides": {
+                    "supply_edge_disrupted": {"y_offset": -8},
+                },
                 "series": [
-                    ("supply_edge_active", "供应映射活跃边", "#43AA8B"),
+                    ("supply_edge_active", "供应映射活跃边", "#06B6D4"),
                     ("supply_edge_backup_active", "备用映射激活边", "#277DA1"),
-                    ("supply_edge_disrupted", "供应映射中断边", "#BC4749"),
+                    ("supply_edge_disrupted", "供应映射中断边", "#BE123C"),
                 ],
             },
         ],
@@ -369,32 +379,32 @@ def export_material_network_trends(
                 "title": "物料层中断情况",
                 "ylabel": "节点数",
                 "series": [
-                    ("material_affected_nodes", "受影响物料", "#F4A261"),
-                    ("material_blocked_nodes", "阻断物料", "#BC4749"),
+                    ("material_affected_nodes", "受影响物料", "#FB923C"),
+                    ("material_blocked_nodes", "阻断物料", "#B23A48"),
                 ],
             },
             {
                 "title": "装配层中断情况",
                 "ylabel": "节点数",
                 "series": [
-                    ("assembly_affected_nodes", "受影响装配件", "#F6BD60"),
-                    ("assembly_blocked_nodes", "阻断装配件", "#D00000"),
+                    ("assembly_affected_nodes", "受影响装配件", "#FACC15"),
+                    ("assembly_blocked_nodes", "阻断装配件", "#EF4444"),
                 ],
             },
             {
                 "title": "产品层中断情况",
                 "ylabel": "节点数",
                 "series": [
-                    ("product_affected_nodes", "受影响产品", "#4D908E"),
-                    ("product_blocked_nodes", "阻断产品", "#7F1D1D"),
+                    ("product_affected_nodes", "受影响产品", "#0D9488"),
+                    ("product_blocked_nodes", "阻断产品", "#374151"),
                 ],
             },
             {
                 "title": "物料清单与替代边变化",
                 "ylabel": "边数",
                 "series": [
-                    ("bom_edge_disrupted", "物料清单中断边", "#6A040F"),
-                    ("alternative_edge_substituted", "替代边已启用", "#6D597A"),
+                    ("bom_edge_disrupted", "物料清单中断边", "#4A044E"),
+                    ("alternative_edge_substituted", "替代边已启用", "#8E44AD"),
                 ],
             },
         ],
@@ -443,6 +453,10 @@ def export_panel_trend_figure(
             title=panel.get("title"),
             scenario_start=scenario_start,
             focus_window=focus_window,
+            annotate_endpoints=bool(panel.get("annotate_endpoints", True)),
+            endpoint_fixed_x_offset=panel.get("endpoint_fixed_x_offset", ENDPOINT_LABEL_X_OFFSET),
+            endpoint_min_gap_px=float(panel.get("endpoint_min_gap_px", ENDPOINT_LABEL_MIN_GAP_PX)),
+            endpoint_annotation_overrides=panel.get("endpoint_annotation_overrides"),
         )
         if focus_window is not None:
             ax.set_xlim(focus_window)
@@ -740,11 +754,15 @@ def _plot_lines(
     scenario_start: pd.Timestamp,
     title: str | None = None,
     focus_window: tuple[pd.Timestamp, pd.Timestamp] | None = None,
+    annotate_endpoints: bool = True,
+    endpoint_fixed_x_offset: int | None = None,
+    endpoint_min_gap_px: float = 32.0,
+    endpoint_annotation_overrides: dict[str, dict[str, Any]] | None = None,
 ) -> None:
     drawn = False
     rate_like = True
     visible_columns: list[str] = []
-    endpoints: list[tuple[pd.Timestamp, float, str, str]] = []
+    endpoints: list[dict[str, Any]] = []
 
     for column, label, color in series:
         if column not in frame.columns:
@@ -778,7 +796,15 @@ def _plot_lines(
                     edgecolor="#FFFFFF",
                     linewidth=0.9,
                 )
-                endpoints.append((last_date, last_value, label, color))
+                endpoints.append(
+                    {
+                        "column": column,
+                        "date": last_date,
+                        "value": last_value,
+                        "label": label,
+                        "color": color,
+                    }
+                )
         visible_columns.append(column)
         if not _looks_like_rate_column(column, values):
             rate_like = False
@@ -790,19 +816,38 @@ def _plot_lines(
     if drawn and _is_integer_panel(frame, visible_columns):
         integer_ticks(ax)
     add_scenario_marker(ax, scenario_start)
-    if len(endpoints) <= 3:
-        annotate_series_endpoints(
-            ax,
-            [
-                (
-                    last_date,
-                    last_value,
-                    f"{label} {last_value:.0f}" if abs(last_value - round(last_value)) < 1e-9 else f"{label} {last_value:.2f}",
-                    color,
+    if annotate_endpoints and endpoints:
+        auto_endpoints: list[tuple[pd.Timestamp, float, str, str]] = []
+        annotation_overrides = endpoint_annotation_overrides or {}
+        for endpoint in endpoints:
+            label_text = _format_endpoint_label(endpoint["label"], endpoint["value"])
+            override = annotation_overrides.get(endpoint["column"])
+            if override:
+                annotate_series_endpoint(
+                    ax,
+                    endpoint["date"],
+                    endpoint["value"],
+                    label_text,
+                    color=endpoint["color"],
+                    x_offset=override.get("x_offset", endpoint_fixed_x_offset),
+                    y_offset=override.get("y_offset"),
                 )
-                for last_date, last_value, label, color in endpoints
-            ],
-        )
+                continue
+            auto_endpoints.append(
+                (
+                    endpoint["date"],
+                    endpoint["value"],
+                    label_text,
+                    endpoint["color"],
+                )
+            )
+        if auto_endpoints:
+            annotate_series_endpoints(
+                ax,
+                auto_endpoints,
+                fixed_x_offset=endpoint_fixed_x_offset,
+                min_gap_px=endpoint_min_gap_px,
+            )
     if drawn:
         legend_style(
             ax,
@@ -810,6 +855,12 @@ def _plot_lines(
             bbox_to_anchor=(1.10, 1.0),
             fontsize=9.6 if len(visible_columns) >= 5 else 10.2,
         )
+
+
+def _format_endpoint_label(label: str, value: float) -> str:
+    if abs(value - round(value)) < 1e-9:
+        return f"{label} {value:.0f}"
+    return f"{label} {value:.2f}"
 
 
 def _summarize_snapshot(snapshot: dict[str, Any]) -> dict[str, int]:

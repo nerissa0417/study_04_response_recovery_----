@@ -45,15 +45,15 @@ QUALITATIVE_COLORS = [
 ]
 
 POLICY_PROFILE_COLORS = {
-    "baseline": "#0F766E",
-    "all_policies": "#2563EB",
-    "no_policy": "#C44536",
-    "only_backup_switch": "#D97706",
-    "only_substitution": "#9333EA",
+    "baseline": "#166534",
+    "all_policies": "#1D4ED8",
+    "no_policy": "#D62828",
+    "only_backup_switch": "#F97316",
+    "only_substitution": "#A855F7",
     "only_priority_repair": "#0891B2",
-    "no_priority_repair": "#7C6A0A",
-    "no_backup_switch": "#C2410C",
-    "no_substitution": "#4F46E5",
+    "no_priority_repair": "#0EA5E9",
+    "no_backup_switch": "#B45309",
+    "no_substitution": "#6366F1",
 }
 
 POLICY_PROFILE_LINESTYLES = {
@@ -144,7 +144,7 @@ def add_figure_header(fig, title: str, subtitle: str | None = None) -> None:
     subtitle_text = "\n".join(subtitle_lines)
     title_y = 0.986
     title_line_step = 0.05
-    subtitle_gap = 0.017
+    subtitle_gap = 0.018
     subtitle_line_step = 0.028
     fig.suptitle(
         title_text,
@@ -300,6 +300,7 @@ def annotate_series_endpoints(
     endpoints: Sequence[tuple[Any, float, str, str]],
     *,
     min_gap_px: float = 32.0,
+    fixed_x_offset: int | None = None,
 ) -> None:
     if not endpoints:
         return
@@ -313,7 +314,11 @@ def annotate_series_endpoints(
     for x_value, y_value, text, color in endpoints:
         _, y_ratio = _normalized_point_position(ax, x_value, y_value)
         x_ratio, _ = _normalized_point_position(ax, x_value, y_value)
-        base_x_offset = -34 if x_ratio >= 0.9 else (-24 if x_ratio >= 0.76 else 8)
+        base_x_offset = (
+            float(fixed_x_offset)
+            if fixed_x_offset is not None
+            else (-34 if x_ratio >= 0.9 else (-24 if x_ratio >= 0.76 else 8))
+        )
         if y_ratio <= 0.12:
             base_y_offset = 14.0
         elif y_ratio <= 0.2:

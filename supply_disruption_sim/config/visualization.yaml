@@ -1,18 +1,18 @@
 node_palette:
-  available: "#2A9D8F"
-  degraded: "#F4A261"
-  disrupted: "#D1495B"
-  recovering: "#5C80BC"
+  available: "#22C55E"
+  degraded: "#FFB703"
+  disrupted: "#9A3412"
+  recovering: "#60A5FA"
   stable: "#94A3B8"
-  affected: "#F6BD60"
-  blocked: "#A12934"
+  affected: "#FFB703"
+  blocked: "#9A3412"
 
 edge_palette:
   active: "#8FA3B8"
-  disrupted: "#D1495B"
+  disrupted: "#C1121F"
   backup_active: "#277DA1"
   standby: "#9AA9BA"
-  substituted: "#6D597A"
+  substituted: "#8E44AD"
 
 node_shape:
   supplier: "o"

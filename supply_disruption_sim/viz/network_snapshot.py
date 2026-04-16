@@ -204,7 +204,7 @@ def render_network_snapshot(
                     for node_key in key_node_keys
                 ],
                 edgecolors=KEY_NODE_EDGE_COLOR,
-                linewidths=2.5,
+                linewidths=3.0,
                 alpha=1.0,
                 ax=ax,
             )
@@ -286,16 +286,16 @@ def _draw_legends(*, node_legend_ax, status_legend_ax) -> None:
         Line2D([0], [0], marker="s", color="w", label="物料/零件", markerfacecolor="#7F8C8D", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.5, markersize=16),
         Line2D([0], [0], marker="D", color="w", label="装配件", markerfacecolor="#7F8C8D", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.5, markersize=16),
         Line2D([0], [0], marker="^", color="w", label="产品", markerfacecolor="#7F8C8D", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.5, markersize=16),
-        Line2D([0], [0], marker="o", color="w", label="关键节点", markerfacecolor="#FFFFFF", markeredgecolor=KEY_NODE_EDGE_COLOR, markeredgewidth=2.5, markersize=16),
+        Line2D([0], [0], marker="o", color="w", label="关键节点", markerfacecolor="#FFFFFF", markeredgecolor=KEY_NODE_EDGE_COLOR, markeredgewidth=3.0, markersize=16),
     ]
     state_handles = [
-        Line2D([0], [0], marker="o", color="w", label="可用", markerfacecolor="#2E8B57", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.4, markersize=16),
-        Line2D([0], [0], marker="o", color="w", label="降级/受影响", markerfacecolor="#F0AD4E", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.4, markersize=16),
-        Line2D([0], [0], marker="o", color="w", label="中断/阻断", markerfacecolor="#D9534F", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.4, markersize=16),
-        Line2D([0], [0], color="#64748B", lw=3.0, linestyle="dashed", label="备用/待命边"),
-        Line2D([0], [0], color="#4A90E2", lw=3.2, label="备用已激活"),
+        Line2D([0], [0], marker="o", color="w", label="可用", markerfacecolor="#22C55E", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.4, markersize=16),
+        Line2D([0], [0], marker="o", color="w", label="降级/受影响", markerfacecolor="#FFB703", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.4, markersize=16),
+        Line2D([0], [0], marker="o", color="w", label="中断/阻断", markerfacecolor="#9A3412", markeredgecolor=NODE_EDGE_COLOR, markeredgewidth=1.4, markersize=16),
+        Line2D([0], [0], color="#9AA9BA", lw=3.0, linestyle="dashed", label="备用/待命边"),
+        Line2D([0], [0], color="#277DA1", lw=3.2, label="备用已激活"),
         Line2D([0], [0], color="#8E44AD", lw=3.0, linestyle="dashdot", label="已替代"),
-        Line2D([0], [0], color="#D9534F", lw=3.0, linestyle="dotted", label="中断边"),
+        Line2D([0], [0], color="#C1121F", lw=3.0, linestyle="dotted", label="中断边"),
     ]
     legend_style = {
         "frameon": True,

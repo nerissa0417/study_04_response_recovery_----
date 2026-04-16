@@ -16,6 +16,7 @@ from supply_disruption_sim.viz.marker_selection import select_marker_dates
 from supply_disruption_sim.viz.plot_theme import (
     add_figure_header,
     add_scenario_marker,
+    annotate_series_endpoints,
     finish_figure,
     font_props,
     format_date_axis,
@@ -26,12 +27,15 @@ from supply_disruption_sim.viz.plot_theme import (
 
 
 TIMELINE_ACTION_COLORS = {
-    "backup_switch": "#0F766E",
-    "substitution": "#C2410C",
-    "priority_repair": "#7C3AED",
-    "policy_cost": "#1D4ED8",
+    "backup_switch": "#0B8F72",
+    "substitution": "#EA580C",
+    "priority_repair": "#0284C7",
+    "policy_cost": "#334155",
     "policy_event": "#111827",
 }
+
+ENDPOINT_LABEL_X_OFFSET = -18
+ENDPOINT_LABEL_MIN_GAP_PX = 26.0
 
 
 def export_timeline_plot(result: SimulationResult, figure_path: str | Path) -> Path | None:
@@ -65,14 +69,20 @@ def _plot_service_panel(
     history: pd.DataFrame,
     marker_dates: dict[str, pd.Timestamp],
 ) -> None:
+    plotted_series: list[tuple[str, str, str]] = []
     if "service_level" in history.columns:
         ax.plot(history["date"], history["service_level"], color="#0F766E", linewidth=2.6, label="产品服务水平")
+        plotted_series.append(("service_level", "产品服务水平", "#0F766E"))
     if "demand_fulfillment_rate" in history.columns:
-        ax.plot(history["date"], history["demand_fulfillment_rate"], color="#D97706", linewidth=2.3, label="需求满足率")
+        ax.plot(history["date"], history["demand_fulfillment_rate"], color="#2563EB", linewidth=2.3, label="需求满足率")
+        plotted_series.append(("demand_fulfillment_rate", "需求满足率", "#2563EB"))
     if "system_service_level" in history.columns:
-        ax.plot(history["date"], history["system_service_level"], color="#5B6CFA", linewidth=2.3, label="系统服务水平")
+        ax.plot(history["date"], history["system_service_level"], color="#7C3AED", linewidth=2.3, label="系统服务水平")
+        plotted_series.append(("system_service_level", "系统服务水平", "#7C3AED"))
     style_axes(ax, title="服务水平变化", ylabel="服务水平", grid_axis="y")
     ax.set_ylim(-0.03, 1.05)
+    ax.margins(x=0.045)
+    _annotate_panel_endpoints(ax, history, plotted_series)
     _add_timeline_markers(ax, marker_dates)
     legend_style(ax, loc="upper left", bbox_to_anchor=(1.16, 1.0))
 
@@ -83,20 +93,22 @@ def _plot_disruption_panel(
     marker_dates: dict[str, pd.Timestamp],
 ) -> None:
     series = [
-        ("supply_unavailable_items", "供应不可用物料", "#C44536"),
-        ("supply_effective_unavailable_items", "有效不可用物料", "#7F1D1D"),
-        ("total_backlog_demand", "积压需求总量", "#E9A03B"),
-        ("fused_failed_items", "融合失败物料", "#6A040F"),
+        ("supply_unavailable_items", "供应不可用物料", "#C2410C"),
+        ("supply_effective_unavailable_items", "有效不可用物料", "#7C2D12"),
+        ("total_backlog_demand", "积压需求总量", "#D97706"),
+        ("fused_failed_items", "融合失败物料", "#6D28D9"),
     ]
-    plotted_columns: list[str] = []
+    plotted_series: list[tuple[str, str, str]] = []
     for column, label, color in series:
         if column not in history.columns:
             continue
         ax.plot(history["date"], history[column], color=color, linewidth=2.2, label=label)
-        plotted_columns.append(column)
+        plotted_series.append((column, label, color))
     style_axes(ax, title="冲击后果变化", ylabel="影响规模", grid_axis="y")
-    if plotted_columns:
+    if plotted_series:
         integer_ticks(ax)
+    ax.margins(x=0.045, y=0.14)
+    _annotate_panel_endpoints(ax, history, plotted_series)
     _add_timeline_markers(ax, marker_dates)
     legend_style(ax, loc="upper left", bbox_to_anchor=(1.16, 1.0))
 
@@ -255,3 +267,43 @@ def _add_timeline_markers(ax, marker_dates: dict[str, pd.Timestamp]) -> None:
             },
             fontproperties=font_props(size=9.2),
         )
+
+
+def _annotate_panel_endpoints(
+    ax,
+    history: pd.DataFrame,
+    plotted_series: list[tuple[str, str, str]],
+) -> None:
+    endpoints: list[tuple[pd.Timestamp, float, str, str]] = []
+    for column, label, color in plotted_series:
+        values = pd.to_numeric(history[column], errors="coerce")
+        if not values.notna().any():
+            continue
+        last_index = values.last_valid_index()
+        if last_index is None:
+            continue
+        last_date = pd.Timestamp(history.loc[last_index, "date"])
+        last_value = float(values.loc[last_index])
+        ax.scatter(
+            last_date,
+            last_value,
+            color=color,
+            s=34,
+            zorder=4,
+            edgecolor="#FFFFFF",
+            linewidth=0.9,
+        )
+        endpoints.append((last_date, last_value, _format_endpoint_label(label, last_value), color))
+    if endpoints:
+        annotate_series_endpoints(
+            ax,
+            endpoints,
+            fixed_x_offset=ENDPOINT_LABEL_X_OFFSET,
+            min_gap_px=ENDPOINT_LABEL_MIN_GAP_PX,
+        )
+
+
+def _format_endpoint_label(label: str, value: float) -> str:
+    if abs(value - round(value)) < 1e-9:
+        return f"{label} {value:.0f}"
+    return f"{label} {value:.2f}"

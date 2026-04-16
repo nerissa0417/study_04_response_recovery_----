@@ -163,10 +163,10 @@ def export_monthly_disrupted_nodes_figure(
     x_values = list(range(len(monthly)))
     bottom = [0] * len(monthly)
     series = [
-        ("supplier_disrupted_nodes", "供应商中断", "#D1495B"),
-        ("material_disrupted_nodes", "物料阻断", "#BC4749"),
-        ("assembly_disrupted_nodes", "装配阻断", "#7F1D1D"),
-        ("product_disrupted_nodes", "产品阻断", "#3D405B"),
+        ("supplier_disrupted_nodes", "供应商中断", "#E11D48"),
+        ("material_disrupted_nodes", "物料阻断", "#B23A48"),
+        ("assembly_disrupted_nodes", "装配阻断", "#EF4444"),
+        ("product_disrupted_nodes", "产品阻断", "#374151"),
     ]
     for column, label, color in series:
         values = monthly[column].astype(int).tolist()
