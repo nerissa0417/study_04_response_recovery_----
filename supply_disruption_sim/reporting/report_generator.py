@@ -1047,7 +1047,7 @@ def _plot_paper_summary_panel(summary_df: pd.DataFrame, figure_path: Path) -> No
         ax.bar(labels, summary_df[metric], color="#5C80BC", alpha=0.92, edgecolor="#FFFFFF", linewidth=0.9)
         style_axes(ax, title=title, ylabel=title, grid_axis="y")
         ax.tick_params(axis="x", rotation=18)
-    add_figure_header(fig, "论文摘要指标面板", "用于快速比较不同情境与策略组合在关键指标上的差异")
+    add_figure_header(fig, "摘要指标面板", "用于快速比较不同情境与策略组合在关键指标上的差异")
     plot_top = max(0.69, min(0.84, float(getattr(fig, "_codex_header_layout_top", 0.87)) - 0.02))
     fig.subplots_adjust(left=0.08, right=0.97, bottom=0.15, top=plot_top, hspace=0.42, wspace=0.26)
     fig.savefig(figure_path, dpi=160)
@@ -1061,7 +1061,7 @@ def _aggregate_batch(summary_df: pd.DataFrame, group_key: str) -> pd.DataFrame:
     working = summary_df.copy()
     if group_key == "policy_profile":
         ordered_profiles = [
-            "baseline",
+            "time_priority_interrupt",
             "all_policies",
             "no_policy",
             "only_backup_switch",
@@ -1071,7 +1071,7 @@ def _aggregate_batch(summary_df: pd.DataFrame, group_key: str) -> pd.DataFrame:
             "no_backup_switch",
             "no_substitution",
         ]
-        observed_profiles = working[group_key].astype(str).tolist()
+        observed_profiles = working[group_key].astype(str).dropna().unique().tolist()
         categories = ordered_profiles + [profile for profile in observed_profiles if profile not in ordered_profiles]
         working[group_key] = pd.Categorical(working[group_key].astype(str), categories=categories, ordered=True)
     elif group_key == "scenario_id":
@@ -1079,7 +1079,7 @@ def _aggregate_batch(summary_df: pd.DataFrame, group_key: str) -> pd.DataFrame:
             "default_random_distributed_node_disruption",
             "default_keynode_distributed_disruption",
         ]
-        observed_scenarios = working[group_key].astype(str).tolist()
+        observed_scenarios = working[group_key].astype(str).dropna().unique().tolist()
         categories = ordered_scenarios + [scenario for scenario in observed_scenarios if scenario not in ordered_scenarios]
         working[group_key] = pd.Categorical(working[group_key].astype(str), categories=categories, ordered=True)
 

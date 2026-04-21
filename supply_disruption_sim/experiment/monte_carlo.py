@@ -58,7 +58,7 @@ def run_monte_carlo_experiments(
     )
     base_model = context["model"]
     rng = random.Random(random_seed)
-    selected_profiles = policy_profiles or ["baseline", "no_priority_repair"]
+    selected_profiles = policy_profiles or ["time_priority_interrupt", "no_priority_repair"]
     distributions = parameter_distributions or dict(DEFAULT_MONTE_CARLO_DISTRIBUTIONS)
 
     records: list[dict[str, Any]] = []

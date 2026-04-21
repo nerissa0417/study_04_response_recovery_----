@@ -242,8 +242,8 @@ def export_core_metric_trends(result: SimulationResult, figure_path: str | Path)
                     ("disrupted_key_suppliers", "中断关键供应商", "#9D174D"),
                     ("affected_key_items", "受影响关键物料", "#65A30D"),
                     ("failed_key_items", "失败关键物料", "#A21CAF"),
-                    ("active_backup_switches", "激活备用切换", "#0B8F72"),
-                    ("active_priority_repairs", "激活优先修复", "#0284C7"),
+                    ("active_backup_switches", "激活备供切换", "#0B8F72"),
+                    ("active_priority_repairs", "激活优先抢修", "#0284C7"),
                 ],
             },
             {
@@ -252,9 +252,9 @@ def export_core_metric_trends(result: SimulationResult, figure_path: str | Path)
                 "annotate_endpoints": False,
                 "series": [
                     ("policy_cumulative_cost", "累计策略成本", "#334155"),
-                    ("backup_supplier_switch_cumulative_cost", "备用切换累计成本", "#16A34A"),
+                    ("backup_supplier_switch_cumulative_cost", "备供切换累计成本", "#16A34A"),
                     ("equivalent_material_substitution_cumulative_cost", "替代料累计成本", "#E76F51"),
-                    ("priority_repair_cumulative_cost", "优先修复累计成本", "#264653"),
+                    ("priority_repair_cumulative_cost", "优先抢修累计成本", "#264653"),
                 ],
             },
         ],
@@ -498,7 +498,7 @@ def export_policy_comparison_trends(
         frame["total_interrupted_nodes"] = frame["supplier_disrupted_nodes"] + frame["downstream_interrupted_nodes"]
 
     ordered_profiles = [
-        "baseline",
+        "time_priority_interrupt",
         "all_policies",
         "no_policy",
         "only_backup_switch",
@@ -999,5 +999,3 @@ def _is_integer_panel(frame: pd.DataFrame, columns: list[str]) -> bool:
 def _is_integer_metric(metric: str) -> bool:
     normalized = str(metric).lower()
     return not any(token in normalized for token in ["service_level", "rate", "ratio", "fulfillment", "cost"])
-
-

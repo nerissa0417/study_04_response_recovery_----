@@ -49,7 +49,7 @@ def export_timeline_plot(result: SimulationResult, figure_path: str | Path) -> P
     add_figure_header(
         fig,
         "恢复策略时间轴总览",
-        f"{scenario_label(result.scenario.scenario_id)}：围绕冲击开始、策略启动与业务恢复三个阶段展开",
+        f"{scenario_label(result.scenario.scenario_id)}：围绕冲击开始、恢复动作启动与业务恢复三个阶段展开",
     )
     plot_top = max(0.68, min(0.84, float(getattr(fig, "_codex_header_layout_top", 0.87)) - 0.02))
     fig.subplots_adjust(left=0.09, right=0.66, bottom=0.09, top=plot_top, hspace=0.40)
@@ -126,7 +126,7 @@ def _plot_policy_panel(
             history["active_backup_switches"],
             color=TIMELINE_ACTION_COLORS["backup_switch"],
             linewidth=2.2,
-            label="激活备用切换",
+            label="激活备供切换",
         )
         action_columns.append("active_backup_switches")
     if "active_substitutions" in history.columns:
@@ -144,7 +144,7 @@ def _plot_policy_panel(
             history["active_priority_repairs"],
             color=TIMELINE_ACTION_COLORS["priority_repair"],
             linewidth=2.2,
-            label="激活优先修复",
+            label="激活优先抢修",
         )
         action_columns.append("active_priority_repairs")
 
@@ -242,7 +242,7 @@ def _add_timeline_markers(ax, marker_dates: dict[str, pd.Timestamp]) -> None:
         add_scenario_marker(ax, marker_dates["t_start"], label="冲击开始")
 
     marker_specs = [
-        ("t_policy_start", "策略启动", "#277DA1", "#EFF6FF", "#93C5FD"),
+        ("t_policy_start", "恢复动作启动", "#277DA1", "#EFF6FF", "#93C5FD"),
         ("t_recovery", "业务恢复", "#0F766E", "#ECFDF5", "#6EE7B7"),
     ]
     ymin, ymax = ax.get_ylim()

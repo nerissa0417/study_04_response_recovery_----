@@ -42,7 +42,7 @@ SNAPSHOT_TITLES = {
     "t0": "冲击前基线网络快照",
     "t_start": "首次可见冲击网络快照",
     "t_supply_peak": "原始供应冲击峰值网络快照",
-    "t_policy_start": "恢复策略开始执行网络快照",
+    "t_policy_start": "恢复动作启动网络快照",
     "t_recovery": "业务恢复网络快照",
 }
 

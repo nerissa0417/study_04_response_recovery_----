@@ -11,7 +11,6 @@ def _key_node_bonus(model: ModelBundle) -> float:
     return float(model.standard_bundle.metadata.get("config", {}).get("priority_repair", {}).get("key_node_bonus_weight", 3.0))
 
 
-
 def apply_priority_repair(
     current_date: pd.Timestamp,
     state: SimState,
@@ -22,9 +21,129 @@ def apply_priority_repair(
     if not policy.enabled:
         return
 
-    _activate_due_repairs(current_date=current_date, state=state)
-    _schedule_supplier_repairs(current_date=current_date, state=state, model=model, policy=policy, context=context)
-    _schedule_material_repairs(current_date=current_date, state=state, model=model, policy=policy, context=context)
+    activate_due_repairs(current_date=current_date, state=state)
+    schedule_priority_repairs_from_context(
+        current_date=current_date,
+        state=state,
+        model=model,
+        policy=policy,
+        context=context,
+    )
+
+
+def activate_due_repairs(current_date: pd.Timestamp, state: SimState) -> None:
+    for supplier_id, payload in list(state.repair_pending_suppliers.items()):
+        if payload["activate_date"] <= current_date:
+            state.repair_active_suppliers.add(supplier_id)
+            state.repair_log.append(
+                {"date": current_date, "repair_type": "supplier", "target_id": supplier_id}
+            )
+            record_policy_event(
+                state=state,
+                current_date=current_date,
+                policy_type="priority_repair",
+                action="activate_supplier_repair",
+                target_id=supplier_id,
+                target_type="supplier",
+                cost=float(payload.get("activation_cost", 0.0)),
+                metadata={"strategy_role": str(payload.get("strategy_role", "parallel_root_repair"))},
+            )
+            del state.repair_pending_suppliers[supplier_id]
+    for item_id, payload in list(state.repair_pending_items.items()):
+        if payload["activate_date"] <= current_date:
+            state.repair_active_items.add(item_id)
+            state.repair_log.append(
+                {"date": current_date, "repair_type": "material", "target_id": item_id}
+            )
+            record_policy_event(
+                state=state,
+                current_date=current_date,
+                policy_type="priority_repair",
+                action="activate_material_repair",
+                target_id=item_id,
+                target_type="item",
+                cost=float(payload.get("activation_cost", 0.0)),
+                metadata={"strategy_role": str(payload.get("strategy_role", "parallel_root_repair"))},
+            )
+            del state.repair_pending_items[item_id]
+
+
+def schedule_priority_repairs_from_context(
+    *,
+    current_date: pd.Timestamp,
+    state: SimState,
+    model: ModelBundle,
+    policy: PolicySpec,
+    context: dict,
+) -> None:
+    schedule_priority_repairs(
+        current_date=current_date,
+        state=state,
+        model=model,
+        policy=policy,
+        disrupted_suppliers=set(context["disrupted_suppliers"]),
+        degraded_suppliers=set(context["degraded_suppliers"]),
+        disrupted_items=set(context.get("disrupted_items", set())),
+    )
+
+
+def schedule_priority_repairs_from_state(
+    *,
+    current_date: pd.Timestamp,
+    state: SimState,
+    model: ModelBundle,
+    policy: PolicySpec,
+) -> None:
+    disrupted_suppliers = {
+        supplier_id
+        for supplier_id, status in state.supplier_status.items()
+        if status == "disrupted"
+    }
+    degraded_suppliers = {
+        supplier_id
+        for supplier_id, status in state.supplier_status.items()
+        if status == "degraded"
+    }
+    disrupted_items = {
+        item_id
+        for item_id, status in state.item_supply_status.items()
+        if status == "unavailable"
+    }
+    schedule_priority_repairs(
+        current_date=current_date,
+        state=state,
+        model=model,
+        policy=policy,
+        disrupted_suppliers=disrupted_suppliers,
+        degraded_suppliers=degraded_suppliers,
+        disrupted_items=disrupted_items,
+    )
+
+
+def schedule_priority_repairs(
+    *,
+    current_date: pd.Timestamp,
+    state: SimState,
+    model: ModelBundle,
+    policy: PolicySpec,
+    disrupted_suppliers: set[str],
+    degraded_suppliers: set[str],
+    disrupted_items: set[str],
+) -> None:
+    _schedule_supplier_repairs(
+        current_date=current_date,
+        state=state,
+        model=model,
+        policy=policy,
+        supplier_candidates=sorted(disrupted_suppliers | degraded_suppliers),
+    )
+    _schedule_material_repairs(
+        current_date=current_date,
+        state=state,
+        model=model,
+        policy=policy,
+        item_candidates=sorted(disrupted_items),
+    )
 
 
 def override_context_with_repairs(context: dict, state: SimState) -> dict:
@@ -43,50 +162,16 @@ def override_context_with_repairs(context: dict, state: SimState) -> dict:
     return patched
 
 
-def _activate_due_repairs(current_date: pd.Timestamp, state: SimState) -> None:
-    for supplier_id, payload in list(state.repair_pending_suppliers.items()):
-        if payload["activate_date"] <= current_date:
-            state.repair_active_suppliers.add(supplier_id)
-            state.repair_log.append(
-                {"date": current_date, "repair_type": "supplier", "target_id": supplier_id}
-            )
-            record_policy_event(
-                state=state,
-                current_date=current_date,
-                policy_type="priority_repair",
-                action="activate_supplier_repair",
-                target_id=supplier_id,
-                target_type="supplier",
-                cost=float(payload.get("activation_cost", 0.0)),
-            )
-            del state.repair_pending_suppliers[supplier_id]
-    for item_id, payload in list(state.repair_pending_items.items()):
-        if payload["activate_date"] <= current_date:
-            state.repair_active_items.add(item_id)
-            state.repair_log.append(
-                {"date": current_date, "repair_type": "material", "target_id": item_id}
-            )
-            record_policy_event(
-                state=state,
-                current_date=current_date,
-                policy_type="priority_repair",
-                action="activate_material_repair",
-                target_id=item_id,
-                target_type="item",
-                cost=float(payload.get("activation_cost", 0.0)),
-            )
-            del state.repair_pending_items[item_id]
-
-
 def _schedule_supplier_repairs(
+    *,
     current_date: pd.Timestamp,
     state: SimState,
     model: ModelBundle,
     policy: PolicySpec,
-    context: dict,
+    supplier_candidates: list[str],
 ) -> None:
     candidates = sorted(
-        set(context["disrupted_suppliers"]) | set(context["degraded_suppliers"]),
+        set(supplier_candidates),
         key=lambda supplier_id: _score_supplier(model, supplier_id, policy.priority_rule),
         reverse=True,
     )
@@ -104,6 +189,7 @@ def _schedule_supplier_repairs(
         state.repair_pending_suppliers[supplier_id] = {
             "activate_date": current_date + pd.Timedelta(days=state.params.priority_repair_lead_days),
             "activation_cost": float(policy.params.get("activation_cost", 0.0)),
+            "strategy_role": "parallel_root_repair",
         }
         record_policy_event(
             state=state,
@@ -113,20 +199,24 @@ def _schedule_supplier_repairs(
             target_id=supplier_id,
             target_type="supplier",
             cost=schedule_cost,
-            metadata={"activate_date": state.repair_pending_suppliers[supplier_id]["activate_date"]},
+            metadata={
+                "activate_date": state.repair_pending_suppliers[supplier_id]["activate_date"],
+                "strategy_role": "parallel_root_repair",
+            },
         )
         available_slots -= 1
 
 
 def _schedule_material_repairs(
+    *,
     current_date: pd.Timestamp,
     state: SimState,
     model: ModelBundle,
     policy: PolicySpec,
-    context: dict,
+    item_candidates: list[str],
 ) -> None:
     candidates = sorted(
-        set(context.get("disrupted_items", set())),
+        set(item_candidates),
         key=lambda item_id: _score_item(model, item_id, policy.priority_rule),
         reverse=True,
     )
@@ -144,6 +234,7 @@ def _schedule_material_repairs(
         state.repair_pending_items[item_id] = {
             "activate_date": current_date + pd.Timedelta(days=state.params.priority_repair_lead_days),
             "activation_cost": float(policy.params.get("activation_cost", 0.0)),
+            "strategy_role": "parallel_root_repair",
         }
         record_policy_event(
             state=state,
@@ -153,7 +244,10 @@ def _schedule_material_repairs(
             target_id=item_id,
             target_type="item",
             cost=schedule_cost,
-            metadata={"activate_date": state.repair_pending_items[item_id]["activate_date"]},
+            metadata={
+                "activate_date": state.repair_pending_items[item_id]["activate_date"],
+                "strategy_role": "parallel_root_repair",
+            },
         )
         available_slots -= 1
 

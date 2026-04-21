@@ -7,7 +7,7 @@ standardize:
 simulation:
   enabled: true
   scenario: default_random_distributed_node_disruption
-  policy_profile: baseline
+  policy_profile: time_priority_interrupt
   report_profile: minimal
   bayesian_use_sampling: false
   bayesian_random_seed: 42
@@ -19,7 +19,7 @@ batch:
     - default_random_distributed_node_disruption
     - default_keynode_distributed_disruption
   policy_profiles:
-    - baseline
+    - time_priority_interrupt
     - all_policies
     - no_policy
     - only_backup_switch
@@ -33,7 +33,7 @@ batch:
 sensitivity:
   enabled: false
   scenario: default_random_distributed_node_disruption
-  policy_profile: baseline
+  policy_profile: time_priority_interrupt
   parameters:
     - single_source_ratio
     - backup_coverage
@@ -52,7 +52,7 @@ monte_carlo:
     - default_random_distributed_node_disruption
     - default_keynode_distributed_disruption
   policy_profiles:
-    - baseline
+    - time_priority_interrupt
     - no_priority_repair
   trials: 20
   random_seed: 42

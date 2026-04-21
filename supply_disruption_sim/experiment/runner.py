@@ -24,6 +24,20 @@ from supply_disruption_sim.viz.network_trend_plot import build_network_history
 
 
 DEFAULT_POLICY_PROFILES: dict[str, dict[str, dict[str, Any]]] = {
+    "time_priority_interrupt": {
+        "backup_supplier_switch": {
+            "enabled": True,
+            "params": {"recovery_mode": "time_priority_interrupt"},
+        },
+        "equivalent_material_substitution": {
+            "enabled": True,
+            "params": {"recovery_mode": "time_priority_interrupt"},
+        },
+        "priority_repair": {
+            "enabled": True,
+            "params": {"recovery_mode": "time_priority_interrupt"},
+        },
+    },
     "baseline": {},
     "all_policies": {
         "backup_supplier_switch": {"enabled": True},
@@ -56,7 +70,7 @@ DEFAULT_POLICY_PROFILES: dict[str, dict[str, dict[str, Any]]] = {
 }
 
 DEFAULT_SINGLE_SCENARIO_COMPARISON_PROFILES = [
-    "baseline",
+    "time_priority_interrupt",
     "all_policies",
     "no_policy",
     "only_backup_switch",
@@ -103,7 +117,7 @@ def run_experiment(
     input_dir: str | Path,
     scenario_name: str,
     output_dir: str | Path,
-    policy_profile: str = "baseline",
+    policy_profile: str = "time_priority_interrupt",
     report_profile: str = "minimal",
     policy_overrides: dict[str, dict[str, Any]] | None = None,
     custom_policy_profiles: dict[str, dict[str, dict[str, Any]]] | None = None,
@@ -135,7 +149,7 @@ def run_experiment_with_model(
     model: ModelBundle,
     scenario_name: str,
     output_dir: str | Path,
-    policy_profile: str = "baseline",
+    policy_profile: str = "time_priority_interrupt",
     report_profile: str = "minimal",
     policy_overrides: dict[str, dict[str, Any]] | None = None,
     custom_policy_profiles: dict[str, dict[str, dict[str, Any]]] | None = None,
@@ -193,7 +207,7 @@ def run_experiment_with_model(
 
 
 def build_policy_set(
-    policy_profile: str = "baseline",
+    policy_profile: str = "time_priority_interrupt",
     policy_overrides: dict[str, dict[str, Any]] | None = None,
     custom_policy_profiles: dict[str, dict[str, dict[str, Any]]] | None = None,
 ) -> list[PolicySpec]:
@@ -405,6 +419,18 @@ def _build_single_scenario_policy_comparison_outputs(
         if comparison_frames
         else pd.DataFrame(columns=_policy_comparison_time_series_columns())
     )
+    if not summary_df.empty:
+        summary_df["policy_profile"] = pd.Categorical(
+            summary_df["policy_profile"].astype(str),
+            categories=ordered_profiles,
+            ordered=True,
+        )
+    if not time_series_df.empty:
+        time_series_df["policy_profile"] = pd.Categorical(
+            time_series_df["policy_profile"].astype(str),
+            categories=ordered_profiles,
+            ordered=True,
+        )
     return (
         summary_df.sort_values(by=["scenario_id", "policy_profile"]).reset_index(drop=True),
         time_series_df.sort_values(by=["policy_profile", "date", "day_offset"]).reset_index(drop=True),

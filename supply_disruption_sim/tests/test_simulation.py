@@ -594,6 +594,11 @@ class SimulationPipelineTest(unittest.TestCase):
 
     def test_policy_profiles_cover_expected_strategy_combinations(self) -> None:
         expected_enabled = {
+            "time_priority_interrupt": {
+                "backup_supplier_switch": True,
+                "equivalent_material_substitution": True,
+                "priority_repair": True,
+            },
             "all_policies": {
                 "backup_supplier_switch": True,
                 "equivalent_material_substitution": True,
@@ -624,6 +629,18 @@ class SimulationPipelineTest(unittest.TestCase):
             policies = build_policy_set(policy_profile=profile_name)
             actual = {policy.policy_type: policy.enabled for policy in policies}
             self.assertEqual(actual, expected)
+        time_priority_policies = {
+            policy.policy_type: policy.params.get("recovery_mode")
+            for policy in build_policy_set(policy_profile="time_priority_interrupt")
+        }
+        self.assertEqual(
+            time_priority_policies,
+            {
+                "backup_supplier_switch": "time_priority_interrupt",
+                "equivalent_material_substitution": "time_priority_interrupt",
+                "priority_repair": "time_priority_interrupt",
+            },
+        )
 
     def test_gap04_sensitivity_analysis_exports_tables(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:

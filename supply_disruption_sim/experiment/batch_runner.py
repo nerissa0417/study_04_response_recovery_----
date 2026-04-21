@@ -11,7 +11,7 @@ from supply_disruption_sim.reporting.report_generator import generate_batch_repo
 
 
 DEFAULT_BATCH_POLICY_PROFILES = [
-    "baseline",
+    "time_priority_interrupt",
     "all_policies",
     "no_policy",
     "only_backup_switch",

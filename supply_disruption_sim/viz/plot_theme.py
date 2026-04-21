@@ -45,6 +45,7 @@ QUALITATIVE_COLORS = [
 ]
 
 POLICY_PROFILE_COLORS = {
+    "time_priority_interrupt": "#0F766E",
     "baseline": "#166534",
     "all_policies": "#1D4ED8",
     "no_policy": "#D62828",
@@ -57,6 +58,7 @@ POLICY_PROFILE_COLORS = {
 }
 
 POLICY_PROFILE_LINESTYLES = {
+    "time_priority_interrupt": "-",
     "baseline": "-",
     "all_policies": "--",
     "no_policy": "-",

@@ -16,14 +16,40 @@ def apply_equivalent_material_substitution(
     if not policy.enabled:
         return
 
+    candidates = collect_substitution_candidates(
+        current_date=current_date,
+        state=state,
+        model=model,
+        policy=policy,
+    )
+    for item_id, payload in candidates.items():
+        schedule_substitution(
+            current_date=current_date,
+            state=state,
+            model=model,
+            policy=policy,
+            item_id=item_id,
+            payload=payload,
+        )
+    activate_due_substitutions(current_date=current_date, state=state, policy=policy)
+
+
+def collect_substitution_candidates(
+    *,
+    current_date: pd.Timestamp,
+    state: SimState,
+    model: ModelBundle,
+    policy: PolicySpec,
+) -> dict[str, dict]:
+    candidates: dict[str, dict] = {}
     critical_items = model.standard_bundle.items.loc[
         model.standard_bundle.items["is_critical_material"], "item_id"
     ]
-    for item_id in critical_items:
+    for item_id in critical_items.astype(str):
         if state.item_supply_status.get(item_id) != "unavailable":
             state.substitution_pending.pop(item_id, None)
             continue
-        if item_id in state.substitution_active:
+        if item_id in state.substitution_active or item_id in state.substitution_pending:
             continue
         alternatives = model.supply_map.alternative_items(item_id)
         if not alternatives:
@@ -38,31 +64,63 @@ def apply_equivalent_material_substitution(
         )
         if alt_item_id is None:
             continue
-        if item_id not in state.substitution_pending:
-            substitution_cost = _estimate_substitution_cost(
+        activate_date = current_date + pd.Timedelta(days=max(policy.switch_time_days, 0))
+        candidates[item_id] = {
+            "policy_type": policy.policy_type,
+            "alt_item_id": str(alt_item_id),
+            "activate_date": activate_date,
+            "delay_days": max(policy.switch_time_days, 0),
+            "expected_effective_date": activate_date,
+            "substitution_cost": _estimate_substitution_cost(
                 item_id=item_id,
-                alt_item_id=alt_item_id,
+                alt_item_id=str(alt_item_id),
                 model=model,
                 policy=policy,
-            )
-            state.substitution_pending[item_id] = {
-                "alt_item_id": alt_item_id,
-                "activate_date": current_date + pd.Timedelta(days=max(policy.switch_time_days, 0)),
-            }
-            record_policy_event(
-                state=state,
-                current_date=current_date,
-                policy_type=policy.policy_type,
-                action="schedule_substitution",
-                target_id=item_id,
-                target_type="item",
-                cost=substitution_cost,
-                metadata={
-                    "alt_item_id": alt_item_id,
-                    "activate_date": state.substitution_pending[item_id]["activate_date"],
-                },
-            )
+            ),
+        }
+    return candidates
 
+
+def schedule_substitution(
+    *,
+    current_date: pd.Timestamp,
+    state: SimState,
+    model: ModelBundle,
+    policy: PolicySpec,
+    item_id: str,
+    payload: dict,
+    strategy_role: str = "primary",
+) -> None:
+    if item_id in state.substitution_active or item_id in state.substitution_pending:
+        return
+
+    state.substitution_pending[item_id] = {
+        "alt_item_id": str(payload["alt_item_id"]),
+        "activate_date": pd.Timestamp(payload["activate_date"]).normalize(),
+        "strategy_role": strategy_role,
+    }
+    record_policy_event(
+        state=state,
+        current_date=current_date,
+        policy_type=policy.policy_type,
+        action="schedule_substitution",
+        target_id=item_id,
+        target_type="item",
+        cost=float(payload.get("substitution_cost", 0.0)),
+        metadata={
+            "alt_item_id": str(payload["alt_item_id"]),
+            "activate_date": state.substitution_pending[item_id]["activate_date"],
+            "strategy_role": strategy_role,
+        },
+    )
+
+
+def activate_due_substitutions(
+    *,
+    current_date: pd.Timestamp,
+    state: SimState,
+    policy: PolicySpec,
+) -> None:
     for item_id, pending in list(state.substitution_pending.items()):
         if pending["activate_date"] <= current_date:
             state.substitution_active[item_id] = pending["alt_item_id"]
@@ -75,7 +133,10 @@ def apply_equivalent_material_substitution(
                 target_id=item_id,
                 target_type="item",
                 cost=float(policy.params.get("activation_cost", 0.0)),
-                metadata={"alt_item_id": pending["alt_item_id"]},
+                metadata={
+                    "alt_item_id": pending["alt_item_id"],
+                    "strategy_role": str(pending.get("strategy_role", "primary")),
+                },
             )
 
 

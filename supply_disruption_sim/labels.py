@@ -12,31 +12,32 @@ SCENARIO_TYPE_ALIASES = {
 }
 
 SCENARIO_ID_LABELS = {
-    "default_random_distributed_node_disruption": "随机分散中断情境",
+    "default_random_distributed_node_disruption": "随机中断情境",
     "default_keynode_distributed_disruption": "关键节点中断情境",
 }
 
 SCENARIO_TYPE_LABELS = {
-    "random_distributed_node_disruption": "随机分散节点中断",
+    "random_distributed_node_disruption": "随机节点中断",
     "keynode_distributed_disruption": "关键节点集中中断",
 }
 
 POLICY_PROFILE_LABELS = {
-    "baseline": "当前恢复策略",
-    "all_policies": "全策略联动",
+    "time_priority_interrupt": "当前恢复策略",
+    "baseline": "默认联动恢复",
+    "all_policies": "全策略显示联动",
     "no_policy": "无恢复策略",
-    "only_backup_switch": "仅备用切换",
+    "only_backup_switch": "仅备供切换",
     "only_substitution": "仅等效替代",
-    "only_priority_repair": "仅优先修复",
-    "no_priority_repair": "去除优先修复",
-    "no_backup_switch": "去除备用切换",
+    "only_priority_repair": "仅优先抢修",
+    "no_priority_repair": "去除优先抢修",
+    "no_backup_switch": "去除备供切换",
     "no_substitution": "去除等效替代",
 }
 
 POLICY_TYPE_LABELS = {
-    "backup_supplier_switch": "备用切换",
+    "backup_supplier_switch": "备供切换",
     "equivalent_material_substitution": "等效替代",
-    "priority_repair": "优先修复",
+    "priority_repair": "优先抢修",
 }
 
 PARAMETER_LABELS = {
@@ -44,7 +45,7 @@ PARAMETER_LABELS = {
     "backup_coverage": "备份覆盖率",
     "substitution_availability": "替代可得性",
     "backup_switch_time_days": "备供切换时滞",
-    "priority_repair_lead_days": "修复提前期",
+    "priority_repair_lead_days": "优先抢修提前天数",
     "incident_duration_factor": "中断持续时间系数",
 }
 
@@ -58,6 +59,7 @@ PARAMETER_DIMENSION_LABELS = {
 }
 
 TOKEN_LABELS = {
+    "time": "时间",
     "default": "默认",
     "random": "随机",
     "distributed": "分散",
@@ -80,7 +82,7 @@ TOKEN_LABELS = {
     "switch": "切换",
     "substitution": "等效替代",
     "priority": "优先",
-    "repair": "修复",
+    "repair": "抢修",
     "scenario": "情境",
     "profile": "方案",
 }

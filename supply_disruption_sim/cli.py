@@ -27,7 +27,7 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--input-dir", default="Input_data")
     run_parser.add_argument("--scenario", default="default_random_distributed_node_disruption")
     run_parser.add_argument("--output-dir", default="output/run_random_distributed")
-    run_parser.add_argument("--policy-profile", default="baseline")
+    run_parser.add_argument("--policy-profile", default="time_priority_interrupt")
     run_parser.add_argument("--report-profile", choices=["minimal", "full", "paper"], default="minimal")
     run_parser.add_argument("--parameter-experiments", action=argparse.BooleanOptionalAction, default=True)
     run_parser.add_argument("--bayesian-use-sampling", action=argparse.BooleanOptionalAction, default=None)
@@ -46,7 +46,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--policy-profiles",
         nargs="+",
         default=[
-            "baseline",
+            "time_priority_interrupt",
             "all_policies",
             "no_policy",
             "only_backup_switch",
@@ -63,7 +63,7 @@ def build_parser() -> argparse.ArgumentParser:
     sensitivity_parser.add_argument("--input-dir", default="Input_data")
     sensitivity_parser.add_argument("--scenario", default="default_random_distributed_node_disruption")
     sensitivity_parser.add_argument("--output-dir", default="output/sensitivity_runs")
-    sensitivity_parser.add_argument("--policy-profile", default="baseline")
+    sensitivity_parser.add_argument("--policy-profile", default="time_priority_interrupt")
     sensitivity_parser.add_argument(
         "--parameters",
         nargs="+",
@@ -85,7 +85,7 @@ def build_parser() -> argparse.ArgumentParser:
     monte_carlo_parser.add_argument(
         "--policy-profiles",
         nargs="+",
-        default=["baseline", "no_priority_repair"],
+        default=["time_priority_interrupt", "no_priority_repair"],
     )
     monte_carlo_parser.add_argument("--trials", type=int, default=20)
     monte_carlo_parser.add_argument("--random-seed", type=int, default=42)
@@ -186,7 +186,7 @@ def run_scenario(
     input_dir: Path,
     scenario_name: str,
     output_dir: Path,
-    policy_profile: str = "baseline",
+    policy_profile: str = "time_priority_interrupt",
     report_profile: str = "minimal",
     include_parameter_experiments: bool = True,
     bayesian_use_sampling: bool | None = None,
@@ -236,7 +236,7 @@ def run_sensitivity(
     input_dir: Path,
     scenario_name: str,
     output_dir: Path,
-    policy_profile: str = "baseline",
+    policy_profile: str = "time_priority_interrupt",
     parameters: list[str] | None = None,
     random_seed: int = 42,
     bayesian_use_sampling: bool | None = None,

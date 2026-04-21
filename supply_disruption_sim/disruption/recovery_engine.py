@@ -75,7 +75,7 @@ def run_simulation(
             apply_inventory_update=True,
             bayes_engine=bayes,
         )
-        policy_manager.apply_post(current_date=current_date, state=state, model=model)
+        policy_manager.apply_post(current_date=current_date, state=state, model=model, context=context)
         context = override_context_with_repairs(context=context, state=state)
         supplier_capacity_factors = update_supplier_statuses(state=state, context=context, model=model)
         compute_item_supply_statuses(
