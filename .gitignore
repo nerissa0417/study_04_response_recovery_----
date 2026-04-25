@@ -17,9 +17,12 @@ venv/
 env/
 
 # Generated simulation outputs
-output/
+# output/
 *.log
-*.output/
+output/refined_visualizations/
+output/run_keynode_distributed/
+output/run_random_distributed/
+output/study04_dynamic_frontend/study04_dynamic_frontend_release.zip
 
 # Local notebooks and temporary files
 .ipynb_checkpoints/
@@ -40,3 +43,4 @@ _new_study04_recovery/Input_data/
 tmp_0414_text_clean.txt
 tmp_0414_text.txt
 tmp_0414.docx
+科研绘图/

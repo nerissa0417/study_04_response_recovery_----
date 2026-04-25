@@ -5,7 +5,12 @@ from .data_adapter.standardizer import export_standard_bundle, standardize
 from .data_adapter.validator import validate_standard_bundle
 from .disruption.recovery_engine import run_simulation
 from .model.builder import build_model
-from .reporting.report_generator import generate_report
+
+
+def generate_report(*args, **kwargs):
+    from .reporting.report_generator import generate_report as _generate_report
+
+    return _generate_report(*args, **kwargs)
 
 __all__ = [
     "build_model",

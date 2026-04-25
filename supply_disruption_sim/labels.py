@@ -18,7 +18,7 @@ SCENARIO_ID_LABELS = {
 
 SCENARIO_TYPE_LABELS = {
     "random_distributed_node_disruption": "随机节点中断",
-    "keynode_distributed_disruption": "关键节点集中中断",
+    "keynode_distributed_disruption": "关键节点中断",
 }
 
 POLICY_PROFILE_LABELS = {

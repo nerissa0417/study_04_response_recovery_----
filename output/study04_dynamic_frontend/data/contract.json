@@ -1,0 +1,89 @@
+{
+  "contract_name": "study04_dynamic_frontend",
+  "contract_version": "1.0.0",
+  "generated_timezone": "Asia/Shanghai",
+  "required_scene_fields": [
+    "scene_key",
+    "scene_family",
+    "label",
+    "accent",
+    "accent_soft",
+    "scenario",
+    "summary",
+    "kpis",
+    "daily",
+    "network_markers",
+    "network_snapshots",
+    "policy_events",
+    "impacted_paths",
+    "parameter_sensitivity",
+    "policy_comparison_summary",
+    "policy_comparison_time_series",
+    "policy_profiles",
+    "monthly_disrupted",
+    "propagation_durations",
+    "artifacts",
+    "interactive_network"
+  ],
+  "api_endpoints": {
+    "health": "/api/health",
+    "contract": "/api/contract",
+    "whatif_run": "/api/whatif-run"
+  },
+  "policy_profiles": [
+    {
+      "value": "time_priority_interrupt",
+      "label": "当前恢复策略"
+    },
+    {
+      "value": "all_policies",
+      "label": "全策略显示联动"
+    },
+    {
+      "value": "no_policy",
+      "label": "无恢复策略"
+    },
+    {
+      "value": "only_backup_switch",
+      "label": "仅备供切换"
+    },
+    {
+      "value": "only_substitution",
+      "label": "仅等效替代"
+    },
+    {
+      "value": "only_priority_repair",
+      "label": "仅优先抢修"
+    }
+  ],
+  "network_filters": [
+    {
+      "value": "process",
+      "label": "当前过程"
+    },
+    {
+      "value": "all",
+      "label": "全链路"
+    },
+    {
+      "value": "key",
+      "label": "仅关键节点"
+    },
+    {
+      "value": "disrupted",
+      "label": "仅中断/阻断"
+    },
+    {
+      "value": "supplier",
+      "label": "仅供应商"
+    },
+    {
+      "value": "item",
+      "label": "仅物料/BOM"
+    },
+    {
+      "value": "policy",
+      "label": "仅策略作用边"
+    }
+  ]
+}

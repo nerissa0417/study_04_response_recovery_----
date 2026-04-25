@@ -18,9 +18,14 @@ from supply_disruption_sim.disruption.scenario_loader import (
 )
 from supply_disruption_sim.labels import policy_profile_label
 from supply_disruption_sim.model.builder import build_model
-from supply_disruption_sim.reporting.report_generator import generate_report
-from supply_disruption_sim.types import ModelBundle, PolicySpec, ReportArtifacts, SimulationParams, SimulationResult
-from supply_disruption_sim.viz.network_trend_plot import build_network_history
+from supply_disruption_sim.types import (
+    ModelBundle,
+    PolicySpec,
+    ReportArtifacts,
+    ScenarioSpec,
+    SimulationParams,
+    SimulationResult,
+)
 
 
 DEFAULT_POLICY_PROFILES: dict[str, dict[str, dict[str, Any]]] = {
@@ -156,6 +161,8 @@ def run_experiment_with_model(
     params_overrides: dict[str, Any] | None = None,
     include_parameter_experiments: bool = False,
 ) -> dict[str, Any]:
+    from supply_disruption_sim.reporting.report_generator import generate_report
+
     scenario = load_scenario(scenario_name, model)
     params = _build_params(model=model, params_overrides=params_overrides)
     policies = build_policy_set(
@@ -216,6 +223,26 @@ def build_policy_set(
     _apply_policy_overrides(policies, profile_overrides)
     _apply_policy_overrides(policies, policy_overrides or {})
     return policies
+
+
+def build_policy_comparison_outputs_for_scenario(
+    *,
+    model: ModelBundle,
+    scenario: ScenarioSpec,
+    baseline_result: SimulationResult,
+    baseline_policy_profile: str,
+    params: SimulationParams,
+    custom_policy_profiles: dict[str, dict[str, dict[str, Any]]] | None = None,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Build the same single-scenario policy comparison outputs for an in-memory scenario."""
+    return _build_single_scenario_policy_comparison_outputs(
+        model=model,
+        scenario=scenario,
+        baseline_result=baseline_result,
+        baseline_policy_profile=baseline_policy_profile,
+        params=params,
+        custom_policy_profiles=custom_policy_profiles,
+    )
 
 
 def _resolve_policy_profile(
@@ -375,12 +402,16 @@ def _serialize_artifacts(artifacts: ReportArtifacts) -> dict[str, Any]:
 def _build_single_scenario_policy_comparison_outputs(
     *,
     model: ModelBundle,
-    scenario_name: str,
+    scenario_name: str | None = None,
+    scenario: ScenarioSpec | None = None,
     baseline_result: SimulationResult,
     baseline_policy_profile: str,
     params: SimulationParams,
     custom_policy_profiles: dict[str, dict[str, dict[str, Any]]] | None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
+    if scenario_name is None and scenario is None:
+        raise ValueError("Either scenario_name or scenario must be provided for policy comparison.")
+
     ordered_profiles = list(DEFAULT_SINGLE_SCENARIO_COMPARISON_PROFILES)
     if baseline_policy_profile not in ordered_profiles:
         ordered_profiles.append(baseline_policy_profile)
@@ -396,7 +427,7 @@ def _build_single_scenario_policy_comparison_outputs(
     for comparison_profile in ordered_profiles:
         if comparison_profile == baseline_policy_profile:
             continue
-        comparison_scenario = load_scenario(scenario_name, model)
+        comparison_scenario = copy.deepcopy(scenario) if scenario is not None else load_scenario(str(scenario_name), model)
         comparison_policies = build_policy_set(
             policy_profile=comparison_profile,
             custom_policy_profiles=custom_policy_profiles,
@@ -465,6 +496,8 @@ def _build_policy_comparison_time_series_frame(
     result: SimulationResult,
     policy_profile: str,
 ) -> pd.DataFrame:
+    from supply_disruption_sim.viz.network_trend_plot import build_network_history
+
     history = result.history.copy()
     if history.empty:
         return pd.DataFrame(columns=_policy_comparison_time_series_columns())

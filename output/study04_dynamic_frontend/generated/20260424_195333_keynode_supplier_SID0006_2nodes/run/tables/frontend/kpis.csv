@@ -1,0 +1,2 @@
+scenario_id,scenario_name,target_id,ttr_days,propagation_duration_months,propagation_stop_date,average_service_level,avg_system_service_level,estimated_disruption_loss,policy_total_cost,max_affected_key_items,max_failed_key_items,max_disrupted_key_suppliers
+interactive_keynode_2nodes_sid0006,INTERACTIVE关键节点2NODESSID0006,"SID0006,SID0020",0,3,2025-08-04,0.9417,0.9417,2253.8375,60038.3375,1,0,9

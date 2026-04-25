@@ -8,8 +8,11 @@ import pandas as pd
 
 from supply_disruption_sim.disruption.recovery_engine import run_simulation
 from supply_disruption_sim.disruption.scenario_loader import load_default_params, load_scenario
-from supply_disruption_sim.experiment.runner import build_policy_set, prepare_experiment_context
-from supply_disruption_sim.reporting.report_generator import generate_report
+from supply_disruption_sim.experiment.runner import (
+    build_policy_comparison_outputs_for_scenario,
+    build_policy_set,
+    prepare_experiment_context,
+)
 from supply_disruption_sim.types import ModelBundle, PolicySpec, ReportArtifacts, ScenarioSpec, SimulationParams, SimulationResult
 
 
@@ -117,14 +120,25 @@ def run_custom_node_experiment(
     report_profile: str = "minimal",
     params_overrides: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    from supply_disruption_sim.reporting.report_generator import generate_report
+
     params = _build_params(model=model, params_overrides=params_overrides)
     policies = build_policy_set(policy_profile=policy_profile)
     result = run_simulation(model=model, scenario=scenario, policies=policies, params=params)
+    policy_comparison_summary, policy_comparison_time_series = build_policy_comparison_outputs_for_scenario(
+        model=model,
+        scenario=scenario,
+        baseline_result=result,
+        baseline_policy_profile=policy_profile,
+        params=params,
+    )
     artifacts = generate_report(
         result,
         output_dir,
         report_profile=report_profile,
         params=asdict(params),
+        policy_comparison_summary=policy_comparison_summary,
+        policy_comparison_time_series=policy_comparison_time_series,
     )
     return {
         "scenario": scenario,
@@ -132,6 +146,8 @@ def run_custom_node_experiment(
         "policies": policies,
         "result": result,
         "artifacts": artifacts,
+        "policy_comparison_summary": policy_comparison_summary,
+        "policy_comparison_time_series": policy_comparison_time_series,
     }
 
 

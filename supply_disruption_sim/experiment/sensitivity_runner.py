@@ -7,22 +7,14 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-import matplotlib
 import pandas as pd
-
-
-matplotlib.use("Agg")
-
-import matplotlib.pyplot as plt
 
 from supply_disruption_sim.disruption.recovery_engine import run_simulation
 from supply_disruption_sim.disruption.scenario_loader import load_default_params, load_scenario
 from supply_disruption_sim.experiment.runner import build_policy_set, prepare_experiment_context
 from supply_disruption_sim.labels import parameter_dimension_label, parameter_label, policy_profile_label, scenario_label
 from supply_disruption_sim.model.builder import build_model
-from supply_disruption_sim.reporting.report_generator import generate_report
 from supply_disruption_sim.types import ModelBundle, PolicySpec, ScenarioSpec, SimulationParams, StandardBundle
-from supply_disruption_sim.viz.plot_theme import add_figure_header, finish_figure, font_props, style_axes
 
 
 DEFAULT_SENSITIVITY_PARAMETER_GRID: dict[str, list[float | int]] = {
@@ -189,6 +181,8 @@ def _run_parameter_variant(
     random_seed: int,
     params_overrides: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    from supply_disruption_sim.reporting.report_generator import generate_report
+
     variant_model, scenario, params, policies, applied_parameters = prepare_variant_inputs(
         base_model=base_model,
         scenario_name=scenario_name,
@@ -779,6 +773,14 @@ def _rank_sensitivity(parameter_response_df: pd.DataFrame, baseline_row: dict[st
 
 
 def _plot_sensitivity_ranking(sensitivity_ranking_df: pd.DataFrame, figure_path: Path) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+
+    import matplotlib.pyplot as plt
+
+    from supply_disruption_sim.viz.plot_theme import finish_figure, font_props, style_axes
+
     if sensitivity_ranking_df.empty:
         return
     working = sensitivity_ranking_df.copy()

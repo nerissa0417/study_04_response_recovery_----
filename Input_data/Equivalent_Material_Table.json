@@ -1,12 +1,12 @@
 [
   {
-    "Material_ID": "MID0006",
-    "Equivalent_Material_ID": "MID0009",
-    "Equivalent_Material_Info_ID": "EMID0001"
+    "Equivalent_Material_Info_ID":"EMID0001",
+    "Material_ID":"MID0007",
+    "Equivalent_Material_ID":"MID0009"
   },
   {
-    "Material_ID": "MID0006",
-    "Equivalent_Material_ID": "MID0019",
-    "Equivalent_Material_Info_ID": "EMID0002"
+    "Equivalent_Material_Info_ID":"EMID0002",
+    "Material_ID":"MID0007",
+    "Equivalent_Material_ID":"MID0019"
   }
 ]

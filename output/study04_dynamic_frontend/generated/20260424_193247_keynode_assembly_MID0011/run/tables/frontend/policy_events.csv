@@ -1,0 +1,7 @@
+date,policy_type,action,target_id,target_type,cost,activate_date,strategy_role,policy_type_name
+2025-06-15,priority_repair,schedule_material_repair,MID0011,item,1122.3207,2025-06-20,parallel_root_repair,优先抢修
+2025-06-20,priority_repair,activate_material_repair,MID0011,item,300.0,,parallel_root_repair,优先抢修
+2025-06-27,priority_repair,schedule_material_repair,MID0019,item,1126.7567,2025-07-02,parallel_root_repair,优先抢修
+2025-07-02,priority_repair,activate_material_repair,MID0019,item,300.0,,parallel_root_repair,优先抢修
+2025-07-02,priority_repair,schedule_material_repair,MID0009,item,1236.1628,2025-07-07,parallel_root_repair,优先抢修
+2025-07-07,priority_repair,activate_material_repair,MID0009,item,300.0,,parallel_root_repair,优先抢修

@@ -1,0 +1,6 @@
+marker_name,date,supplier_disrupted_nodes,material_affected_nodes,bom_edge_disrupted
+t0,2025-06-14,0,0,0
+t_start,2025-06-15,0,9,10
+t_supply_peak,2025-06-15,0,9,10
+t_policy_start,2025-06-20,0,0,0
+t_recovery,2025-06-20,0,0,0

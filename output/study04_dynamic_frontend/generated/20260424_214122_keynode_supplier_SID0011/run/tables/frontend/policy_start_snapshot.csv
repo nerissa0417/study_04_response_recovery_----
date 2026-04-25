@@ -1,0 +1,2 @@
+date,service_level,supply_unavailable_items,supply_degraded_items,supply_effective_degraded_items,supply_effective_unavailable_items,fused_failed_items,total_backlog_demand
+2025-06-20,0.5,0,3,7,0,0,3.7169477533172257

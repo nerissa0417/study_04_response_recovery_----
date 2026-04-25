@@ -1,0 +1,2 @@
+scenario_id,scenario_name,scenario_type,scenario_type_name,target_type,target_id,start_date,duration_days,severity
+interactive_random_2nodes_mid0012,INTERACTIVE随机2NODESMID0012,random_distributed_node_disruption,随机节点中断,node_group,"MID0012,MID0003",2025-06-15,14,1.0

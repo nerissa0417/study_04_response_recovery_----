@@ -1,0 +1,13 @@
+impact_dimension,impact_level,impact_status,root_cause,item_id,path
+fusion,assembly,failed,supply_constraint,MID0002,MID0002 -> MID0023 -> MID0006
+supply,assembly,unavailable,supply_constraint,MID0002,MID0002 -> MID0023 -> MID0006
+demand,product,backlog,,MID0006,MID0006
+fusion,product,failed,supply_constraint,MID0006,MID0006
+fusion,assembly,failed,supply_constraint,MID0012,MID0012 -> MID0006
+fusion,assembly,failed,supply_constraint,MID0015,MID0015 -> MID0024 -> MID0006
+fusion,material,failed,supply_constraint,MID0017,MID0017 -> MID0012 -> MID0006
+fusion,material,failed,supply_constraint,MID0017,MID0017 -> MID0015 -> MID0024 -> MID0006
+fusion,assembly,failed,supply_constraint,MID0023,MID0023 -> MID0006
+fusion,assembly,failed,supply_constraint,MID0024,MID0024 -> MID0006
+fusion,material,affected,demand_backlog,MID0001,MID0001 -> MID0002 -> MID0023 -> MID0006
+fusion,material,affected,demand_backlog,MID0001,MID0001 -> MID0011 -> MID0012 -> MID0006

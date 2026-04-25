@@ -1,0 +1,76 @@
+impact_dimension,impact_level,impact_status,root_cause,item_id,path
+supply,product,unavailable,supply_constraint,MID0006,MID0006
+supply,assembly,unavailable,supply_constraint,MID0011,MID0011 -> MID0012 -> MID0006
+supply,assembly,unavailable,supply_constraint,MID0012,MID0012 -> MID0006
+demand,material,backlog,,MID0001,MID0006 -> MID0023 -> MID0002 -> MID0001
+demand,material,backlog,,MID0001,MID0006 -> MID0012 -> MID0011 -> MID0001
+demand,material,backlog,,MID0001,MID0006 -> MID0022 -> MID0001
+demand,assembly,backlog,,MID0002,MID0006 -> MID0023 -> MID0002
+demand,assembly,backlog,,MID0003,MID0006 -> MID0012 -> MID0003
+demand,material,backlog,,MID0004,MID0006 -> MID0024 -> MID0013 -> MID0004
+demand,material,backlog,,MID0004,MID0006 -> MID0022 -> MID0004
+demand,assembly,backlog,,MID0005,MID0006 -> MID0022 -> MID0005
+demand,product,backlog,,MID0006,MID0006
+demand,material,backlog,,MID0007,MID0006 -> MID0022 -> MID0005 -> MID0007
+demand,material,backlog,,MID0007,MID0006 -> MID0023 -> MID0007
+demand,material,backlog,,MID0008,MID0006 -> MID0023 -> MID0021 -> MID0008
+demand,material,backlog,,MID0008,MID0006 -> MID0023 -> MID0008
+demand,material,backlog,,MID0010,MID0006 -> MID0012 -> MID0014 -> MID0010
+demand,material,backlog,,MID0010,MID0006 -> MID0024 -> MID0010
+demand,assembly,backlog,,MID0011,MID0006 -> MID0012 -> MID0011
+demand,assembly,backlog,,MID0012,MID0006 -> MID0012
+demand,assembly,backlog,,MID0013,MID0006 -> MID0024 -> MID0013
+demand,assembly,backlog,,MID0014,MID0006 -> MID0012 -> MID0014
+demand,assembly,backlog,,MID0015,MID0006 -> MID0024 -> MID0015
+demand,material,backlog,,MID0016,MID0006 -> MID0022 -> MID0018 -> MID0016
+demand,material,backlog,,MID0016,MID0006 -> MID0024 -> MID0016
+demand,material,backlog,,MID0017,MID0006 -> MID0012 -> MID0017
+demand,material,backlog,,MID0017,MID0006 -> MID0024 -> MID0015 -> MID0017
+demand,assembly,backlog,,MID0018,MID0006 -> MID0022 -> MID0018
+demand,material,backlog,,MID0020,MID0006 -> MID0023 -> MID0002 -> MID0020
+demand,material,backlog,,MID0020,MID0006 -> MID0012 -> MID0003 -> MID0020
+demand,material,backlog,,MID0020,MID0006 -> MID0022 -> MID0005 -> MID0020
+demand,material,backlog,,MID0020,MID0006 -> MID0012 -> MID0011 -> MID0020
+demand,material,backlog,,MID0020,MID0006 -> MID0024 -> MID0013 -> MID0020
+demand,assembly,backlog,,MID0021,MID0006 -> MID0023 -> MID0021
+demand,assembly,backlog,,MID0022,MID0006 -> MID0022
+demand,assembly,backlog,,MID0023,MID0006 -> MID0023
+demand,assembly,backlog,,MID0024,MID0006 -> MID0024
+demand,material,backlog,,MID0025,MID0006 -> MID0023 -> MID0002 -> MID0025
+demand,material,backlog,,MID0025,MID0006 -> MID0012 -> MID0003 -> MID0025
+fusion,material,affected,demand_backlog,MID0001,MID0001 -> MID0002 -> MID0023 -> MID0006
+fusion,material,affected,demand_backlog,MID0001,MID0001 -> MID0011 -> MID0012 -> MID0006
+fusion,material,affected,demand_backlog,MID0001,MID0001 -> MID0022 -> MID0006
+fusion,assembly,affected,demand_backlog,MID0002,MID0002 -> MID0023 -> MID0006
+fusion,assembly,affected,demand_backlog,MID0003,MID0003 -> MID0012 -> MID0006
+fusion,material,affected,demand_backlog,MID0004,MID0004 -> MID0013 -> MID0024 -> MID0006
+fusion,material,affected,demand_backlog,MID0004,MID0004 -> MID0022 -> MID0006
+fusion,assembly,affected,demand_backlog,MID0005,MID0005 -> MID0022 -> MID0006
+fusion,product,failed,supply_constraint,MID0006,MID0006
+fusion,material,affected,demand_backlog,MID0007,MID0007 -> MID0005 -> MID0022 -> MID0006
+fusion,material,affected,demand_backlog,MID0007,MID0007 -> MID0023 -> MID0006
+fusion,material,affected,demand_backlog,MID0008,MID0008 -> MID0021 -> MID0023 -> MID0006
+fusion,material,affected,demand_backlog,MID0008,MID0008 -> MID0023 -> MID0006
+fusion,material,affected,demand_backlog,MID0010,MID0010 -> MID0014 -> MID0012 -> MID0006
+fusion,material,affected,demand_backlog,MID0010,MID0010 -> MID0024 -> MID0006
+fusion,assembly,failed,supply_constraint,MID0011,MID0011 -> MID0012 -> MID0006
+fusion,assembly,failed,supply_constraint,MID0012,MID0012 -> MID0006
+fusion,assembly,affected,demand_backlog,MID0013,MID0013 -> MID0024 -> MID0006
+fusion,assembly,affected,demand_backlog,MID0014,MID0014 -> MID0012 -> MID0006
+fusion,assembly,affected,demand_backlog,MID0015,MID0015 -> MID0024 -> MID0006
+fusion,material,affected,demand_backlog,MID0016,MID0016 -> MID0018 -> MID0022 -> MID0006
+fusion,material,affected,demand_backlog,MID0016,MID0016 -> MID0024 -> MID0006
+fusion,material,affected,demand_backlog,MID0017,MID0017 -> MID0012 -> MID0006
+fusion,material,affected,demand_backlog,MID0017,MID0017 -> MID0015 -> MID0024 -> MID0006
+fusion,assembly,affected,demand_backlog,MID0018,MID0018 -> MID0022 -> MID0006
+fusion,material,affected,demand_backlog,MID0020,MID0020 -> MID0002 -> MID0023 -> MID0006
+fusion,material,affected,demand_backlog,MID0020,MID0020 -> MID0003 -> MID0012 -> MID0006
+fusion,material,affected,demand_backlog,MID0020,MID0020 -> MID0005 -> MID0022 -> MID0006
+fusion,material,affected,demand_backlog,MID0020,MID0020 -> MID0011 -> MID0012 -> MID0006
+fusion,material,affected,demand_backlog,MID0020,MID0020 -> MID0013 -> MID0024 -> MID0006
+fusion,assembly,affected,demand_backlog,MID0021,MID0021 -> MID0023 -> MID0006
+fusion,assembly,affected,demand_backlog,MID0022,MID0022 -> MID0006
+fusion,assembly,affected,demand_backlog,MID0023,MID0023 -> MID0006
+fusion,assembly,affected,demand_backlog,MID0024,MID0024 -> MID0006
+fusion,material,affected,demand_backlog,MID0025,MID0025 -> MID0002 -> MID0023 -> MID0006
+fusion,material,affected,demand_backlog,MID0025,MID0025 -> MID0003 -> MID0012 -> MID0006

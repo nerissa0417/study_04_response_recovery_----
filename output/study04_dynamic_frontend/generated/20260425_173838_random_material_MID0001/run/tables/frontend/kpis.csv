@@ -1,0 +1,2 @@
+scenario_id,scenario_name,target_id,ttr_days,propagation_duration_months,propagation_stop_date,average_service_level,avg_system_service_level,estimated_disruption_loss,policy_total_cost,max_affected_key_items,max_failed_key_items,max_disrupted_key_suppliers
+interactive_random_1nodes_mid0001,INTERACTIVE随机1NODESMID0001,MID0001,5,1,2025-06-19,0.9167,0.9167,10543.695,5421.3293,2,2,0

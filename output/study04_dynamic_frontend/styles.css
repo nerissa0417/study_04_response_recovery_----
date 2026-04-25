@@ -1,0 +1,5324 @@
+:root {
+  color-scheme: light;
+  --bg: #f5f7fb;
+  --panel: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --line: #dbe5f0;
+  --shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+  --random: #0f766e;
+  --random-soft: #dcfce7;
+  --keynode: #b91c1c;
+  --keynode-soft: #fee2e2;
+  --blue: #2563eb;
+  --space-xs: 8px;
+  --space-sm: 10px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --workspace-gap: clamp(6px, 0.55vw, 12px);
+  --workspace-sidebar-w: clamp(150px, 7.6vw, 210px);
+  --workspace-aside-w: clamp(390px, 22vw, 540px);
+  --map-aside-w: clamp(470px, 25.5vw, 640px);
+  --active-aside-stack4-summary: 0.2fr;
+  --active-aside-stack4-control: 0.22fr;
+  --active-aside-stack4-detail: 0.26fr;
+  --active-aside-stack4-focus: 0.32fr;
+  --active-aside-stack-gap: 4px;
+  --active-summary-panel-padding: 10px 12px;
+  --active-summary-title-gap: 2px;
+  --active-summary-grid-gap: 4px;
+  --active-summary-grid-cols: 2;
+  --active-summary-card-padding: 8px 10px;
+  --active-summary-card-min-h: 40px;
+  --active-summary-title-font: 15px;
+  --active-summary-label-font: 9px;
+  --active-summary-value-font: 13px;
+  --active-control-panel-padding: 10px 12px;
+  --active-control-title-gap: 0px;
+  --active-control-row-gap: 10px;
+  --active-control-timeline-gap: 4px;
+  --active-control-button-gap: 8px;
+  --active-control-button-cols: 5;
+  --active-control-meta-gap: 8px;
+  --active-control-meta-cols: 3;
+  --active-control-card-padding: 8px 10px;
+  --active-control-card-min-h: 40px;
+  --active-control-caption-padding: 6px 8px;
+  --active-control-title-font: 15px;
+  --active-control-button-font: 12px;
+  --active-control-caption-font: 9px;
+  --active-control-label-font: 9px;
+  --active-control-value-font: 13px;
+  --active-detail-panel-padding: 10px 12px;
+  --active-detail-title-gap: 2px;
+  --active-detail-grid-gap: 4px;
+  --active-detail-grid-cols: 3;
+  --active-detail-card-padding: 8px 10px;
+  --active-detail-card-min-h: 40px;
+  --active-detail-title-font: 15px;
+  --active-detail-note-font: 9px;
+  --active-detail-label-font: 9px;
+  --active-detail-value-font: 13px;
+  --active-focus-panel-padding: 10px 12px;
+  --active-focus-title-gap: 2px;
+  --active-focus-grid-gap: 4px;
+  --active-focus-grid-cols: 3;
+  --active-focus-card-padding: 6px 5px;
+  --active-focus-card-min-h: 40px;
+  --active-focus-action-gap: 6px;
+  --active-focus-action-top-gap: 6px;
+  --active-focus-title-font: 15px;
+  --active-focus-label-font: 9px;
+  --active-focus-value-font: 13px;
+  /* Recovery strategy right panel: independent controls, not shared with random/keynode pages. */
+  --recovery-aside-stack3-summary: 0.24fr;
+  --recovery-aside-stack3-control: 0.29fr;
+  --recovery-aside-stack3-action: 0.47fr;
+  --recovery-aside-stack3-gap: var(--workspace-gap);
+  --recovery-aside-stack4-summary: 0.19fr;
+  --recovery-aside-stack4-control: 0.21fr;
+  --recovery-aside-stack4-action: 0.33fr;
+  --recovery-aside-stack4-selector: 0.27fr;
+  --recovery-aside-stack4-gap: var(--workspace-gap);
+  --recovery-overview-summary: 0.22fr;
+  --recovery-overview-control: 0.22fr;
+  --recovery-overview-action: 0.56fr;
+  --recovery-network-summary: 0.18fr;
+  --recovery-network-control: 0.28fr;
+  --recovery-network-action: 0.36fr;
+  --recovery-network-selector: 0.18fr;
+  --recovery-compact-summary: 0.22fr;
+  --recovery-compact-control: 0.32fr;
+  --recovery-compact-selector: 0.46fr;
+  --recovery-summary-panel-padding: 10px 14px;
+  --recovery-summary-title-gap: 4px;
+  --recovery-summary-grid-gap: 8px;
+  --recovery-summary-grid-cols: 2;
+  --recovery-summary-card-padding: 8px 10px;
+  --recovery-summary-card-min-h: 42px;
+  --recovery-summary-title-font: 15px;
+  --recovery-summary-label-font: 9px;
+  --recovery-summary-value-font: 13px;
+  --recovery-control-panel-padding: 10px 14px;
+  --recovery-control-title-gap: 4px;
+  --recovery-control-row-gap: 6px;
+  --recovery-control-align: start;
+  --recovery-control-timeline-gap: 5px;
+  --recovery-control-button-gap: 6px;
+  --recovery-control-button-cols: 5;
+  --recovery-control-meta-gap: 8px;
+  --recovery-control-meta-cols: 3;
+  --recovery-control-card-padding: 8px 10px;
+  --recovery-control-card-min-h: 42px;
+  --recovery-control-title-font: 15px;
+  --recovery-control-button-font: 11px;
+  --recovery-control-label-font: 9px;
+  --recovery-control-value-font: 13px;
+  --recovery-detail-control-panel-padding: 12px 14px;
+  --recovery-detail-control-title-timeline-gap: 14px;
+  --recovery-detail-control-timeline-button-gap: 14px;
+  --recovery-detail-control-button-gap: 14px;
+  --recovery-detail-control-button-cols: 3;
+  --recovery-detail-control-buttons-meta-gap: 14px;
+  --recovery-detail-control-meta-gap: 10px;
+  --recovery-network-control-title-timeline-gap: 6px;
+  --recovery-network-control-timeline-button-gap: 5px;
+  --recovery-network-control-button-gap: 6px;
+  --recovery-action-panel-padding: 10px 14px;
+  --recovery-action-title-gap: 6px;
+  --recovery-action-grid-gap: 8px;
+  --recovery-action-grid-align: stretch;
+  --recovery-action-grid-auto-rows: minmax(48px, 1fr);
+  --recovery-action-grid-cols: 2;
+  --recovery-action-card-padding: 8px 10px;
+  --recovery-action-card-min-h: 48px;
+  --recovery-action-title-font: 15px;
+  --recovery-action-note-font: 10px;
+  --recovery-action-label-font: 9px;
+  --recovery-action-value-font: 14px;
+  --recovery-selector-panel-padding: 6px 14px;
+  --recovery-selector-title-gap: 0px;
+  --recovery-selector-title-content-gap: var(--recovery-selector-title-gap);
+  --recovery-selector-grid-gap: 8px;
+  --recovery-selector-grid-height: auto;
+  --recovery-selector-grid-self: start;
+  --recovery-selector-grid-align: start;
+  --recovery-selector-grid-auto-rows: minmax(52px, 1fr);
+  --recovery-selector-grid-cols: 2;
+  --recovery-selector-card-padding: 8px 10px;
+  --recovery-selector-card-min-h: 32px;
+  --recovery-selector-action-gap: 8px;
+  --recovery-selector-action-top-gap: 22px;
+  --recovery-selector-title-font: 15px;
+  --recovery-selector-label-font: 9px;
+  --recovery-selector-value-font: 14px;
+  /* Recovery main panels. */
+  --recovery-main-overview-trends: 0.50fr;
+  --recovery-main-overview-cost: 0.50fr;
+  --recovery-main-impact-events: 0.34fr;
+  --recovery-main-impact-paths: 0.66fr;
+  --recovery-main-impact-overflow: auto;
+  /* Map display right panel controls. */
+  --map-side-control: 0.28fr;
+  --map-side-stats: 0.72fr;
+  --map-side-gap: var(--workspace-gap);
+  --map-control-panel-padding: 12px 14px;
+  --map-control-title-timeline-gap: 8px;
+  --map-control-timeline-button-gap: 8px;
+  --map-control-button-gap: 8px;
+  --map-control-button-cols: 4;
+  --map-control-buttons-meta-gap: 10px;
+  --map-control-meta-gap: 8px;
+  --map-control-card-min-h: 50px;
+  --map-control-card-padding: 8px 10px;
+  --map-control-title-font: 15px;
+  --map-control-button-font: 12px;
+  --map-control-label-font: 10px;
+  --map-control-value-font: 15px;
+  --map-stat-title-font: 15px;
+  --map-stat-title-gap: 6px;
+  --map-stat-panel-gap: 12px;
+  --map-supplier-list-gap: 12px;
+  --map-supplier-card-min-h: 48px;
+  --map-supplier-card-padding: 5px 9px;
+  --map-supplier-card-name-font: 12px;
+  --map-supplier-card-note-font: 10px;
+  --workspace-panel-h-main: clamp(420px, 54vh, 640px);
+  --workspace-panel-h-chart: clamp(240px, 28vh, 320px);
+  --workspace-panel-h-detail: clamp(220px, 28vh, 320px);
+  --workspace-panel-h-summary: clamp(170px, 20vh, 220px);
+  --workspace-panel-h-control: clamp(220px, 26vh, 300px);
+  --dashboard-content-height: calc(100dvh - 122px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(20, 184, 166, 0.18), transparent 28%),
+    radial-gradient(circle at 88% 2%, rgba(185, 28, 28, 0.12), transparent 22%),
+    linear-gradient(180deg, #0f172a 0, #111827 136px, #eef4fb 136px, #f6f8fc 100%);
+  color: var(--text);
+  font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.page-shell {
+  width: 100vw;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-width: none;
+  margin: 0;
+  padding: clamp(8px, 0.7vw, 12px) clamp(10px, 0.9vw, 16px) clamp(10px, 0.8vw, 14px);
+  display: grid;
+  grid-template-rows: auto auto auto 1fr;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  color: #f8fafc;
+  padding: 0 4px 0;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(24px, 1.35vw, 28px);
+  line-height: 1.02;
+  letter-spacing: 0.01em;
+}
+
+.hero-subtitle {
+  max-width: 680px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.76);
+  text-align: right;
+  display: none;
+}
+
+.content {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 0;
+  grid-row: 4;
+  height: 100%;
+  min-height: 0;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+#result-banner {
+  grid-row: 3;
+}
+
+body[data-page="overview"] .content {
+  height: var(--dashboard-content-height);
+  min-height: var(--dashboard-content-height);
+}
+
+body[data-page="overview"] .workspace-layout.page-overview {
+  height: 100%;
+  min-height: 100%;
+}
+
+.content > * {
+  min-height: 0;
+  height: 100%;
+}
+
+.toolbar-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding: 10px 14px;
+  min-height: 64px;
+}
+
+.toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.toolbar-main-row {
+  width: 100%;
+}
+
+.toolbar-left-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.toolbar-row.compact {
+  justify-content: flex-start;
+  gap: var(--space-sm);
+  flex-wrap: nowrap;
+  min-height: 0;
+}
+
+.toolbar-row.compact:empty,
+#family-nav-row:empty,
+#result-mode-row:empty {
+  display: none;
+}
+
+#family-nav-row {
+  margin: 0;
+  min-width: 0;
+}
+
+#family-nav-row .scene-pill-group {
+  flex-wrap: nowrap;
+}
+
+#result-mode-row {
+  display: flex !important;
+  margin: 0;
+  min-width: 0;
+}
+
+#result-mode-row .result-mode-pills {
+  flex-wrap: nowrap;
+  gap: clamp(8px, 0.48vw, 12px);
+}
+
+#result-mode-row .scene-pill {
+  min-width: clamp(82px, 4.5vw, 118px);
+  min-height: clamp(34px, 3.4vh, 42px);
+  padding: 0 clamp(12px, 0.72vw, 18px);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.toolbar-title {
+  margin: 0;
+  /* Inactive: final toolbar title size is defined near the end of this file. */
+  /* font-size: 22px; */
+  line-height: 1.1;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.page-nav-group {
+  display: flex;
+  /* Inactive: final top-nav gap is defined near the end of this file. */
+  /* gap: 10px; */
+  flex-wrap: nowrap;
+  flex: 0 0 auto;
+}
+
+.panel {
+  min-width: 0;
+  background: var(--panel);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+  padding: var(--space-lg);
+}
+
+#result-banner:empty {
+  display: none;
+}
+
+.workspace-layout {
+  display: grid;
+  grid-template-columns: var(--workspace-sidebar-w) minmax(0, 1fr) var(--workspace-aside-w);
+  gap: var(--workspace-gap);
+  height: 100%;
+  min-height: 0;
+  align-items: stretch;
+}
+
+.workspace-sidebar,
+.workspace-center,
+.workspace-main,
+.workspace-aside {
+  min-height: 0;
+  height: 100%;
+}
+
+.workspace-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 10px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 250, 255, 0.98));
+}
+
+.workspace-page-title {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.08;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.workspace-center {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  gap: var(--workspace-gap);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.workspace-main-header {
+  display: none;
+}
+
+.workspace-main-header-copy {
+  display: grid;
+  gap: 0;
+}
+
+.workspace-main-title {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.12;
+}
+
+.workspace-nav-list {
+  display: grid;
+  gap: var(--space-md);
+  flex: 1;
+  min-height: 0;
+  grid-auto-rows: minmax(58px, max-content);
+  align-content: start;
+}
+
+.workspace-nav-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 14px;
+  background: #eff4fb;
+  color: var(--text);
+  padding: 12px 14px;
+  min-height: 56px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+  box-shadow: inset 0 0 0 1px rgba(219, 229, 240, 0.9);
+}
+
+.workspace-nav-button:hover {
+  transform: translateY(-1px);
+}
+
+.workspace-nav-button.active {
+  color: #fff;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.14);
+}
+
+.workspace-main {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  min-width: 0;
+  overflow: hidden;
+  padding-right: 2px;
+  height: 100%;
+  min-height: 0;
+}
+
+.workspace-main::-webkit-scrollbar {
+  width: 8px;
+}
+
+.workspace-main::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.38);
+  border-radius: 999px;
+}
+
+.workspace-main > * {
+  min-height: 0;
+  height: 100%;
+  align-self: stretch;
+}
+
+.map-dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--map-aside-w);
+  gap: var(--workspace-gap);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.map-main-panel {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  gap: var(--space-md);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.map-stage {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.china-map-svg {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: block;
+}
+
+.china-map-layer {
+  filter: drop-shadow(0 12px 22px rgba(15, 23, 42, 0.08));
+}
+
+.china-map-feature {
+  transition: fill 0.16s ease;
+}
+
+.china-map-feature:hover {
+  fill: #f1f5f9;
+}
+
+.map-grid-line {
+  stroke: rgba(37, 99, 235, 0.14);
+  stroke-width: 1;
+}
+
+.map-node text {
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, 0.86);
+  stroke-width: 3px;
+}
+
+.map-legend {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.map-legend-item,
+.map-supplier-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.map-dot {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 10px;
+  border-radius: 999px;
+  background: #0f766e;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+.map-dot.warning {
+  background: #d97706;
+}
+
+.map-dot.danger {
+  background: #b91c1c;
+}
+
+.map-dot.recovering {
+  background: #2563eb;
+}
+
+.map-side-stack {
+  display: grid;
+  grid-template-rows: minmax(0, var(--map-side-control)) minmax(0, var(--map-side-stats));
+  gap: var(--map-side-gap);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.map-side-stack > .panel {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.map-side-stack .aside-control-panel {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  align-content: start;
+  gap: 0;
+  padding: var(--map-control-panel-padding);
+}
+
+.map-side-stack .aside-control-panel > .section-head {
+  margin: 0 0 var(--map-control-title-timeline-gap) 0;
+}
+
+.map-side-stack .aside-control-panel > .section-head h2 {
+  font-size: var(--map-control-title-font);
+  line-height: 1.15;
+}
+
+.map-side-stack .aside-control-panel > .timeline-controller {
+  display: grid;
+  gap: var(--map-control-timeline-button-gap);
+  align-content: start;
+  min-height: 0;
+  margin-bottom: var(--map-control-buttons-meta-gap);
+}
+
+.map-side-stack .aside-control-panel .timeline-action-row {
+  display: grid;
+  grid-template-columns: repeat(var(--map-control-button-cols), minmax(0, 1fr));
+  gap: var(--map-control-button-gap);
+  margin: 0;
+}
+
+.map-side-stack .aside-control-panel .timeline-action-row > * {
+  min-width: 0;
+  width: 100%;
+  padding: 9px 10px;
+  font-size: var(--map-control-button-font);
+  white-space: nowrap;
+}
+
+.map-side-stack .aside-control-panel .timeline-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--map-control-meta-gap);
+  margin: 0;
+}
+
+.map-side-stack .aside-control-panel .detail-card {
+  min-height: var(--map-control-card-min-h);
+  padding: var(--map-control-card-padding);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.map-side-stack .aside-control-panel .detail-card span {
+  font-size: var(--map-control-label-font);
+  line-height: 1.25;
+}
+
+.map-side-stack .aside-control-panel .detail-card strong {
+  font-size: var(--map-control-value-font);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.map-stat-panel {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 0;
+}
+
+.map-stat-panel > .section-head {
+  align-self: start;
+  margin: 0 0 var(--map-stat-title-gap) 0;
+}
+
+.map-stat-panel > .section-head h2 {
+  font-size: var(--map-stat-title-font);
+  line-height: 1.15;
+}
+
+.map-stat-panel > .compact-detail-grid {
+  margin: 0 0 var(--map-stat-panel-gap) 0;
+}
+
+.map-supplier-list {
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: grid;
+  gap: var(--map-supplier-list-gap);
+  align-content: start;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 116, 139, 0.62) transparent;
+}
+
+.map-supplier-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.map-supplier-list::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.62);
+  border-radius: 999px;
+}
+
+.map-supplier-card {
+  min-height: var(--map-supplier-card-min-h);
+  padding: var(--map-supplier-card-padding);
+  border-radius: 10px;
+  background: rgba(248, 250, 252, 0.86);
+  border: 1px solid rgba(226, 232, 240, 0.92);
+}
+
+.map-supplier-card strong {
+  display: block;
+  margin: 0;
+  font-size: var(--map-supplier-card-name-font);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.map-supplier-card small {
+  display: block;
+  color: var(--muted);
+  font-size: var(--map-supplier-card-note-font);
+  line-height: 1.35;
+}
+
+.workspace-main-grid,
+.workspace-main-stack,
+.workspace-link-grid,
+.workspace-stack {
+  display: grid;
+  gap: var(--space-md);
+  min-height: 0;
+}
+
+.workspace-main-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  height: 100%;
+  align-items: stretch;
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+.workspace-main-stack {
+  height: 100%;
+  grid-template-columns: 1fr;
+  align-content: stretch;
+}
+
+.workspace-main-stack.stack-count-1 {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.workspace-main-stack.stack-count-2 {
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.workspace-main-stack.stack-count-3 {
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+}
+
+.workspace-main-stack.stack-count-4 {
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+}
+
+.workspace-main-grid > * {
+  min-height: 0;
+}
+
+.workspace-main-stack > * {
+  min-height: 0;
+  height: 100%;
+}
+
+.workspace-main-stack > .panel,
+.workspace-main-grid > .panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.workspace-link-grid {
+  grid-template-columns: 1fr;
+}
+
+.workspace-aside {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 0;
+  align-content: stretch;
+  overflow: hidden;
+  padding-right: 2px;
+  height: 100%;
+  min-height: 0;
+}
+
+.workspace-aside::-webkit-scrollbar {
+  width: 8px;
+}
+
+.workspace-aside::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.45);
+  border-radius: 999px;
+}
+
+.workspace-aside .panel {
+  padding: 14px 16px;
+}
+
+.workspace-aside > .workspace-stack {
+  height: 100%;
+  min-height: 0;
+}
+
+.workspace-aside > .workspace-stack > * {
+  min-height: 0;
+}
+
+.workspace-aside .workspace-stack.stack-count-1 {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.workspace-aside .workspace-stack.stack-count-2 {
+  grid-template-rows: minmax(0, 0.95fr) minmax(0, 1.05fr);
+}
+
+.workspace-aside .workspace-stack.stack-count-3 {
+  grid-template-rows: minmax(0, 0.92fr) minmax(0, 1.02fr) minmax(0, 1.06fr);
+}
+
+.workspace-aside .workspace-stack.stack-count-4 {
+  grid-template-rows: minmax(0, 0.82fr) minmax(0, 0.95fr) minmax(0, 1.08fr) minmax(0, 1.05fr);
+}
+
+.workspace-layout.page-overview .workspace-aside .workspace-stack.stack-count-3 {
+  grid-template-rows: minmax(0, 0.78fr) minmax(0, 0.54fr) minmax(0, 0.68fr);
+}
+
+.workspace-layout.page-overview .workspace-main-stack.stack-count-2 {
+  grid-template-rows: minmax(0, 0.44fr) minmax(0, 0.56fr);
+}
+
+.workspace-layout.page-overview,
+.workspace-layout.page-overview .workspace-sidebar,
+.workspace-layout.page-overview .workspace-center,
+.workspace-layout.page-overview .workspace-main,
+.workspace-layout.page-overview .workspace-main-stack,
+.workspace-layout.page-overview .workspace-aside,
+.workspace-layout.page-overview .workspace-aside > .workspace-stack {
+  height: 100%;
+  min-height: 0;
+}
+
+.workspace-layout.page-overview .workspace-aside .workspace-stack.stack-count-2 {
+  grid-template-rows: minmax(0, 0.36fr) minmax(0, 0.64fr);
+}
+
+.workspace-layout.page-overview.module-scene_summary .workspace-main-stack.stack-count-2 {
+  grid-template-rows: minmax(0, 0.48fr) minmax(0, 0.52fr);
+}
+
+.workspace-layout.page-overview.module-metric_compare .workspace-main-stack.stack-count-2 {
+  grid-template-rows: minmax(0, 0.46fr) minmax(0, 0.54fr);
+}
+
+.workspace-layout.page-overview.module-stage_timeline .workspace-main-stack.stack-count-2 {
+  grid-template-rows: minmax(0, 0.38fr) minmax(0, 0.62fr);
+}
+
+.workspace-layout.page-overview.module-monthly_distribution .workspace-main-stack.stack-count-2 {
+  grid-template-rows: minmax(0, 0.62fr) minmax(0, 0.38fr);
+}
+
+.workspace-layout.page-overview.module-duration_compare .workspace-main-stack.stack-count-2 {
+  grid-template-rows: minmax(0, 0.34fr) minmax(0, 0.66fr);
+}
+
+/* Legacy generic module stack ratios.
+   Disabled so random/keynode four-block asides are controlled only by
+   the final --active-* parameter block at the end of this file.
+.workspace-layout.module-node_simulation .workspace-aside .workspace-stack.stack-count-4 {
+  grid-template-rows: minmax(0, 0.72fr) minmax(0, 0.84fr) minmax(0, 0.72fr) minmax(0, 1.44fr);
+}
+
+.workspace-layout.module-dynamic_network .workspace-aside .workspace-stack.stack-count-4,
+.workspace-layout.module-recovery_network .workspace-aside .workspace-stack.stack-count-4 {
+  grid-template-rows: minmax(0, 0.8fr) minmax(0, 0.92fr) minmax(0, 1.02fr) minmax(0, 1.12fr);
+}
+*/
+
+/* Legacy recovery right-panel ratios.
+   Disabled: recovery pages now use only the final active recovery block
+   at the end of this file.
+.workspace-layout.page-recovery .workspace-aside .workspace-stack.stack-count-2 {
+  grid-template-rows: minmax(0, 0.58fr) minmax(0, 0.42fr);
+}
+
+.workspace-layout.page-recovery .workspace-aside .workspace-stack.stack-count-3 {
+  grid-template-rows: minmax(0, 0.34fr) minmax(0, 0.38fr) minmax(0, 0.28fr);
+}
+
+.workspace-layout.page-recovery .workspace-aside .panel {
+  overflow: hidden;
+}
+
+.workspace-layout.page-recovery .workspace-aside .workspace-stack.stack-count-4 {
+  grid-template-rows: minmax(0, 0.26fr) minmax(0, 0.29fr) minmax(0, 0.24fr) minmax(0, 0.21fr);
+}
+
+.workspace-layout.page-recovery .scene-summary-panel .meta-item,
+.workspace-layout.page-recovery .scene-summary-panel .kpi-mini,
+.workspace-layout.page-recovery .process-panel .detail-card {
+  min-height: 56px;
+}
+
+.workspace-layout.page-recovery .workspace-aside .detail-card strong,
+.workspace-layout.page-recovery .workspace-aside .meta-item strong,
+.workspace-layout.page-recovery .workspace-aside .kpi-mini strong {
+  font-size: 16px;
+}
+*/
+
+/* Legacy random/keynode three-block aside ratio.
+   Disabled for consistency with the final active right-panel parameters.
+.workspace-layout.page-random .workspace-aside .workspace-stack.stack-count-3,
+.workspace-layout.page-keynode .workspace-aside .workspace-stack.stack-count-3 {
+  grid-template-rows: minmax(0, 0.76fr) minmax(0, 0.94fr) minmax(0, 1.30fr);
+}
+*/
+
+/* Legacy right-aside 4-block ratios for random/keynode pages.
+   Superseded by the final active block at the end of this file. */
+/*
+.workspace-layout.page-random.module-dynamic_network .workspace-aside .workspace-stack.stack-count-4,
+.workspace-layout.page-keynode.module-dynamic_network .workspace-aside .workspace-stack.stack-count-4 {
+  grid-template-rows: minmax(0, 0.74fr) minmax(0, 0.90fr) minmax(0, 1.02fr) minmax(0, 0.70fr);
+}
+
+.workspace-layout.page-random.module-node_simulation .workspace-aside .workspace-stack.stack-count-4,
+.workspace-layout.page-keynode.module-node_simulation .workspace-aside .workspace-stack.stack-count-4 {
+  grid-template-rows: minmax(0, 0.70fr) minmax(0, 0.88fr) minmax(0, 0.64fr) minmax(0, 1.18fr);
+}
+*/
+
+/* Legacy random/keynode aside internals.
+   Kept for reference only; current four-block aside internals are controlled
+   by the final active parameter block at the end of this file.
+
+.workspace-layout.page-random .workspace-aside .panel,
+.workspace-layout.page-random .workspace-aside .network-copy-card,
+.workspace-layout.page-keynode .workspace-aside .panel,
+.workspace-layout.page-keynode .workspace-aside .network-copy-card {
+  min-height: 0;
+  padding: 9px 10px;
+  gap: 6px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.workspace-layout.page-random.module-dynamic_network .workspace-aside,
+.workspace-layout.page-random.module-node_simulation .workspace-aside,
+.workspace-layout.page-keynode.module-dynamic_network .workspace-aside,
+.workspace-layout.page-keynode.module-node_simulation .workspace-aside {
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.workspace-layout.page-random.module-dynamic_network .workspace-aside > .workspace-stack,
+.workspace-layout.page-random.module-node_simulation .workspace-aside > .workspace-stack,
+.workspace-layout.page-keynode.module-dynamic_network .workspace-aside > .workspace-stack,
+.workspace-layout.page-keynode.module-node_simulation .workspace-aside > .workspace-stack {
+  display: grid;
+  gap: 8px;
+  height: 100%;
+  min-height: 0;
+}
+
+.workspace-layout.page-random.module-dynamic_network .workspace-aside > .workspace-stack > *,
+.workspace-layout.page-random.module-node_simulation .workspace-aside > .workspace-stack > *,
+.workspace-layout.page-keynode.module-dynamic_network .workspace-aside > .workspace-stack > *,
+.workspace-layout.page-keynode.module-node_simulation .workspace-aside > .workspace-stack > * {
+  min-height: 0;
+}
+
+.workspace-layout.page-random.module-dynamic_network .workspace-aside .panel,
+.workspace-layout.page-random.module-dynamic_network .workspace-aside .network-copy-card,
+.workspace-layout.page-random.module-node_simulation .workspace-aside .panel,
+.workspace-layout.page-random.module-node_simulation .workspace-aside .network-copy-card,
+.workspace-layout.page-keynode.module-dynamic_network .workspace-aside .panel,
+.workspace-layout.page-keynode.module-dynamic_network .workspace-aside .network-copy-card,
+.workspace-layout.page-keynode.module-node_simulation .workspace-aside .panel,
+.workspace-layout.page-keynode.module-node_simulation .workspace-aside .network-copy-card {
+  overflow: hidden;
+}
+
+.workspace-layout.page-random.module-dynamic_network .workspace-aside .scene-summary-panel .meta-item,
+.workspace-layout.page-random.module-dynamic_network .workspace-aside .process-panel .detail-card,
+.workspace-layout.page-random.module-node_simulation .workspace-aside .scene-summary-panel .meta-item,
+.workspace-layout.page-random.module-node_simulation .workspace-aside .process-panel .detail-card,
+.workspace-layout.page-keynode.module-dynamic_network .workspace-aside .scene-summary-panel .meta-item,
+.workspace-layout.page-keynode.module-dynamic_network .workspace-aside .process-panel .detail-card,
+.workspace-layout.page-keynode.module-node_simulation .workspace-aside .scene-summary-panel .meta-item,
+.workspace-layout.page-keynode.module-node_simulation .workspace-aside .process-panel .detail-card {
+  min-height: 42px;
+}
+
+.workspace-layout.page-random.module-dynamic_network .workspace-aside .snapshot-stat-grid,
+.workspace-layout.page-keynode.module-dynamic_network .workspace-aside .snapshot-stat-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.workspace-layout.page-random.module-dynamic_network .workspace-aside .detail-card,
+.workspace-layout.page-random.module-dynamic_network .workspace-aside .meta-item,
+.workspace-layout.page-random.module-dynamic_network .workspace-aside .kpi-mini,
+.workspace-layout.page-random.module-node_simulation .workspace-aside .detail-card,
+.workspace-layout.page-random.module-node_simulation .workspace-aside .meta-item,
+.workspace-layout.page-random.module-node_simulation .workspace-aside .kpi-mini,
+.workspace-layout.page-keynode.module-dynamic_network .workspace-aside .detail-card,
+.workspace-layout.page-keynode.module-dynamic_network .workspace-aside .meta-item,
+.workspace-layout.page-keynode.module-dynamic_network .workspace-aside .kpi-mini,
+.workspace-layout.page-keynode.module-node_simulation .workspace-aside .detail-card,
+.workspace-layout.page-keynode.module-node_simulation .workspace-aside .meta-item,
+.workspace-layout.page-keynode.module-node_simulation .workspace-aside .kpi-mini {
+  padding: 7px 9px;
+}
+
+.workspace-layout.page-random.module-dynamic_network .workspace-aside .section-head,
+.workspace-layout.page-random.module-node_simulation .workspace-aside .section-head,
+.workspace-layout.page-keynode.module-dynamic_network .workspace-aside .section-head,
+.workspace-layout.page-keynode.module-node_simulation .workspace-aside .section-head {
+  margin-bottom: 6px;
+}
+
+.workspace-layout.page-random.module-dynamic_network .workspace-aside .section-head h2,
+.workspace-layout.page-random.module-node_simulation .workspace-aside .section-head h2,
+.workspace-layout.page-keynode.module-dynamic_network .workspace-aside .section-head h2,
+.workspace-layout.page-keynode.module-node_simulation .workspace-aside .section-head h2 {
+  font-size: 15px;
+}
+
+.workspace-layout.page-random .workspace-aside .panel::-webkit-scrollbar,
+.workspace-layout.page-random .workspace-aside .network-copy-card::-webkit-scrollbar,
+.workspace-layout.page-keynode .workspace-aside .panel::-webkit-scrollbar,
+.workspace-layout.page-keynode .workspace-aside .network-copy-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.workspace-layout.page-random .workspace-aside .panel::-webkit-scrollbar-thumb,
+.workspace-layout.page-random .workspace-aside .network-copy-card::-webkit-scrollbar-thumb,
+.workspace-layout.page-keynode .workspace-aside .panel::-webkit-scrollbar-thumb,
+.workspace-layout.page-keynode .workspace-aside .network-copy-card::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.42);
+  border-radius: 999px;
+}
+
+.workspace-layout.page-random .workspace-aside .section-head h2,
+.workspace-layout.page-keynode .workspace-aside .section-head h2 {
+  font-size: 15px;
+}
+
+.workspace-layout.page-random .scene-summary-panel,
+.workspace-layout.page-keynode .scene-summary-panel,
+.workspace-layout.page-random .detail-panel,
+.workspace-layout.page-keynode .detail-panel,
+.workspace-layout.page-random .network-copy-card,
+.workspace-layout.page-keynode .network-copy-card {
+  gap: 6px;
+}
+
+.workspace-layout.page-random .scene-meta,
+.workspace-layout.page-random .scene-kpis,
+.workspace-layout.page-random .detail-grid,
+.workspace-layout.page-random .compact-detail-grid,
+.workspace-layout.page-random .snapshot-stat-grid,
+.workspace-layout.page-random .timeline-meta,
+.workspace-layout.page-keynode .scene-meta,
+.workspace-layout.page-keynode .scene-kpis,
+.workspace-layout.page-keynode .detail-grid,
+.workspace-layout.page-keynode .compact-detail-grid,
+.workspace-layout.page-keynode .snapshot-stat-grid,
+.workspace-layout.page-keynode .timeline-meta {
+  gap: 6px;
+}
+
+.workspace-layout.page-random .workspace-aside .scene-summary-panel,
+.workspace-layout.page-keynode .workspace-aside .scene-summary-panel {
+  grid-template-rows: auto auto auto;
+  align-content: start;
+}
+
+.workspace-layout.page-random .workspace-aside .process-panel,
+.workspace-layout.page-keynode .workspace-aside .process-panel {
+  justify-content: flex-start;
+  gap: 6px;
+}
+
+.workspace-layout.page-random .workspace-aside .detail-grid,
+.workspace-layout.page-random .workspace-aside .compact-detail-grid,
+.workspace-layout.page-keynode .workspace-aside .detail-grid,
+.workspace-layout.page-keynode .workspace-aside .compact-detail-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.workspace-layout.page-random .workspace-aside .aside-note-panel,
+.workspace-layout.page-random .workspace-aside .aside-entry-panel,
+.workspace-layout.page-random .workspace-aside .aside-summary-panel,
+.workspace-layout.page-random .workspace-aside .aside-control-panel,
+.workspace-layout.page-random .workspace-aside .aside-detail-panel,
+.workspace-layout.page-random .workspace-aside .aside-config-panel,
+.workspace-layout.page-keynode .workspace-aside .aside-note-panel,
+.workspace-layout.page-keynode .workspace-aside .aside-entry-panel,
+.workspace-layout.page-keynode .workspace-aside .aside-summary-panel,
+.workspace-layout.page-keynode .workspace-aside .aside-control-panel,
+.workspace-layout.page-keynode .workspace-aside .aside-detail-panel,
+.workspace-layout.page-keynode .workspace-aside .aside-config-panel {
+  gap: 8px;
+}
+
+.workspace-layout.page-random .workspace-aside .process-progress,
+.workspace-layout.page-keynode .workspace-aside .process-progress {
+  height: 8px;
+}
+
+.workspace-layout.page-random .scene-summary-panel .meta-item,
+.workspace-layout.page-random .scene-summary-panel .kpi-mini,
+.workspace-layout.page-random .process-panel .detail-card,
+.workspace-layout.page-random .workspace-aside .detail-card,
+.workspace-layout.page-random .workspace-aside .meta-item,
+.workspace-layout.page-random .workspace-aside .kpi-mini,
+.workspace-layout.page-keynode .scene-summary-panel .meta-item,
+.workspace-layout.page-keynode .scene-summary-panel .kpi-mini,
+.workspace-layout.page-keynode .process-panel .detail-card,
+.workspace-layout.page-keynode .workspace-aside .detail-card,
+.workspace-layout.page-keynode .workspace-aside .meta-item,
+.workspace-layout.page-keynode .workspace-aside .kpi-mini {
+  min-height: 40px;
+  padding: 7px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.workspace-layout.page-random .workspace-aside .detail-card strong,
+.workspace-layout.page-random .workspace-aside .meta-item strong,
+.workspace-layout.page-random .workspace-aside .kpi-mini strong,
+.workspace-layout.page-keynode .workspace-aside .detail-card strong,
+.workspace-layout.page-keynode .workspace-aside .meta-item strong,
+.workspace-layout.page-keynode .workspace-aside .kpi-mini strong {
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.workspace-layout.page-random .workspace-aside .detail-card span,
+.workspace-layout.page-random .workspace-aside .meta-item span,
+.workspace-layout.page-random .workspace-aside .kpi-mini span,
+.workspace-layout.page-keynode .workspace-aside .detail-card span,
+.workspace-layout.page-keynode .workspace-aside .meta-item span,
+.workspace-layout.page-keynode .workspace-aside .kpi-mini span {
+  font-size: 9px;
+  line-height: 1.2;
+}
+
+.workspace-layout.page-random .timeline-action-row,
+.workspace-layout.page-random .selector-action-row,
+.workspace-layout.page-random .network-filter-row,
+.workspace-layout.page-keynode .timeline-action-row,
+.workspace-layout.page-keynode .selector-action-row,
+.workspace-layout.page-keynode .network-filter-row {
+  gap: 5px;
+}
+
+.workspace-layout.page-random .scene-pill,
+.workspace-layout.page-random .stage-chip,
+.workspace-layout.page-random .metric-chip,
+.workspace-layout.page-random .ghost-button,
+.workspace-layout.page-keynode .scene-pill,
+.workspace-layout.page-keynode .stage-chip,
+.workspace-layout.page-keynode .metric-chip,
+.workspace-layout.page-keynode .ghost-button {
+  padding: 6px 8px;
+  font-size: 10px;
+}
+
+.workspace-layout.page-random .mini-card-head,
+.workspace-layout.page-keynode .mini-card-head {
+  margin-top: 6px;
+  padding-top: 6px;
+}
+
+.workspace-layout.page-random .mini-event-card,
+.workspace-layout.page-keynode .mini-event-card {
+  padding: 7px 9px;
+}
+
+.workspace-layout.page-random .workspace-aside .stage-caption,
+.workspace-layout.page-keynode .workspace-aside .stage-caption {
+  margin-top: 0;
+  padding: 6px 8px;
+  font-size: 9px;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.workspace-layout.page-random .workspace-aside .timeline-controller,
+.workspace-layout.page-keynode .workspace-aside .timeline-controller {
+  align-content: start;
+  gap: 6px;
+}
+
+.workspace-layout.page-random .workspace-aside .timeline-meta,
+.workspace-layout.page-keynode .workspace-aside .timeline-meta {
+  gap: 5px;
+}
+*/
+
+/* Legacy module-specific aside stack ratios.
+   Kept for reference only; current random/keynode right-panel sizing is controlled
+   by the final active block at the end of this file. */
+/*
+.workspace-layout.module-propagation_statistics .workspace-aside > .workspace-stack.aside-stack-propagation_statistics.stack-count-3 {
+  grid-template-rows: minmax(0, 0.22fr) minmax(0, 0.28fr) minmax(0, 0.50fr);
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside > .workspace-stack.aside-stack-propagation_statistics.stack-count-4 {
+  grid-template-rows: minmax(0, 0.18fr) minmax(0, 0.22fr) minmax(0, 0.36fr) minmax(0, 0.24fr);
+}
+
+.workspace-layout.module-supply_propagation .workspace-aside > .workspace-stack.aside-stack-supply_propagation.stack-count-3 {
+  grid-template-rows: minmax(0, 0.21fr) minmax(0, 0.24fr) minmax(0, 0.55fr);
+}
+
+.workspace-layout.module-supply_propagation .workspace-aside > .workspace-stack.aside-stack-supply_propagation.stack-count-4 {
+  grid-template-rows: minmax(0, 0.19fr) minmax(0, 0.23fr) minmax(0, 0.32fr) minmax(0, 0.26fr);
+}
+
+.workspace-layout.module-demand_propagation .workspace-aside > .workspace-stack.aside-stack-demand_propagation.stack-count-3 {
+  grid-template-rows: minmax(0, 0.20fr) minmax(0, 0.23fr) minmax(0, 0.57fr);
+}
+
+.workspace-layout.module-demand_propagation .workspace-aside > .workspace-stack.aside-stack-demand_propagation.stack-count-4 {
+  grid-template-rows: minmax(0, 0.19fr) minmax(0, 0.23fr) minmax(0, 0.32fr) minmax(0, 0.26fr);
+}
+
+.workspace-layout.module-dynamic_network .workspace-aside > .workspace-stack.aside-stack-dynamic_network.stack-count-3 {
+  grid-template-rows: minmax(0, 0.22fr) minmax(0, 0.26fr) minmax(0, 0.52fr);
+}
+
+.workspace-layout.module-dynamic_network .workspace-aside > .workspace-stack.aside-stack-dynamic_network.stack-count-4 {
+  grid-template-rows: minmax(0, 0.18fr) minmax(0, 0.21fr) minmax(0, 0.31fr) minmax(0, 0.30fr);
+}
+
+.workspace-layout.module-node_simulation .workspace-aside > .workspace-stack.aside-stack-node_simulation.stack-count-3 {
+  grid-template-rows: minmax(0, 0.18fr) minmax(0, 0.23fr) minmax(0, 0.59fr);
+}
+
+.workspace-layout.module-node_simulation .workspace-aside > .workspace-stack.aside-stack-node_simulation.stack-count-4 {
+  grid-template-rows: minmax(0, 0.16fr) minmax(0, 0.19fr) minmax(0, 0.25fr) minmax(0, 0.40fr);
+}
+*/
+
+/* Legacy module-specific aside internals.
+   Commented out so only the final active per-panel variables/rules at the end of the file
+   control random/keynode right-panel layout. */
+/*
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-detail-panel,
+.workspace-layout.module-supply_propagation .workspace-aside .aside-detail-panel,
+.workspace-layout.module-demand_propagation .workspace-aside .aside-detail-panel,
+.workspace-layout.module-dynamic_network .workspace-aside .aside-detail-panel,
+.workspace-layout.module-node_simulation .workspace-aside .aside-detail-panel,
+.workspace-layout.module-node_simulation .workspace-aside .aside-config-panel {
+  gap: 6px;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-summary-panel,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-control-panel,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-detail-panel,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-focus-panel {
+  padding: 9px 11px;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-summary-panel,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-detail-panel,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-focus-panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-control-panel,
+.workspace-layout.module-supply_propagation .workspace-aside .aside-control-panel,
+.workspace-layout.module-demand_propagation .workspace-aside .aside-control-panel,
+.workspace-layout.module-dynamic_network .workspace-aside .aside-control-panel,
+.workspace-layout.module-node_simulation .workspace-aside .aside-control-panel {
+  gap: 6px;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-summary-panel .section-head,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-control-panel .section-head,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-detail-panel .section-head,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-focus-panel h3 {
+  margin-bottom: 8px;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-summary-panel .section-head h2,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-control-panel .section-head h2,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-detail-panel .section-head h2,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-focus-panel h3 {
+  font-size: 16px;
+  line-height: 1.15;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-summary-panel .meta-item,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-control-panel .detail-card,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-detail-panel .detail-card,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-focus-panel .detail-card {
+  min-height: 0;
+  height: 100%;
+  padding: 8px 10px;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-summary-panel .meta-item strong,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-control-panel .detail-card strong,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-detail-panel .detail-card strong,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-focus-panel .detail-card strong {
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-summary-panel .meta-item span,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-control-panel .detail-card span,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-detail-panel .detail-card span,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-focus-panel .detail-card span,
+.workspace-layout.module-propagation_statistics .workspace-aside .chart-note {
+  font-size: 10.5px;
+  line-height: 1.28;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-summary-panel .compact-summary-grid,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-focus-panel .detail-grid {
+  gap: 6px;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-control-panel .timeline-controller {
+  gap: 6px;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-control-panel .timeline-controller,
+.workspace-layout.module-supply_propagation .workspace-aside .aside-control-panel .timeline-controller,
+.workspace-layout.module-demand_propagation .workspace-aside .aside-control-panel .timeline-controller,
+.workspace-layout.module-dynamic_network .workspace-aside .aside-control-panel .timeline-controller,
+.workspace-layout.module-node_simulation .workspace-aside .aside-control-panel .timeline-controller {
+  align-content: start;
+  gap: 6px;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-control-panel .timeline-meta {
+  gap: 5px;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-control-panel .stage-caption {
+  margin-top: 0;
+  padding: 7px 8px;
+  font-size: 10px;
+  line-height: 1.28;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-focus-panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.workspace-layout.module-supply_propagation .workspace-aside .aside-focus-panel,
+.workspace-layout.module-demand_propagation .workspace-aside .aside-focus-panel,
+.workspace-layout.module-dynamic_network .workspace-aside .aside-focus-panel,
+.workspace-layout.module-node_simulation .workspace-aside .aside-focus-panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-summary-panel .compact-summary-grid {
+  height: 100%;
+  align-content: stretch;
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-focus-panel .detail-grid {
+  height: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: stretch;
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-detail-panel,
+.workspace-layout.module-supply_propagation .workspace-aside .aside-detail-panel,
+.workspace-layout.module-demand_propagation .workspace-aside .aside-detail-panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-detail-panel .detail-grid,
+.workspace-layout.module-supply_propagation .workspace-aside .aside-detail-panel .detail-grid,
+.workspace-layout.module-demand_propagation .workspace-aside .aside-detail-panel .detail-grid,
+.workspace-layout.module-dynamic_network .workspace-aside .aside-detail-panel .snapshot-stat-grid {
+  height: 100%;
+  align-content: stretch;
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-detail-panel .detail-grid,
+.workspace-layout.module-supply_propagation .workspace-aside .aside-detail-panel .detail-grid,
+.workspace-layout.module-demand_propagation .workspace-aside .aside-detail-panel .detail-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-summary-panel .meta-item,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-detail-panel .detail-card {
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-summary-panel .meta-item span,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-summary-panel .meta-item strong,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-detail-panel .detail-card span,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-detail-panel .detail-card strong {
+  text-align: center;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-focus-panel .detail-card {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-focus-panel .detail-card span,
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-focus-panel .detail-card strong {
+  display: inline-block;
+  margin-top: 0;
+  max-width: 100%;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .aside-focus-panel .detail-card strong {
+  font-size: 13px;
+}
+
+.workspace-layout.module-supply_propagation .workspace-aside .aside-focus-panel .detail-grid,
+.workspace-layout.module-demand_propagation .workspace-aside .aside-focus-panel .detail-grid,
+.workspace-layout.module-dynamic_network .workspace-aside .aside-focus-panel .detail-grid,
+.workspace-layout.module-node_simulation .workspace-aside .aside-focus-panel .detail-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.workspace-aside .aside-focus-panel .chart-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  margin: 0;
+}
+
+.workspace-layout.module-dynamic_network .workspace-aside .timeline-controller,
+.workspace-layout.module-node_simulation .workspace-aside .timeline-controller {
+  gap: 6px;
+}
+*/
+
+/* Legacy single-line timeline button sizing.
+   Current button sizing/columns are controlled by --active-control-* variables.
+
+.timeline-action-row.timeline-action-row-single {
+  flex-wrap: nowrap;
+  overflow: hidden;
+  overflow-y: hidden;
+  justify-content: space-between;
+  gap: 4px;
+  padding-bottom: 0;
+}
+
+.timeline-action-row.timeline-action-row-single::-webkit-scrollbar {
+  display: none;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .timeline-action-row-single .ghost-button,
+.workspace-layout.module-propagation_statistics .workspace-aside .timeline-action-row-single .stage-chip,
+.workspace-layout.module-supply_propagation .workspace-aside .timeline-action-row-single .ghost-button,
+.workspace-layout.module-supply_propagation .workspace-aside .timeline-action-row-single .stage-chip,
+.workspace-layout.module-demand_propagation .workspace-aside .timeline-action-row-single .ghost-button,
+.workspace-layout.module-demand_propagation .workspace-aside .timeline-action-row-single .stage-chip,
+.workspace-layout.module-dynamic_network .workspace-aside .timeline-action-row-single .ghost-button,
+.workspace-layout.module-dynamic_network .workspace-aside .timeline-action-row-single .stage-chip,
+.workspace-layout.module-node_simulation .workspace-aside .timeline-action-row-single .ghost-button,
+.workspace-layout.module-node_simulation .workspace-aside .timeline-action-row-single .stage-chip {
+  flex: 1 1 0;
+  min-width: 0;
+  white-space: nowrap;
+  padding: 6px 4px;
+  font-size: 9px;
+}
+
+.workspace-layout.module-propagation_statistics .workspace-aside .timeline-action-row-single .ghost-button,
+.workspace-layout.module-propagation_statistics .workspace-aside .timeline-action-row-single .stage-chip {
+  padding: 7px 5px;
+  font-size: 10px;
+}
+*/
+
+.aside-note-panel,
+.aside-entry-panel,
+.aside-summary-panel,
+.aside-control-panel,
+.aside-detail-panel,
+.aside-config-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* Legacy module-specific aside overrides.
+   Disabled so random/keynode right panels use only the final --active-* rules.
+.workspace-layout.module-node_simulation .workspace-aside .panel,
+.workspace-layout.module-dynamic_network .workspace-aside .panel,
+.workspace-layout.module-recovery_network .workspace-aside .panel {
+  padding: 10px 11px;
+}
+
+.workspace-layout.module-node_simulation .network-copy-card,
+.workspace-layout.module-dynamic_network .network-copy-card,
+.workspace-layout.module-recovery_network .network-copy-card {
+  gap: 6px;
+}
+
+.workspace-layout.module-node_simulation .workspace-aside .aside-config-panel .compact-detail-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.workspace-layout.module-node_simulation .workspace-aside .aside-config-panel .detail-card:nth-child(2),
+.workspace-layout.module-node_simulation .workspace-aside .aside-config-panel .detail-card:nth-child(4) {
+  grid-column: span 2;
+}
+
+.workspace-layout.module-node_simulation .compact-detail-grid,
+.workspace-layout.module-node_simulation .detail-grid,
+.workspace-layout.module-node_simulation .selector-action-row {
+  gap: 8px;
+}
+
+.workspace-layout.module-node_simulation .selector-action-row {
+  margin-top: 8px;
+}
+*/
+
+.workspace-main-panel,
+.workspace-chart-panel {
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.workspace-main-panel {
+  min-height: var(--workspace-panel-h-main);
+  display: flex;
+  flex-direction: column;
+}
+
+.workspace-layout.module-node_simulation .workspace-main-panel,
+.workspace-layout.module-dynamic_network .workspace-main-panel,
+.workspace-layout.module-recovery_network .workspace-main-panel {
+  min-height: 0;
+}
+
+.workspace-main-panel > :last-child {
+  flex: 1;
+  min-height: 0;
+}
+
+.workspace-chart-panel {
+  min-height: var(--workspace-panel-h-chart);
+  align-content: start;
+}
+
+.workspace-chart-panel.short-panel {
+  min-height: var(--workspace-panel-h-chart);
+}
+
+.workspace-main-stack > .workspace-main-panel,
+.workspace-main-stack > .workspace-chart-panel {
+  min-height: 0;
+}
+
+.workspace-link-grid .scene-pill {
+  width: 100%;
+  min-height: 40px;
+  justify-content: center;
+}
+
+.process-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbff 56%, #f2fbf8 100%);
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.section-head.compact {
+  margin-bottom: var(--space-md);
+}
+
+.section-head h2,
+.panel h3,
+.panel h4 {
+  margin: 0;
+}
+
+.section-head h2 {
+  font-size: 22px;
+  line-height: 1.12;
+}
+
+.scenario-summary-head {
+  width: 100%;
+  min-width: 0;
+}
+
+.scenario-title-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  white-space: nowrap !important;
+}
+
+.scenario-title-node {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.scenario-title-suffix {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.scene-pill-group,
+.stage-chips,
+.metric-chip-group {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.api-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 600;
+}
+
+.api-pill.success {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.api-pill.warning {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+.scene-pill,
+.stage-chip,
+.metric-chip,
+.ghost-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+#family-nav-row .scene-pill,
+.page-nav-group .scene-pill {
+  /* Inactive: final top-nav button sizing is defined near the end of this file. */
+  /* min-height: 38px; */
+  /* font-size: 14px; */
+  /* font-weight: 700; */
+}
+
+.scene-pill,
+.stage-chip,
+.metric-chip {
+  background: #eff4fb;
+  color: var(--text);
+}
+
+.disabled-pill {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ghost-button {
+  background: #111827;
+  color: #f8fafc;
+}
+
+.scene-pill:hover,
+.stage-chip:hover,
+.metric-chip:hover,
+.ghost-button:hover {
+  transform: translateY(-1px);
+}
+
+.scene-pill:disabled,
+.metric-chip:disabled,
+.ghost-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.scene-pill.active,
+.stage-chip.active,
+.metric-chip.active {
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14);
+}
+
+.scene-card-grid,
+.compare-grid,
+.trend-grid,
+.analysis-grid {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.overview-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.overview-panel > .scene-card-grid,
+.overview-panel > .compare-grid,
+.overview-panel > .stage-compare-grid,
+.overview-panel > .mini-chart-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.overview-grid {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.scene-top-grid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: minmax(300px, 0.92fr) minmax(360px, 1fr) minmax(380px, 1fr);
+  align-items: stretch;
+}
+
+.scene-top-grid > .panel {
+  height: 100%;
+}
+
+.scene-summary-panel {
+  display: grid;
+  grid-template-rows: auto minmax(108px, 1fr) auto;
+  align-content: stretch;
+  gap: var(--space-md);
+}
+
+.scene-card-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: var(--space-md);
+  align-items: stretch;
+  grid-auto-rows: minmax(210px, auto);
+}
+
+.compare-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  align-items: stretch;
+  align-content: start;
+}
+
+.workspace-layout.page-overview .compare-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  height: 100%;
+  align-content: stretch;
+}
+
+.workspace-layout.page-overview .compare-grid-overview .compare-card:last-child {
+  grid-column: span 2;
+}
+
+.workspace-layout.page-overview .overview-compare-panel,
+.workspace-layout.page-overview .overview-scene-panel {
+  min-height: 0;
+}
+
+.workspace-layout.page-overview .compare-card,
+.workspace-layout.page-overview .scene-card {
+  min-height: 0;
+}
+
+.scene-card,
+.compare-card,
+.detail-card,
+.path-card,
+.event-card {
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.scene-card {
+  padding: var(--space-lg);
+  display: grid;
+  gap: var(--space-md);
+  min-height: 210px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+}
+
+.scene-card.active {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.96));
+}
+
+.scene-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  align-items: flex-start;
+}
+
+.scene-card h3 {
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.banner-title {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.scene-type-tag {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #fff;
+}
+
+.scene-meta,
+.scene-kpis,
+.detail-grid,
+.snapshot-stat-grid {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.scene-meta {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-self: center;
+}
+
+.compact-summary-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-self: stretch;
+}
+
+.scene-kpis {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-self: end;
+}
+
+.meta-item,
+.kpi-mini,
+.compare-card,
+.detail-card {
+  padding: 12px 14px;
+}
+
+.scene-summary-panel .meta-item,
+.scene-summary-panel .kpi-mini,
+.process-panel .detail-card {
+  min-height: 68px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.meta-item span,
+.kpi-mini span,
+.compare-card span,
+.detail-card span,
+.event-card small,
+.path-card small,
+.network-copy small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.meta-item strong,
+.kpi-mini strong,
+.compare-card strong,
+.detail-card strong,
+.network-copy strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 17px;
+  line-height: 1.2;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.workspace-aside .meta-item strong,
+.workspace-aside .kpi-mini strong,
+.workspace-aside .detail-card strong,
+.workspace-aside .section-head h2,
+.workspace-aside .meta-item span,
+.workspace-aside .kpi-mini span,
+.workspace-aside .detail-card span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.compare-card {
+  display: grid;
+  gap: 6px;
+  min-height: 92px;
+  align-content: center;
+}
+
+.compare-card em {
+  font-style: normal;
+  font-size: 12px;
+  color: #0f766e;
+}
+
+.control-row {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.45fr);
+}
+
+.timeline-controller {
+  display: grid;
+  gap: var(--space-md);
+  align-content: center;
+  flex: 1;
+}
+
+.process-progress {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.process-progress-fill {
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #0f766e, #2563eb, #7c3aed);
+  transition: width 0.24s ease;
+}
+
+.timeline-action-row {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+}
+
+#date-slider {
+  width: 100%;
+}
+
+.timeline-meta {
+  display: grid;
+  gap: var(--space-xs);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.process-panel .timeline-meta {
+  align-self: stretch;
+}
+
+.process-panel .detail-card strong {
+  font-size: 18px;
+}
+
+.stage-caption {
+  margin-top: -2px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.035);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.meta-label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.detail-panel {
+  display: grid;
+  gap: var(--space-sm);
+  align-content: start;
+}
+
+.detail-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.compact-detail-grid {
+  display: grid;
+  gap: var(--space-sm);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: var(--space-sm);
+}
+
+.configurator-card {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.trend-grid {
+  grid-template-columns: repeat(auto-fit, minmax(560px, 1fr));
+  align-items: start;
+}
+
+.analysis-grid {
+  grid-template-columns: repeat(auto-fit, minmax(560px, 1fr));
+  align-items: start;
+}
+
+.full-width-analysis-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.policy-comparison-panel {
+  width: 100%;
+}
+
+.policy-comparison-grid {
+  display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: var(--workspace-gap);
+  min-height: 0;
+  height: 100%;
+}
+
+.policy-comparison-card {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 4px;
+  padding: 8px 10px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 16px;
+  background: rgba(248, 250, 252, 0.58);
+  overflow: hidden;
+}
+
+.policy-comparison-card > h3 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.policy-comparison-card .chart-svg {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+/* Legacy centered recovery detail modules.
+   Disabled: policy compare and impact paths should fill the shared
+   recovery workspace instead of floating as small centered cards.
+.workspace-layout.module-policy_compare .workspace-main,
+.workspace-layout.module-event_timeline .workspace-main,
+.workspace-layout.module-impact_paths .workspace-main {
+  justify-content: center;
+}
+
+.workspace-layout.module-policy_compare .workspace-main > *,
+.workspace-layout.module-event_timeline .workspace-main > *,
+.workspace-layout.module-impact_paths .workspace-main > * {
+  flex: 0 1 auto;
+  height: auto;
+  max-height: 100%;
+  width: min(100%, 1560px);
+  align-self: center;
+}
+
+.workspace-layout.module-policy_compare .policy-comparison-panel,
+.workspace-layout.module-event_timeline .panel,
+.workspace-layout.module-impact_paths .panel {
+  min-height: min(72vh, 760px);
+}
+*/
+
+.policy-comparison-panel .chart-svg {
+  display: block;
+  max-width: none;
+  margin: 0;
+}
+
+.policy-comparison-panel .chart-legend {
+  margin-top: 4px;
+}
+
+.stage-compare-grid,
+.mini-chart-grid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+.workspace-layout.page-overview .mini-chart-grid,
+.workspace-layout.page-overview .stage-compare-grid {
+  height: 100%;
+  align-items: stretch;
+}
+
+.workspace-layout.page-overview .mini-chart-grid > .panel,
+.workspace-layout.page-overview .stage-compare-grid > .network-copy-card {
+  height: 100%;
+}
+
+.workspace-layout.page-overview .overview-timeline-panel .stage-compare-grid > .network-copy-card {
+  justify-content: space-between;
+}
+
+.workspace-layout.page-overview .overview-timeline-panel .stage-compare-grid {
+  gap: 10px;
+}
+
+.workspace-layout.page-overview .overview-timeline-panel .network-copy-card {
+  padding: 12px 14px;
+  gap: 6px;
+}
+
+.workspace-layout.page-overview .overview-timeline-panel .stage-row {
+  padding: 5px 0;
+  gap: 10px;
+}
+
+.workspace-layout.page-overview .overview-timeline-panel .stage-row strong {
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.workspace-layout.page-overview .overview-timeline-panel .stage-row small {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.chart-panel {
+  min-width: 0;
+  display: grid;
+  gap: var(--space-md);
+  min-height: 0;
+  align-content: start;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.compact-panel {
+  padding: var(--space-lg);
+}
+
+.chart-head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  align-items: flex-start;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(219, 229, 240, 0.72);
+}
+
+.chart-head h3 {
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.workspace-layout.module-dynamic_network .workspace-main-panel > .section-head h2 {
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.chart-note {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+  display: none;
+}
+
+.navigator-label {
+  fill: #64748b;
+  font-size: 11px;
+}
+
+.chart-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-md);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+}
+
+.network-layout {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: minmax(0, 2.05fr) minmax(290px, 0.62fr);
+  min-height: 0;
+  align-items: start;
+}
+
+.selector-layout {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: minmax(0, 1.6fr) minmax(260px, 0.52fr);
+  min-height: 0;
+  align-items: start;
+}
+
+.network-visual {
+  min-width: 0;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.06), transparent 24%),
+    radial-gradient(circle at 78% 22%, rgba(15, 118, 110, 0.08), transparent 26%),
+    linear-gradient(180deg, #f8fafc, #ffffff);
+  padding: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.selector-visual {
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 24% 18%, rgba(124, 58, 237, 0.06), transparent 24%),
+    linear-gradient(180deg, #f8fafc, #ffffff);
+  padding: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  min-height: 0;
+  height: 100%;
+}
+
+.network-visual img {
+  width: 100%;
+  max-height: none;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.network-visual > :last-child {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.network-copy {
+  min-width: 0;
+  display: grid;
+  gap: var(--space-sm);
+  align-content: start;
+}
+
+.selector-copy {
+  display: grid;
+  gap: var(--space-sm);
+  align-content: start;
+}
+
+.network-copy-card {
+  padding: 14px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.propagation-network-panel {
+  background:
+    radial-gradient(circle at 5% 10%, rgba(15, 118, 110, 0.05), transparent 24%),
+    #ffffff;
+}
+
+.recovery-network-panel {
+  background:
+    radial-gradient(circle at 8% 0%, rgba(39, 125, 161, 0.10), transparent 26%),
+    radial-gradient(circle at 92% 12%, rgba(142, 68, 173, 0.10), transparent 28%),
+    #ffffff;
+}
+
+.recovery-visual {
+  background:
+    radial-gradient(circle at 28% 20%, rgba(39, 125, 161, 0.10), transparent 26%),
+    radial-gradient(circle at 78% 22%, rgba(142, 68, 173, 0.08), transparent 26%),
+    linear-gradient(180deg, #f8fbff, #ffffff);
+  border-color: rgba(39, 125, 161, 0.20);
+}
+
+.recovery-console-card {
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.035), transparent 34%),
+    linear-gradient(180deg, #ffffff, #f7fbff);
+  border-color: rgba(39, 125, 161, 0.20);
+}
+
+.recovery-selector-card {
+  background:
+    linear-gradient(180deg, #fff7ed, #ffffff);
+  border-color: rgba(234, 88, 12, 0.18);
+}
+
+.network-summary-card {
+  background:
+    linear-gradient(180deg, #f0fdfa, #ffffff);
+  border-color: rgba(15, 118, 110, 0.18);
+}
+
+.mini-card-head {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(148, 163, 184, 0.36);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mini-card-head strong {
+  font-size: 14px;
+}
+
+.mini-card-note {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.mini-event-list {
+  display: grid;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+
+.mini-event-card {
+  border-radius: 13px;
+  padding: 10px 12px;
+  background: rgba(248, 250, 252, 0.88);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  display: grid;
+  gap: 4px;
+}
+
+.mini-event-card strong {
+  font-size: 13px;
+}
+
+.mini-event-card small,
+.compact-note {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.selector-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm);
+  margin: var(--space-sm) 0 6px;
+}
+
+.network-control-bar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  justify-content: stretch;
+  gap: 10px;
+}
+
+.network-toolbar {
+  display: flex;
+  justify-content: flex-start;
+  gap: 6px;
+  flex-wrap: nowrap;
+  margin-bottom: 0;
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.network-filter-row,
+.selector-action-row {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.network-filter-row {
+  justify-content: flex-end;
+  flex: 1 1 auto;
+  margin-left: 0;
+  min-width: 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.network-filter-row::-webkit-scrollbar {
+  display: none;
+}
+
+.workspace-layout.module-dynamic_network .network-toolbar .scene-pill,
+.workspace-layout.module-node_simulation .network-toolbar .scene-pill,
+.workspace-layout.module-dynamic_network .network-filter-row .metric-chip,
+.workspace-layout.module-node_simulation .network-filter-row .metric-chip {
+  white-space: nowrap;
+  padding: 7px 10px;
+  font-size: 12px;
+}
+
+.network-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-md);
+  align-items: center;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.network-legend-item {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.network-legend-mark {
+  display: inline-block;
+  width: 16px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.network-legend-mark.node {
+  width: 10px;
+  height: 10px;
+}
+
+.network-legend-mark.outline {
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border: 2px solid;
+}
+
+.network-legend-mark.line {
+  height: 3px;
+}
+
+.selector-action-row {
+  margin-top: var(--space-md);
+  margin-bottom: 0;
+}
+
+.stage-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px dashed rgba(148, 163, 184, 0.32);
+}
+
+.stage-row:last-child {
+  border-bottom: 0;
+}
+
+.network-svg {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+  display: block;
+  border-radius: 14px;
+}
+
+.draggable-node:hover {
+  filter: drop-shadow(0 6px 10px rgba(15, 23, 42, 0.18));
+}
+
+.selector-node:hover {
+  transform: translateY(-1px);
+}
+
+.selector-node,
+.draggable-node {
+  transition: opacity 0.16s ease;
+}
+
+.network-svg {
+  touch-action: none;
+}
+
+.bar-list {
+  display: grid;
+  gap: 12px;
+}
+
+.bar-item {
+  display: grid;
+  gap: 8px;
+}
+
+.bar-item-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.bar-item-top strong {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.bar-track {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.snapshot-stat-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.paths-grid,
+.event-list {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.paths-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.path-card {
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.path-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+}
+
+.status-badge,
+.dimension-badge {
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 600;
+}
+
+.path-flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.result-banner-panel {
+  margin-top: 2px;
+  overflow: hidden;
+  padding: 10px 14px;
+}
+
+.result-banner-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.result-banner-row > div:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.result-banner-row .scene-pill-group {
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+}
+
+.result-banner-row .banner-title {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.node-chip {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  font-size: 12px;
+}
+
+.arrow-chip {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.event-card {
+  padding: 14px 16px;
+  display: grid;
+  gap: 4px;
+}
+
+.event-card strong {
+  font-size: 15px;
+}
+
+.event-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.empty-note {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 18px 2px 4px;
+}
+
+.footnote {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 6px;
+}
+
+@media (max-width: 1180px) {
+  .workspace-layout {
+    grid-template-columns: 1fr;
+    overflow: auto;
+  }
+
+  .workspace-center {
+    height: auto;
+  }
+
+  .workspace-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .compare-grid,
+  .scene-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .control-row,
+  .selector-layout,
+  .network-layout,
+  .analysis-grid,
+  .trend-grid,
+  .paths-grid,
+  .overview-grid,
+  .scene-top-grid,
+  .stage-compare-grid,
+  .mini-chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .selector-summary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-height: 920px) {
+  :root {
+    --workspace-sidebar-w: clamp(150px, 7.6vw, 210px);
+    /* --workspace-aside-w is controlled from the top-level parameter block. */
+    --workspace-panel-h-main: clamp(360px, 48vh, 560px);
+    --workspace-panel-h-chart: clamp(210px, 24vh, 270px);
+    --workspace-panel-h-detail: clamp(200px, 24vh, 270px);
+    --workspace-panel-h-summary: clamp(160px, 18vh, 200px);
+    --workspace-panel-h-control: clamp(190px, 22vh, 240px);
+  }
+
+  .page-shell {
+    padding: 10px 12px 12px;
+    gap: 8px;
+  }
+
+  .hero {
+    padding-bottom: 2px;
+  }
+
+  .hero h1 {
+    font-size: 24px;
+  }
+
+  .hero-subtitle {
+    font-size: 11px;
+    line-height: 1.45;
+    max-width: 620px;
+  }
+
+  .panel,
+  .toolbar-strip {
+    padding: 14px;
+  }
+
+  .workspace-page-title,
+  .workspace-main-title,
+  .section-head h2 {
+    font-size: 22px;
+  }
+
+  .scene-card h3,
+  .banner-title {
+    font-size: 20px;
+  }
+
+  .scene-summary-panel {
+    gap: 12px;
+  }
+
+  .scene-summary-panel .meta-item,
+  .scene-summary-panel .kpi-mini,
+  .process-panel .detail-card {
+    min-height: 60px;
+  }
+
+  .chart-head h3 {
+    font-size: 18px;
+  }
+
+  .chart-note,
+  .empty-note,
+  .footnote {
+    font-size: 12px;
+  }
+
+  .scene-pill,
+  .stage-chip,
+  .metric-chip,
+  .ghost-button,
+  .workspace-nav-button {
+    font-size: 12px;
+  }
+
+  .workspace-nav-list {
+    grid-auto-rows: minmax(52px, max-content);
+  }
+
+  .workspace-nav-button {
+    min-height: 52px;
+  }
+}
+
+@media (max-height: 820px) {
+  .hero-subtitle {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .page-shell {
+    padding-inline: 14px;
+  }
+
+  .hero h1 {
+    font-size: 30px;
+  }
+
+  .scene-card-grid,
+  .scene-meta,
+  .detail-grid,
+  .timeline-meta,
+  .snapshot-stat-grid,
+  .compare-grid,
+  .paths-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .workspace-page-title {
+    font-size: 24px;
+  }
+
+  .section-head h2 {
+    font-size: 24px;
+  }
+}
+
+/* Final overview layout overrides: keep every overview module full-screen,
+   balanced, and dense without inner scrolling or card overlap. */
+body[data-page="overview"] {
+  --workspace-sidebar-w: clamp(150px, 7.6vw, 210px);
+  --workspace-aside-w: clamp(270px, 14.2vw, 330px);
+  --workspace-gap: clamp(8px, 0.5vw, 12px);
+  --space-md: clamp(8px, 0.48vw, 12px);
+  --space-lg: clamp(12px, 0.72vw, 16px);
+}
+
+body[data-page="overview"] .toolbar-strip {
+  min-height: 52px;
+  padding: 8px 12px;
+}
+
+body[data-page="overview"] .workspace-layout.page-overview {
+  grid-template-columns: var(--workspace-sidebar-w) minmax(0, 1fr) var(--workspace-aside-w);
+  height: 100%;
+  min-height: 0;
+}
+
+body[data-page="overview"] .workspace-sidebar {
+  padding: 12px 10px;
+  gap: 10px;
+}
+
+body[data-page="overview"] .workspace-nav-list {
+  gap: var(--space-md);
+  grid-auto-rows: minmax(58px, max-content);
+}
+
+body[data-page="overview"] .workspace-nav-button {
+  min-height: 56px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+}
+
+body[data-page="overview"] .workspace-page-title {
+  font-size: clamp(22px, 1.16vw, 26px);
+}
+
+body[data-page="overview"] .workspace-aside > .workspace-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--workspace-gap);
+  height: 100%;
+}
+
+body[data-page="overview"] .workspace-aside .panel {
+  flex: 0 0 auto;
+  min-height: 0;
+  padding: 14px;
+}
+
+body[data-page="overview"] .workspace-aside .aside-detail-panel {
+  min-height: 118px;
+}
+
+body[data-page="overview"] .workspace-aside .aside-entry-panel {
+  min-height: 150px;
+}
+
+body[data-page="overview"] .overview-module-shell {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  gap: var(--workspace-gap);
+}
+
+body[data-page="overview"] .overview-module-scene_summary {
+  grid-template-rows: minmax(0, 0.49fr) minmax(0, 0.51fr);
+}
+
+body[data-page="overview"] .overview-module-metric_compare {
+  grid-template-rows: minmax(0, 0.43fr) minmax(0, 0.57fr);
+}
+
+body[data-page="overview"] .overview-module-stage_timeline {
+  grid-template-rows: minmax(0, 0.56fr) minmax(0, 0.44fr);
+}
+
+body[data-page="overview"] .overview-module-monthly_distribution {
+  grid-template-rows: minmax(0, 0.62fr) minmax(0, 0.38fr);
+}
+
+body[data-page="overview"] .overview-module-duration_compare {
+  grid-template-rows: minmax(0, 0.44fr) minmax(0, 0.56fr);
+}
+
+body[data-page="overview"] .overview-module-shell > .panel {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  padding: clamp(12px, 0.75vw, 16px);
+}
+
+body[data-page="overview"] .overview-panel {
+  gap: clamp(8px, 0.45vw, 12px);
+}
+
+body[data-page="overview"] .section-head {
+  margin-bottom: 0;
+}
+
+body[data-page="overview"] .section-head h2 {
+  font-size: clamp(20px, 1.08vw, 24px);
+  line-height: 1.05;
+}
+
+body[data-page="overview"] .scene-card-grid {
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  gap: var(--workspace-gap);
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+body[data-page="overview"] .scene-card {
+  min-height: 0;
+  height: 100%;
+  padding: clamp(14px, 0.8vw, 18px);
+  gap: clamp(8px, 0.5vw, 12px);
+  overflow: hidden;
+  align-content: stretch;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+body[data-page="overview"] .scene-card h3 {
+  font-size: clamp(22px, 1.2vw, 28px);
+  line-height: 1.08;
+}
+
+body[data-page="overview"] .scene-type-tag {
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+body[data-page="overview"] .scene-meta {
+  align-self: stretch;
+  align-content: end;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(8px, 0.5vw, 12px);
+}
+
+body[data-page="overview"] .scene-meta .meta-item {
+  min-height: 0;
+  padding: clamp(8px, 0.55vw, 12px);
+}
+
+body[data-page="overview"] .scene-meta .meta-item strong {
+  font-size: clamp(14px, 0.82vw, 18px);
+}
+
+body[data-page="overview"] .compare-grid {
+  height: 100%;
+  min-height: 0;
+  gap: var(--workspace-gap);
+  align-content: stretch;
+}
+
+body[data-page="overview"] .compare-card {
+  min-height: 0;
+  padding: clamp(12px, 0.8vw, 16px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+
+body[data-page="overview"] .compare-card strong {
+  font-size: clamp(16px, 0.9vw, 20px);
+  line-height: 1.18;
+}
+
+body[data-page="overview"] .compare-card em {
+  font-size: clamp(11px, 0.64vw, 13px);
+}
+
+body[data-page="overview"] .mini-chart-grid,
+body[data-page="overview"] .stage-compare-grid {
+  height: 100%;
+  min-height: 0;
+  gap: var(--workspace-gap);
+  align-items: stretch;
+}
+
+body[data-page="overview"] .mini-chart-grid > .panel,
+body[data-page="overview"] .stage-compare-grid > .network-copy-card {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+body[data-page="overview"] .chart-panel {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  align-content: stretch;
+  gap: clamp(8px, 0.5vw, 12px);
+}
+
+body[data-page="overview"] .chart-panel h3,
+body[data-page="overview"] .network-copy-card h3 {
+  font-size: clamp(16px, 0.9vw, 20px);
+  line-height: 1.1;
+}
+
+body[data-page="overview"] .chart-svg {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+body[data-page="overview"] .chart-legend {
+  gap: 7px 12px;
+  align-items: center;
+}
+
+body[data-page="overview"] .legend-item {
+  font-size: clamp(11px, 0.62vw, 13px);
+}
+
+body[data-page="overview"] .overview-timeline-panel .network-copy-card {
+  justify-content: space-evenly;
+  padding: clamp(12px, 0.72vw, 16px);
+}
+
+body[data-page="overview"] .overview-timeline-panel .stage-row {
+  min-height: 0;
+  padding: clamp(5px, 0.36vw, 8px) 0;
+}
+
+body[data-page="overview"] .overview-duration-panel .chart-panel svg,
+body[data-page="overview"] .overview-monthly-panel .chart-panel svg {
+  align-self: center;
+}
+
+@media (max-width: 1500px) {
+  body[data-page="overview"] {
+    --workspace-sidebar-w: 150px;
+    --workspace-aside-w: 260px;
+  }
+
+  body[data-page="overview"] .scene-card h3 {
+    font-size: 20px;
+  }
+
+  body[data-page="overview"] .workspace-aside .panel {
+    padding: 12px;
+  }
+}
+
+/* Overview canvas redesign: one module, one full-screen board. */
+body[data-page="overview"] .overview-canvas-panel {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(10px, 0.62vw, 14px);
+  overflow: hidden;
+  padding: clamp(14px, 0.82vw, 18px);
+}
+
+body[data-page="overview"] .overview-canvas-body {
+  min-height: 0;
+  height: 100%;
+  display: grid;
+  gap: clamp(10px, 0.62vw, 14px);
+}
+
+body[data-page="overview"] .overview-summary-body {
+  grid-template-rows: minmax(0, 1.06fr) minmax(0, 0.82fr);
+}
+
+body[data-page="overview"] .overview-metric-body {
+  grid-template-rows: minmax(0, 0.42fr) minmax(0, 0.58fr);
+}
+
+body[data-page="overview"] .overview-stage-body {
+  grid-template-rows: minmax(0, 0.58fr) minmax(0, 0.42fr);
+}
+
+body[data-page="overview"] .overview-monthly-body {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+body[data-page="overview"] .overview-duration-body {
+  grid-template-rows: minmax(0, 0.56fr) minmax(0, 0.44fr);
+}
+
+body[data-page="overview"] .overview-propagation-body {
+  grid-template-rows: minmax(0, 0.58fr) minmax(0, 0.42fr);
+}
+
+body[data-page="overview"] .overview-stage-process-body {
+  grid-template-rows: minmax(0, 0.66fr) minmax(0, 0.34fr);
+}
+
+body[data-page="overview"] .overview-scene-card-grid,
+body[data-page="overview"] .overview-chart-grid,
+body[data-page="overview"] .overview-stage-grid,
+body[data-page="overview"] .overview-metric-card-grid {
+  min-height: 0;
+  height: 100%;
+  display: grid;
+  gap: clamp(10px, 0.62vw, 14px);
+}
+
+body[data-page="overview"] .overview-scene-card-grid,
+body[data-page="overview"] .overview-chart-grid-two,
+body[data-page="overview"] .overview-stage-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body[data-page="overview"] .overview-canvas-scene-card {
+  min-height: 0;
+  height: 100%;
+  padding: clamp(16px, 0.95vw, 22px);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: stretch;
+}
+
+body[data-page="overview"] .overview-canvas-scene-card .scene-card-header {
+  align-items: flex-start;
+}
+
+body[data-page="overview"] .overview-canvas-scene-card .scene-meta {
+  align-content: end;
+  align-self: stretch;
+}
+
+body[data-page="overview"] .overview-canvas-scene-card .meta-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: clamp(58px, 5.1vh, 82px);
+}
+
+body[data-page="overview"] .overview-metric-card-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+body[data-page="overview"] .overview-metric-card {
+  min-height: 0;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: clamp(12px, 0.8vw, 16px);
+}
+
+body[data-page="overview"] .overview-metric-card:nth-child(-n + 3) {
+  grid-column: span 2;
+}
+
+body[data-page="overview"] .overview-metric-card:nth-child(n + 4) {
+  grid-column: span 3;
+}
+
+body[data-page="overview"] .overview-metric-card span,
+body[data-page="overview"] .overview-metric-card em {
+  color: var(--muted);
+  font-size: clamp(11px, 0.66vw, 13px);
+  line-height: 1.25;
+  font-style: normal;
+}
+
+body[data-page="overview"] .overview-metric-card strong {
+  font-size: clamp(17px, 0.96vw, 22px);
+  line-height: 1.16;
+}
+
+body[data-page="overview"] .overview-chart-card,
+body[data-page="overview"] .overview-stage-card {
+  min-height: 0;
+  height: 100%;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(8px, 0.5vw, 12px);
+  padding: clamp(12px, 0.78vw, 16px);
+  overflow: hidden;
+}
+
+body[data-page="overview"] .overview-chart-card h3,
+body[data-page="overview"] .overview-stage-card h3 {
+  margin: 0;
+  font-size: clamp(17px, 0.94vw, 22px);
+  line-height: 1.1;
+}
+
+body[data-page="overview"] .overview-chart-body {
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body[data-page="overview"] .overview-chart-body > svg {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+}
+
+body[data-page="overview"] .overview-stage-list {
+  min-height: 0;
+  display: grid;
+  grid-auto-rows: minmax(0, 1fr);
+  gap: clamp(6px, 0.38vw, 10px);
+}
+
+body[data-page="overview"] .overview-stage-row {
+  min-height: 0;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: clamp(8px, 0.55vw, 12px);
+}
+
+body[data-page="overview"] .overview-stage-row strong {
+  font-size: clamp(13px, 0.74vw, 16px);
+  line-height: 1.18;
+}
+
+body[data-page="overview"] .overview-stage-row span {
+  color: var(--muted);
+  font-size: clamp(12px, 0.66vw, 14px);
+  white-space: nowrap;
+}
+
+body[data-page="overview"] .overview-canvas-monthly_distribution .overview-chart-card {
+  padding: clamp(18px, 1.05vw, 24px);
+}
+
+body[data-page="overview"] .overview-canvas-monthly_distribution .overview-chart-card h3 {
+  font-size: clamp(20px, 1.1vw, 26px);
+}
+
+body[data-page="overview"] .overview-canvas-monthly_distribution .overview-chart-body {
+  padding: clamp(4px, 0.35vw, 8px);
+}
+
+body[data-page="overview"] .overview-canvas-propagation_statistics .overview-chart-card,
+body[data-page="overview"] .overview-canvas-stage_process .overview-stage-card {
+  padding: clamp(16px, 0.95vw, 22px);
+}
+
+body[data-page="overview"] .overview-canvas-propagation_statistics .overview-chart-card h3,
+body[data-page="overview"] .overview-canvas-stage_process .overview-stage-card h3 {
+  font-size: clamp(20px, 1.05vw, 24px);
+}
+
+body[data-page="overview"] .overview-canvas-propagation_statistics .overview-chart-body {
+  padding: clamp(4px, 0.3vw, 8px);
+}
+
+body[data-page="overview"] .overview-canvas-stage_process .overview-metric-card-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+body[data-page="overview"] .overview-canvas-stage_process .overview-metric-card,
+body[data-page="overview"] .overview-canvas-stage_process .overview-metric-card:nth-child(-n + 3),
+body[data-page="overview"] .overview-canvas-stage_process .overview-metric-card:nth-child(n + 4) {
+  grid-column: auto;
+}
+
+body[data-page="overview"] .overview-canvas-stage_process .overview-metric-card strong {
+  font-size: clamp(15px, 0.85vw, 18px);
+}
+
+@media (max-width: 1360px), (max-height: 780px) {
+  body[data-page="overview"] .overview-summary-body,
+  body[data-page="overview"] .overview-metric-body,
+  body[data-page="overview"] .overview-stage-body,
+  body[data-page="overview"] .overview-duration-body {
+    gap: 8px;
+  }
+
+  body[data-page="overview"] .overview-canvas-panel {
+    padding: 12px;
+  }
+
+  body[data-page="overview"] .overview-canvas-scene-card .meta-item {
+    min-height: 52px;
+  }
+
+  body[data-page="overview"] .overview-stage-row {
+    padding-block: 6px;
+  }
+}
+
+/* Final overview structure: keep each module semantically clean and fill one screen. */
+body[data-page="overview"] {
+  --workspace-sidebar-w: clamp(150px, 7.6vw, 210px);
+}
+
+body[data-page="overview"] .workspace-layout.no-aside {
+  grid-template-columns: var(--workspace-sidebar-w) minmax(0, 1fr);
+}
+
+body[data-page="overview"] .overview-canvas-panel {
+  padding: clamp(12px, 0.78vw, 18px);
+  gap: clamp(8px, 0.52vw, 12px);
+}
+
+body[data-page="overview"] .overview-canvas-panel .section-head h2 {
+  font-size: clamp(20px, 1.15vw, 26px);
+  line-height: 1.08;
+}
+
+body[data-page="overview"] .overview-summary-body {
+  grid-template-rows: minmax(0, 0.34fr) minmax(0, 0.22fr) minmax(0, 0.44fr);
+}
+
+body[data-page="overview"] .overview-propagation-body {
+  grid-template-rows: minmax(0, 0.56fr) minmax(0, 0.44fr);
+}
+
+body[data-page="overview"] .overview-stage-process-body {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+body[data-page="overview"] .overview-summary-card {
+  min-height: 0;
+  height: 100%;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(10px, 0.7vw, 16px);
+  padding: clamp(14px, 0.88vw, 20px);
+  overflow: hidden;
+}
+
+body[data-page="overview"] .overview-summary-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+body[data-page="overview"] .overview-card-eyebrow {
+  display: block;
+  color: var(--muted);
+  font-size: clamp(11px, 0.62vw, 13px);
+  margin-bottom: 6px;
+}
+
+body[data-page="overview"] .overview-summary-title h3 {
+  margin: 0;
+  font-size: clamp(22px, 1.22vw, 30px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+body[data-page="overview"] .overview-summary-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: clamp(8px, 0.62vw, 14px);
+  align-content: stretch;
+  min-height: 0;
+}
+
+body[data-page="overview"] .overview-summary-facts .meta-item {
+  min-height: 0;
+  padding: clamp(8px, 0.62vw, 14px);
+  background: rgba(255, 255, 255, 0.42);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+body[data-page="overview"] .overview-summary-facts .meta-item strong {
+  font-size: clamp(15px, 0.86vw, 20px);
+  line-height: 1.16;
+  overflow-wrap: anywhere;
+}
+
+body[data-page="overview"] .overview-summary-body .overview-metric-card-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+body[data-page="overview"] .overview-summary-body .overview-metric-card,
+body[data-page="overview"] .overview-summary-body .overview-metric-card:nth-child(-n + 3),
+body[data-page="overview"] .overview-summary-body .overview-metric-card:nth-child(n + 4) {
+  grid-column: auto;
+}
+
+body[data-page="overview"] .overview-summary-body .overview-metric-card {
+  justify-content: center;
+  padding: clamp(10px, 0.72vw, 14px);
+  min-height: clamp(108px, 14vh, 146px);
+}
+
+body[data-page="overview"] .overview-summary-body .overview-metric-card strong {
+  font-size: clamp(16px, 0.95vw, 21px);
+}
+
+body[data-page="overview"] .overview-duration-grid {
+  min-height: 0;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(10px, 0.62vw, 14px);
+}
+
+body[data-page="overview"] .overview-duration-card {
+  min-height: 0;
+  height: 100%;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(8px, 0.52vw, 12px);
+  padding: clamp(14px, 0.85vw, 18px);
+}
+
+body[data-page="overview"] .overview-duration-card h3 {
+  margin: 0;
+  font-size: clamp(18px, 1vw, 23px);
+  line-height: 1.08;
+}
+
+body[data-page="overview"] .overview-duration-list {
+  min-height: 0;
+  display: grid;
+  grid-auto-rows: minmax(0, 1fr);
+  gap: clamp(8px, 0.56vw, 12px);
+  align-content: stretch;
+}
+
+body[data-page="overview"] .overview-duration-row {
+  display: grid;
+  grid-template-rows: auto 10px;
+  gap: 6px;
+  align-content: center;
+  min-height: 0;
+}
+
+body[data-page="overview"] .overview-duration-row-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: clamp(12px, 0.72vw, 15px);
+  line-height: 1.15;
+}
+
+body[data-page="overview"] .overview-duration-row-head strong {
+  white-space: nowrap;
+}
+
+body[data-page="overview"] .overview-duration-track {
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #e2e8f0;
+}
+
+body[data-page="overview"] .overview-duration-fill {
+  height: 100%;
+  border-radius: inherit;
+}
+
+body[data-page="overview"] .overview-stage-process-body .overview-stage-grid {
+  height: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body[data-page="overview"] .overview-summary-body .overview-stage-grid {
+  height: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body[data-page="overview"] .overview-stage-process-body .overview-stage-card {
+  padding: clamp(18px, 1vw, 24px);
+}
+
+body[data-page="overview"] .overview-summary-body .overview-stage-card {
+  padding: clamp(14px, 0.85vw, 18px);
+}
+
+body[data-page="overview"] .overview-stage-process-body .overview-stage-list {
+  gap: clamp(10px, 0.7vw, 16px);
+}
+
+body[data-page="overview"] .overview-summary-body .overview-stage-list {
+  gap: clamp(8px, 0.56vw, 12px);
+}
+
+body[data-page="overview"] .overview-stage-process-body .overview-stage-row {
+  padding: clamp(12px, 0.8vw, 18px);
+}
+
+body[data-page="overview"] .overview-summary-body .overview-stage-row {
+  padding: clamp(9px, 0.62vw, 13px);
+}
+
+body[data-page="overview"] .overview-stage-process-body .overview-stage-row strong {
+  font-size: clamp(15px, 0.9vw, 19px);
+}
+
+body[data-page="overview"] .overview-summary-body .overview-stage-row strong {
+  font-size: clamp(13px, 0.78vw, 16px);
+}
+
+body[data-page="overview"] .overview-stage-process-body .overview-stage-row span {
+  font-size: clamp(13px, 0.78vw, 16px);
+}
+
+body[data-page="overview"] .overview-summary-body .overview-stage-row span {
+  font-size: clamp(12px, 0.68vw, 14px);
+}
+
+body[data-page="overview"] .overview-summary-body.overview-dual-family-body {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+body[data-page="overview"] .overview-family-grid {
+  min-height: 0;
+  height: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 0.82vw, 20px);
+}
+
+body[data-page="overview"] .overview-family-column {
+  min-height: 0;
+  height: auto;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: clamp(12px, 0.78vw, 18px);
+}
+
+body[data-page="overview"] .overview-family-hero,
+body[data-page="overview"] .overview-family-section {
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  overflow: hidden;
+}
+
+body[data-page="overview"] .overview-family-hero {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: clamp(12px, 0.78vw, 18px);
+  padding: clamp(16px, 0.95vw, 22px);
+}
+
+body[data-page="overview"] .overview-family-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+body[data-page="overview"] .overview-family-header-text h3 {
+  margin: 0;
+  font-size: clamp(24px, 1.28vw, 32px);
+  line-height: 1.08;
+}
+
+body[data-page="overview"] .overview-family-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(10px, 0.68vw, 14px);
+}
+
+body[data-page="overview"] .overview-family-facts .meta-item {
+  min-height: clamp(76px, 9vh, 96px);
+  padding: clamp(10px, 0.7vw, 14px);
+  background: rgba(255, 255, 255, 0.52);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+body[data-page="overview"] .overview-family-facts .meta-item strong {
+  font-size: clamp(16px, 0.92vw, 22px);
+  line-height: 1.14;
+  overflow-wrap: anywhere;
+}
+
+body[data-page="overview"] .overview-family-section {
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  padding: clamp(14px, 0.88vw, 18px);
+  display: grid;
+  gap: clamp(10px, 0.62vw, 14px);
+}
+
+body[data-page="overview"] .overview-family-section-title {
+  margin: 0;
+  font-size: clamp(18px, 1vw, 22px);
+  line-height: 1.1;
+}
+
+body[data-page="overview"] .overview-family-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(92px, auto);
+  gap: clamp(10px, 0.62vw, 14px);
+}
+
+body[data-page="overview"] .overview-family-metric-card {
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: #ffffff;
+  padding: clamp(12px, 0.72vw, 16px);
+  display: grid;
+  align-content: center;
+  gap: 6px;
+}
+
+body[data-page="overview"] .overview-family-metric-card.wide {
+  grid-column: 1 / -1;
+}
+
+body[data-page="overview"] .overview-family-metric-label {
+  color: var(--muted);
+  font-size: clamp(12px, 0.68vw, 14px);
+  line-height: 1.2;
+}
+
+body[data-page="overview"] .overview-family-metric-value {
+  font-size: clamp(22px, 1.2vw, 30px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+body[data-page="overview"] .overview-family-stage-section {
+  min-height: 0;
+}
+
+body[data-page="overview"] .overview-family-stage-list {
+  display: grid;
+  gap: clamp(10px, 0.62vw, 14px);
+}
+
+body[data-page="overview"] .overview-family-stage-row {
+  min-height: clamp(68px, 7.8vh, 90px);
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  padding: clamp(12px, 0.78vw, 16px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+body[data-page="overview"] .overview-family-stage-row strong {
+  font-size: clamp(15px, 0.86vw, 18px);
+  line-height: 1.18;
+}
+
+body[data-page="overview"] .overview-family-stage-row span {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: clamp(13px, 0.74vw, 15px);
+}
+
+body[data-page="overview"] .overview-propagation-body .overview-chart-card {
+  padding: clamp(16px, 0.95vw, 20px);
+}
+
+body[data-page="overview"] .overview-propagation-body .overview-chart-card h3 {
+  font-size: clamp(20px, 1.08vw, 24px);
+}
+
+body[data-page="overview"] .overview-propagation-body .chart-svg text {
+  font-size: 14px;
+}
+
+/* Root cause cleanup for overview:
+   stop legacy full-height stretching from forcing sparse cards into oversized panels. */
+body[data-page="overview"] .workspace-center,
+body[data-page="overview"] .workspace-main,
+body[data-page="overview"] .workspace-main > .overview-module-shell,
+body[data-page="overview"] .overview-module-shell,
+body[data-page="overview"] .overview-canvas-panel,
+body[data-page="overview"] .overview-canvas-body {
+  min-height: 0;
+  height: auto;
+}
+
+body[data-page="overview"] .workspace-center,
+body[data-page="overview"] .workspace-main {
+  overflow: visible;
+  align-content: start;
+}
+
+body[data-page="overview"] .overview-module-shell {
+  gap: clamp(12px, 0.72vw, 18px);
+}
+
+body[data-page="overview"] .overview-module-scene_summary,
+body[data-page="overview"] .overview-summary-body {
+  grid-template-rows: auto auto auto;
+}
+
+body[data-page="overview"] .overview-summary-card {
+  height: auto;
+  min-height: clamp(180px, 22vh, 240px);
+}
+
+body[data-page="overview"] .overview-summary-body .overview-metric-card-grid {
+  height: auto;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-auto-rows: minmax(88px, auto);
+}
+
+body[data-page="overview"] .overview-summary-body .overview-metric-card {
+  height: auto;
+  min-height: clamp(88px, 10vh, 116px);
+  justify-content: flex-start;
+  padding: clamp(10px, 0.62vw, 14px);
+}
+
+body[data-page="overview"] .overview-summary-body .overview-stage-grid,
+body[data-page="overview"] .overview-summary-body .overview-stage-card,
+body[data-page="overview"] .overview-summary-body .overview-stage-list {
+  height: auto;
+}
+
+body[data-page="overview"] .overview-summary-body .overview-stage-row {
+  min-height: clamp(52px, 6vh, 72px);
+}
+
+body[data-page="overview"] .overview-family-grid {
+  gap: clamp(12px, 0.72vw, 16px);
+}
+
+body[data-page="overview"] .overview-family-hero {
+  gap: clamp(10px, 0.62vw, 14px);
+  padding: clamp(14px, 0.82vw, 18px);
+}
+
+body[data-page="overview"] .overview-family-header h3 {
+  margin: 0;
+  font-size: clamp(30px, 1.62vw, 38px);
+  line-height: 1.06;
+}
+
+body[data-page="overview"] .overview-family-facts {
+  gap: clamp(8px, 0.56vw, 12px);
+}
+
+body[data-page="overview"] .overview-family-facts .meta-item {
+  min-height: clamp(70px, 7.4vh, 86px);
+  padding: clamp(10px, 0.62vw, 14px);
+}
+
+body[data-page="overview"] .overview-family-facts .meta-item strong {
+  font-size: clamp(17px, 0.96vw, 22px);
+}
+
+body[data-page="overview"] .overview-family-shared-section {
+  padding: clamp(14px, 0.82vw, 18px);
+  gap: clamp(12px, 0.68vw, 16px);
+}
+
+body[data-page="overview"] .overview-family-section-title {
+  font-size: clamp(22px, 1.18vw, 28px);
+}
+
+body[data-page="overview"] .overview-family-section-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 0.78vw, 18px);
+  align-items: start;
+}
+
+body[data-page="overview"] .overview-family-section-column {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: clamp(10px, 0.62vw, 14px);
+}
+
+body[data-page="overview"] .overview-family-subtitle {
+  margin: 0;
+  font-size: clamp(18px, 1vw, 24px);
+  line-height: 1.08;
+  color: var(--text-strong);
+}
+
+body[data-page="overview"] .overview-family-section-grid-metrics .overview-family-metrics-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(84px, auto);
+}
+
+body[data-page="overview"] .overview-family-metric-card {
+  min-height: clamp(84px, 8.8vh, 102px);
+  padding: clamp(12px, 0.72vw, 16px);
+}
+
+body[data-page="overview"] .overview-family-metric-label {
+  font-size: clamp(13px, 0.74vw, 15px);
+}
+
+body[data-page="overview"] .overview-family-metric-value {
+  font-size: clamp(24px, 1.3vw, 32px);
+}
+
+body[data-page="overview"] .overview-family-stage-list {
+  gap: clamp(8px, 0.52vw, 12px);
+}
+
+body[data-page="overview"] .overview-family-stage-row {
+  min-height: clamp(56px, 5.8vh, 72px);
+  padding: clamp(12px, 0.72vw, 16px);
+}
+
+body[data-page="overview"] .overview-family-stage-row strong {
+  font-size: clamp(16px, 0.9vw, 19px);
+}
+
+body[data-page="overview"] .overview-family-stage-row span {
+  font-size: clamp(14px, 0.78vw, 16px);
+}
+
+body[data-page="overview"] .overview-dual-family-body {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+body[data-page="overview"] .overview-family-grid {
+  height: 100%;
+  align-items: stretch;
+}
+
+body[data-page="overview"] .overview-family-column {
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(12px, 0.72vw, 16px);
+  padding: clamp(12px, 0.72vw, 16px);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.05);
+}
+
+body[data-page="overview"] .overview-family-hero,
+body[data-page="overview"] .overview-family-section {
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+body[data-page="overview"] .overview-family-hero {
+  background: #ffffff;
+  border-top-width: 4px;
+  grid-template-rows: auto auto;
+  min-height: 0;
+}
+
+body[data-page="overview"] .overview-family-column-random .overview-family-hero {
+  border-top-color: #0F766E;
+}
+
+body[data-page="overview"] .overview-family-column-keynode .overview-family-hero {
+  border-top-color: #C81E1E;
+}
+
+body[data-page="overview"] .overview-family-section {
+  min-height: 0;
+  align-content: start;
+}
+
+/* Final cockpit polish: larger switch controls, denser overview canvas, and
+   a light scenario tint so the full-screen pages do not feel empty. */
+.toolbar-strip {
+  min-height: clamp(72px, 7.2vh, 88px);
+  padding: clamp(14px, 0.9vw, 18px) clamp(18px, 1.15vw, 24px);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.97), rgba(248, 251, 255, 0.94)),
+    radial-gradient(circle at 12% 50%, rgba(15, 118, 110, 0.10), transparent 32%),
+    radial-gradient(circle at 88% 50%, rgba(37, 99, 235, 0.08), transparent 28%);
+}
+
+.toolbar-title {
+  /* Inactive: final toolbar title size is defined near the end of this file. */
+  /* font-size: clamp(24px, 1.28vw, 30px); */
+  letter-spacing: 0.01em;
+}
+
+.page-nav-group {
+  /* Inactive: final top-nav gap is defined near the end of this file. */
+  /* gap: clamp(10px, 0.65vw, 16px); */
+}
+
+#family-nav-row .scene-pill-group {
+  gap: clamp(10px, 0.65vw, 16px);
+}
+
+#family-nav-row .scene-pill,
+.page-nav-group .scene-pill {
+  /* Inactive: final top-nav button sizing is defined near the end of this file. */
+  /* min-width: clamp(94px, 5.2vw, 132px); */
+  /* min-height: clamp(42px, 4.2vh, 50px); */
+  /* padding: 0 clamp(18px, 1vw, 24px); */
+  /* font-size: clamp(15px, 0.82vw, 17px); */
+  letter-spacing: 0.01em;
+}
+
+body[data-page="overview"] .toolbar-strip {
+  min-height: clamp(72px, 7.2vh, 88px);
+  padding: clamp(14px, 0.9vw, 18px) clamp(18px, 1.15vw, 24px);
+}
+
+body[data-page="overview"] .content {
+  height: 100%;
+  min-height: 0;
+}
+
+body[data-page="overview"] .workspace-layout.page-overview,
+body[data-page="overview"] .workspace-layout.no-aside {
+  height: 100%;
+  min-height: 0;
+  align-items: stretch;
+}
+
+body[data-page="overview"] .workspace-center,
+body[data-page="overview"] .workspace-main,
+body[data-page="overview"] .workspace-main > .overview-module-shell,
+body[data-page="overview"] .overview-module-shell,
+body[data-page="overview"] .overview-canvas-panel,
+body[data-page="overview"] .overview-canvas-body {
+  height: 100%;
+  min-height: 0;
+}
+
+body[data-page="overview"] .overview-module-scene_summary {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+body[data-page="overview"] .overview-summary-body.overview-dual-family-body {
+  height: 100%;
+  min-height: 0;
+}
+
+body[data-page="overview"] .overview-family-grid {
+  height: 100%;
+  min-height: 0;
+  align-items: stretch;
+  gap: clamp(16px, 0.95vw, 24px);
+}
+
+body[data-page="overview"] .overview-family-column {
+  height: 100%;
+  min-height: 0;
+  grid-template-rows: minmax(150px, 0.28fr) minmax(0, 0.72fr);
+  gap: clamp(14px, 0.82vw, 20px);
+  padding: clamp(14px, 0.86vw, 20px);
+}
+
+body[data-page="overview"] .overview-family-column-random {
+  background:
+    linear-gradient(180deg, rgba(240, 253, 250, 0.88), rgba(255, 255, 255, 0.98) 36%),
+    #ffffff;
+  border-color: rgba(15, 118, 110, 0.22);
+}
+
+body[data-page="overview"] .overview-family-column-keynode {
+  background:
+    linear-gradient(180deg, rgba(254, 242, 242, 0.92), rgba(255, 255, 255, 0.98) 36%),
+    #ffffff;
+  border-color: rgba(185, 28, 28, 0.20);
+}
+
+body[data-page="overview"] .overview-family-hero {
+  min-height: 0;
+  height: 100%;
+  align-content: space-between;
+  padding: clamp(16px, 1vw, 24px);
+}
+
+body[data-page="overview"] .overview-family-section {
+  height: 100%;
+  min-height: 0;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  align-content: stretch;
+  padding: clamp(16px, 0.95vw, 22px);
+}
+
+body[data-page="overview"] .overview-family-column-random .overview-family-section-title {
+  color: #0f766e;
+}
+
+body[data-page="overview"] .overview-family-column-keynode .overview-family-section-title {
+  color: #b91c1c;
+}
+
+body[data-page="overview"] .overview-family-metrics-grid {
+  grid-auto-rows: minmax(clamp(82px, 8vh, 112px), auto);
+}
+
+body[data-page="overview"] .overview-family-metric-card {
+  min-height: clamp(82px, 8vh, 112px);
+  border-left: 4px solid rgba(15, 23, 42, 0.10);
+}
+
+body[data-page="overview"] .overview-family-column-random .overview-family-metric-card {
+  border-left-color: rgba(15, 118, 110, 0.30);
+}
+
+body[data-page="overview"] .overview-family-column-keynode .overview-family-metric-card {
+  border-left-color: rgba(185, 28, 28, 0.26);
+}
+
+body[data-page="overview"] .overview-family-stage-list {
+  height: 100%;
+  min-height: 0;
+  align-content: stretch;
+}
+
+body[data-page="overview"] .overview-family-stage-row {
+  min-height: clamp(58px, 6vh, 84px);
+}
+
+/* Root-cause correction for the final overview dashboard.
+   The previous full-height override treated every overview module the same:
+   scene summary cards were clipped, while propagation charts were compressed.
+   Keep the two active overview modules on separate height models. */
+body[data-page="overview"] .overview-canvas-scene_summary .overview-dual-family-body,
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-grid,
+body[data-page="overview"] .overview-canvas-propagation_statistics .overview-propagation-body {
+  height: 100%;
+  min-height: 0;
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 0.85vw, 20px);
+  align-items: stretch;
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-column {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 2fr);
+  gap: clamp(16px, 0.95vw, 24px);
+  overflow: hidden;
+  padding: clamp(14px, 0.84vw, 20px);
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-hero {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  padding: clamp(14px, 0.82vw, 18px);
+  align-content: start;
+  gap: clamp(14px, 0.82vw, 18px);
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-header h3 {
+  font-size: clamp(27px, 1.55vw, 38px);
+  line-height: 1.05;
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-facts {
+  gap: clamp(12px, 0.72vw, 16px);
+  align-content: stretch;
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-facts .meta-item {
+  min-height: 0;
+  height: 100%;
+  padding: clamp(10px, 0.6vw, 14px);
+  align-content: center;
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-facts .meta-item strong {
+  font-size: clamp(16px, 0.92vw, 20px);
+  line-height: 1.22;
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-section {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(14px, 0.82vw, 18px);
+  padding: clamp(14px, 0.82vw, 18px);
+  overflow: hidden;
+  align-content: stretch;
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-section-title {
+  font-size: clamp(21px, 1.12vw, 28px);
+  line-height: 1.08;
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: clamp(10px, 0.62vw, 14px);
+  align-content: stretch;
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-metric-card {
+  min-height: 0;
+  height: 100%;
+  padding: clamp(10px, 0.6vw, 14px);
+  justify-content: center;
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-metric-label {
+  font-size: clamp(13px, 0.74vw, 15px);
+  line-height: 1.22;
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-metric-value {
+  font-size: clamp(18px, 1vw, 22px);
+  line-height: 1.14;
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-stage-list {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-auto-rows: minmax(0, 1fr);
+  gap: clamp(10px, 0.62vw, 14px);
+  align-content: stretch;
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-stage-row {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: clamp(10px, 0.6vw, 14px);
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-stage-row strong {
+  font-size: clamp(16px, 0.92vw, 20px);
+  line-height: 1.18;
+}
+
+body[data-page="overview"] .overview-canvas-scene_summary .overview-family-stage-row span {
+  font-size: clamp(13px, 0.76vw, 15px);
+}
+
+body[data-page="overview"] .overview-canvas-propagation_statistics .overview-propagation-body {
+  display: grid;
+  grid-template-rows: minmax(0, 1.04fr) minmax(0, 0.96fr);
+  gap: clamp(14px, 0.85vw, 20px);
+}
+
+body[data-page="overview"] .overview-canvas-propagation_statistics .overview-chart-grid-two,
+body[data-page="overview"] .overview-canvas-propagation_statistics .overview-duration-grid {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 0.85vw, 20px);
+}
+
+body[data-page="overview"] .overview-canvas-propagation_statistics .overview-chart-card,
+body[data-page="overview"] .overview-canvas-propagation_statistics .overview-duration-card {
+  height: 100%;
+  min-height: 0;
+  padding: clamp(12px, 0.72vw, 16px);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+}
+
+body[data-page="overview"] .overview-canvas-propagation_statistics .overview-chart-card h3,
+body[data-page="overview"] .overview-canvas-propagation_statistics .overview-duration-card h3 {
+  font-size: clamp(20px, 1.08vw, 26px);
+  line-height: 1.08;
+}
+
+body[data-page="overview"] .overview-canvas-propagation_statistics .overview-chart-body {
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+body[data-page="overview"] .overview-canvas-propagation_statistics .overview-chart-body > svg {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  display: block;
+}
+
+body[data-page="overview"] .overview-canvas-propagation_statistics .overview-duration-list {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-auto-rows: minmax(0, 1fr);
+  gap: clamp(8px, 0.48vw, 12px);
+}
+
+body[data-page="overview"] .overview-canvas-propagation_statistics .overview-duration-row {
+  min-height: 0;
+  grid-template-rows: auto clamp(10px, 0.62vw, 14px);
+  align-content: center;
+}
+
+/* Final fullscreen lock: this block intentionally overrides older overview
+   experiments above, so the overview uses the whole visible viewport. */
+html,
+body,
+.page-shell {
+  height: 100dvh !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.page-shell {
+  padding: clamp(7px, 0.55vw, 12px) clamp(10px, 0.75vw, 16px) clamp(8px, 0.55vw, 12px) !important;
+  grid-template-rows: clamp(34px, 4vh, 46px) clamp(66px, 7vh, 86px) auto minmax(0, 1fr) !important;
+  gap: clamp(7px, 0.45vw, 10px) !important;
+}
+
+#result-banner:empty {
+  display: none !important;
+}
+
+.hero,
+.toolbar-strip,
+.content,
+.content > *,
+.workspace-layout,
+.workspace-sidebar,
+.workspace-center,
+.workspace-main {
+  min-height: 0 !important;
+}
+
+.hero {
+  padding: 0 4px !important;
+}
+
+.hero h1 {
+  font-size: clamp(26px, 1.45vw, 34px) !important;
+}
+
+.toolbar-strip {
+  min-height: 0 !important;
+  height: 100% !important;
+  padding: clamp(12px, 0.82vw, 18px) clamp(18px, 1.1vw, 26px) !important;
+  border-radius: clamp(16px, 0.9vw, 22px) !important;
+}
+
+.toolbar-main-row,
+.toolbar-left-group {
+  height: 100% !important;
+}
+
+.toolbar-title {
+  font-size: 25px !important;
+  font-weight: 900 !important;
+}
+
+.page-nav-group {
+  gap: clamp(12px, 0.72vw, 18px) !important;
+}
+
+.page-nav-group .scene-pill,
+#family-nav-row .scene-pill {
+  min-width: clamp(104px, 5.8vw, 150px) !important;
+  min-height: clamp(44px, 4.5vh, 56px) !important;
+  padding: 0 clamp(18px, 1.05vw, 26px) !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+}
+
+.content,
+.content > * {
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+body[data-page="overview"] .content {
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+body[data-page="overview"] .workspace-layout.page-overview,
+body[data-page="overview"] .workspace-layout.no-aside {
+  height: 100% !important;
+  min-height: 0 !important;
+  grid-template-columns: var(--workspace-sidebar-w) minmax(0, 1fr) !important;
+  gap: clamp(9px, 0.55vw, 14px) !important;
+  align-items: stretch !important;
+}
+
+body[data-page="overview"] .workspace-center,
+body[data-page="overview"] .workspace-main,
+body[data-page="overview"] .workspace-main > .overview-canvas-panel {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  align-content: stretch !important;
+}
+
+body[data-page="overview"] .workspace-sidebar {
+  padding: clamp(12px, 0.75vw, 18px) clamp(9px, 0.55vw, 14px) !important;
+}
+
+body[data-page="overview"] .workspace-nav-list {
+  display: grid !important;
+  grid-auto-rows: minmax(58px, max-content) !important;
+  gap: var(--space-md) !important;
+  align-content: start !important;
+}
+
+body[data-page="overview"] .workspace-nav-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 56px !important;
+  padding: 12px 14px !important;
+  text-align: center !important;
+  font-size: 14px !important;
+  line-height: 1.15 !important;
+  font-weight: 700 !important;
+}
+
+body[data-page="overview"] .overview-canvas-panel {
+  height: 100% !important;
+  min-height: 0 !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  gap: clamp(10px, 0.62vw, 15px) !important;
+  padding: clamp(14px, 0.85vw, 20px) !important;
+  overflow: hidden !important;
+}
+
+body[data-page="overview"] .overview-canvas-panel > .section-head {
+  margin: 0 !important;
+}
+
+body[data-page="overview"] .overview-canvas-panel > .section-head h2 {
+  font-size: 20px !important;
+  line-height: 1.12 !important;
+}
+
+body[data-page="overview"] .overview-canvas-panel.no-section-title {
+  grid-template-rows: minmax(0, 1fr) !important;
+}
+
+body[data-page="overview"] .overview-canvas-body {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+body[data-page="overview"] :is(.overview-chart-card h3, .overview-duration-card h3, .overview-stage-card h3, .overview-family-header h3) {
+  font-size: 20px !important;
+  line-height: 1.15 !important;
+}
+
+.workspace-main :is(.section-head h2, .chart-head h3, .chart-panel > h3, .compact-panel > h3, .overview-chart-card > h3, .overview-duration-card > h3, .overview-stage-card > h3, .overview-family-header > h3) {
+  font-size: 20px !important;
+  line-height: 1.15 !important;
+}
+
+body[data-page="overview"] :is(.overview-family-facts .meta-item, .overview-summary-facts .meta-item, .overview-metric-card, .overview-family-metric-card) {
+  align-items: center !important;
+  justify-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+body[data-page="overview"] :is(.overview-family-facts .meta-item, .overview-summary-facts .meta-item) {
+  display: grid !important;
+  align-content: center !important;
+}
+
+body[data-page="overview"] :is(.overview-family-facts .meta-item, .overview-summary-facts .meta-item, .overview-metric-card, .overview-family-metric-card) :is(span, strong, em, .overview-family-metric-label, .overview-family-metric-value) {
+  width: auto !important;
+  justify-self: center !important;
+  text-align: center !important;
+}
+
+/* Active final aside sizing: this is the only effective four-block right-panel layout
+   for random/keynode module pages. Edit these selectors and the :root variables above
+   if you need to change width, spacing, or the four panel heights. */
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside > .workspace-stack.stack-count-4,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside > .workspace-stack.stack-count-4 {
+  grid-template-rows:
+    minmax(0, var(--active-aside-stack4-summary))
+    minmax(0, var(--active-aside-stack4-control))
+    minmax(0, var(--active-aside-stack4-detail))
+    minmax(0, var(--active-aside-stack4-focus)) !important;
+  gap: var(--active-aside-stack-gap) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel,
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel,
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel,
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-focus-panel,
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-focus-panel,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel {
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  align-content: start !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel {
+  grid-template-rows: auto minmax(0, 1fr) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel {
+  padding: var(--active-summary-panel-padding) !important;
+  gap: var(--active-summary-grid-gap) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel {
+  padding: var(--active-control-panel-padding) !important;
+  gap: var(--active-control-row-gap) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel {
+  padding: var(--active-detail-panel-padding) !important;
+  gap: var(--active-detail-grid-gap) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-focus-panel,
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-focus-panel,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel {
+  padding: var(--active-focus-panel-padding) !important;
+  gap: var(--active-focus-grid-gap) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel .section-head,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel .section-head {
+  margin: 0 0 var(--active-summary-title-gap) 0 !important;
+  align-self: start !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel .section-head h2,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel .section-head h2 {
+  font-size: var(--active-summary-title-font) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel .section-head,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel .section-head {
+  margin: 0 0 var(--active-control-title-gap) 0 !important;
+  align-self: start !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel .section-head h2,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel .section-head h2 {
+  font-size: var(--active-control-title-font) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .section-head,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .section-head {
+  margin: 0 0 var(--active-detail-title-gap) 0 !important;
+  align-self: start !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .section-head h2,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .section-head h2 {
+  font-size: var(--active-detail-title-font) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-focus-panel h3,
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel h3,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-focus-panel h3,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel h3 {
+  margin: 0 0 var(--active-focus-title-gap) 0 !important;
+  align-self: start !important;
+  font-size: var(--active-focus-title-font) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel {
+  grid-template-rows: auto auto auto !important;
+  row-gap: var(--active-control-row-gap) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .timeline-controller,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .timeline-controller {
+  gap: var(--active-control-timeline-gap) !important;
+  align-content: start !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .timeline-action-row.timeline-action-row-single,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .timeline-action-row.timeline-action-row-single {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: var(--active-control-button-gap) !important;
+  margin: 0 !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .timeline-action-row.timeline-action-row-single > *,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .timeline-action-row.timeline-action-row-single > * {
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: var(--active-control-card-padding) !important;
+  font-size: var(--active-control-button-font) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .timeline-meta,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .timeline-meta {
+  gap: var(--active-control-meta-gap) !important;
+  margin: 0 !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel :is(.meta-item, .kpi-mini),
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel :is(.meta-item, .kpi-mini) {
+  padding: var(--active-summary-card-padding) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel :is(.meta-item, .kpi-mini) span,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel :is(.meta-item, .kpi-mini) span {
+  font-size: var(--active-summary-label-font) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel :is(.meta-item, .kpi-mini) strong,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel :is(.meta-item, .kpi-mini) strong {
+  font-size: var(--active-summary-value-font) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel :is(.compact-summary-grid, .scene-meta, .scene-kpis),
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel :is(.compact-summary-grid, .scene-meta, .scene-kpis) {
+  gap: var(--active-summary-grid-gap) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .detail-card,
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .snapshot-stat-grid > *,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .detail-card,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .snapshot-stat-grid > * {
+  padding: var(--active-detail-card-padding) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .detail-card span,
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .snapshot-stat-grid > * span,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .detail-card span,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .snapshot-stat-grid > * span {
+  font-size: var(--active-detail-label-font) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .detail-card strong,
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .snapshot-stat-grid > * strong,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .detail-card strong,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .snapshot-stat-grid > * strong {
+  font-size: var(--active-detail-value-font) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .detail-grid,
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .snapshot-stat-grid,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .detail-grid,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel .snapshot-stat-grid {
+  gap: var(--active-detail-grid-gap) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-focus-panel .detail-grid,
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel .detail-grid,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-focus-panel .detail-grid,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel .detail-grid {
+  gap: var(--active-focus-grid-gap) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-focus-panel .detail-card,
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel .detail-card,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-focus-panel .detail-card,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel .detail-card {
+  padding: var(--active-focus-card-padding) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel .detail-card span,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel .detail-card span {
+  font-size: var(--active-control-label-font) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel .detail-card strong,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel .detail-card strong {
+  font-size: var(--active-control-value-font) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .stage-caption,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .stage-caption {
+  font-size: var(--active-control-caption-font) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-focus-panel .detail-card span,
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel .detail-card span,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-focus-panel .detail-card span,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel .detail-card span {
+  font-size: var(--active-focus-label-font) !important;
+}
+
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-focus-panel .detail-card strong,
+.workspace-layout.page-random:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel .detail-card strong,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-focus-panel .detail-card strong,
+.workspace-layout.page-keynode:is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel .detail-card strong {
+  font-size: var(--active-focus-value-font) !important;
+}
+
+/* Parameter completion: all four active right-aside modules read only the
+   --active-summary/control/detail/focus variables defined at the top. */
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside {
+  overflow: hidden !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside > .workspace-stack.stack-count-4 {
+  height: 100% !important;
+  min-height: 0 !important;
+  gap: var(--active-aside-stack-gap) !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside :is(.aside-summary-panel, .aside-control-panel, .aside-detail-panel, .aside-focus-panel, .aside-config-panel) {
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel :is(.compact-summary-grid, .scene-meta, .scene-kpis) {
+  grid-template-columns: repeat(var(--active-summary-grid-cols), minmax(0, 1fr)) !important;
+  gap: var(--active-summary-grid-gap) !important;
+  height: 100% !important;
+  align-content: stretch !important;
+  grid-auto-rows: minmax(0, 1fr) !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-summary-panel :is(.meta-item, .kpi-mini) {
+  min-height: var(--active-summary-card-min-h) !important;
+  padding: var(--active-summary-card-padding) !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel .timeline-action-row.timeline-action-row-single {
+  display: grid !important;
+  grid-template-columns: repeat(var(--active-control-button-cols), minmax(0, 1fr)) !important;
+  gap: var(--active-control-button-gap) !important;
+  overflow: hidden !important;
+  padding-bottom: 0 !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel .timeline-action-row.timeline-action-row-single > * {
+  min-width: 0 !important;
+  width: 100% !important;
+  padding: var(--active-control-card-padding) !important;
+  font-size: var(--active-control-button-font) !important;
+  white-space: nowrap !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel .timeline-meta {
+  grid-template-columns: repeat(var(--active-control-meta-cols), minmax(0, 1fr)) !important;
+  gap: var(--active-control-meta-gap) !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel .detail-card {
+  min-height: var(--active-control-card-min-h) !important;
+  padding: var(--active-control-card-padding) !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-control-panel .stage-caption {
+  padding: var(--active-control-caption-padding) !important;
+  font-size: var(--active-control-caption-font) !important;
+  margin-top: 0 !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel :is(.detail-grid, .snapshot-stat-grid) {
+  grid-template-columns: repeat(var(--active-detail-grid-cols), minmax(0, 1fr)) !important;
+  gap: var(--active-detail-grid-gap) !important;
+  height: 100% !important;
+  align-content: stretch !important;
+  grid-auto-rows: minmax(0, 1fr) !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel :is(.detail-card, .snapshot-stat-grid > *) {
+  min-height: var(--active-detail-card-min-h) !important;
+  padding: var(--active-detail-card-padding) !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-detail-panel small {
+  font-size: var(--active-detail-note-font) !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside :is(.aside-focus-panel, .aside-config-panel) :is(.detail-grid, .compact-detail-grid) {
+  grid-template-columns: repeat(var(--active-focus-grid-cols), minmax(0, 1fr)) !important;
+  gap: var(--active-focus-grid-gap) !important;
+  height: 100% !important;
+  align-content: stretch !important;
+  grid-auto-rows: minmax(0, 1fr) !important;
+  margin-top: 0 !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside :is(.aside-focus-panel, .aside-config-panel) .detail-card {
+  grid-column: auto !important;
+  min-height: var(--active-focus-card-min-h) !important;
+  padding: var(--active-focus-card-padding) !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel .selector-action-row {
+  gap: var(--active-focus-action-gap) !important;
+  margin-top: var(--active-focus-action-top-gap) !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel .detail-card {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel .detail-card strong {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.workspace-layout:is(.page-random, .page-keynode):is(.module-process_overview, .module-propagation_statistics, .module-supply_propagation, .module-demand_propagation, .module-dynamic_network, .module-node_simulation) .workspace-aside .aside-config-panel .selector-action-row > * {
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Active recovery strategy layout.
+   This is the only active recovery-specific layout block. The older recovery
+   ratios and centered detail modules above are intentionally commented out. */
+.workspace-layout.page-recovery {
+  grid-template-columns: var(--workspace-sidebar-w) minmax(0, 1fr) var(--workspace-aside-w) !important;
+  gap: var(--workspace-gap) !important;
+}
+
+.workspace-layout.page-recovery .workspace-sidebar {
+  width: var(--workspace-sidebar-w) !important;
+}
+
+.workspace-layout.page-recovery .workspace-nav-list {
+  gap: var(--space-md) !important;
+}
+
+.workspace-layout.page-recovery .workspace-nav-button {
+  width: 100% !important;
+  min-height: 62px !important;
+  padding: 10px 12px !important;
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+}
+
+.workspace-layout.page-recovery .workspace-main,
+.workspace-layout.page-recovery .workspace-aside {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.workspace-layout.page-recovery .workspace-main > *,
+.workspace-layout.page-recovery .workspace-main-stack,
+.workspace-layout.page-recovery .workspace-aside > .workspace-stack {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-self: stretch !important;
+}
+
+.workspace-layout.page-recovery .workspace-main-stack,
+.workspace-layout.page-recovery .workspace-aside > .workspace-stack {
+  gap: var(--workspace-gap) !important;
+}
+
+.workspace-layout.page-recovery.module-recovery_overview .workspace-main-stack.stack-count-2 {
+  grid-template-rows:
+    minmax(0, var(--recovery-main-overview-trends))
+    minmax(0, var(--recovery-main-overview-cost)) !important;
+}
+
+.workspace-layout.page-recovery.module-impact_paths .workspace-main-stack.stack-count-2 {
+  grid-template-columns:
+    minmax(0, var(--recovery-main-impact-events))
+    minmax(0, var(--recovery-main-impact-paths)) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+}
+
+.workspace-layout.page-recovery.module-policy_compare .workspace-main {
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+.workspace-layout.page-recovery.module-policy_compare .policy-comparison-panel {
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  display: grid !important;
+  grid-template-rows: minmax(0, 1fr) auto !important;
+  align-content: stretch !important;
+}
+
+.workspace-layout.page-recovery.module-policy_compare .policy-comparison-panel .chart-svg {
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+.workspace-layout.page-recovery.module-impact_paths .workspace-main-stack > .panel,
+.workspace-layout.page-recovery.module-policy_compare .policy-comparison-panel,
+.workspace-layout.page-recovery.module-recovery_overview .workspace-main-stack > .panel,
+.workspace-layout.page-recovery.module-recovery_network .workspace-main-panel {
+  overflow: hidden !important;
+}
+
+.workspace-layout.page-recovery.module-impact_paths .event-list,
+.workspace-layout.page-recovery.module-impact_paths .paths-grid {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: var(--recovery-main-impact-overflow) !important;
+  gap: 8px !important;
+  padding-right: 4px !important;
+}
+
+.workspace-layout.page-recovery.module-impact_paths .paths-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  align-content: start !important;
+}
+
+.workspace-layout.page-recovery.module-impact_paths .event-card,
+.workspace-layout.page-recovery.module-impact_paths .path-card {
+  padding: 10px 12px !important;
+  gap: 6px !important;
+}
+
+.workspace-layout.page-recovery.module-impact_paths .path-flow {
+  gap: 6px !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside > .workspace-stack.stack-count-3 {
+  grid-template-rows:
+    minmax(0, var(--recovery-aside-stack3-summary))
+    minmax(0, var(--recovery-aside-stack3-control))
+    minmax(0, var(--recovery-aside-stack3-action)) !important;
+  gap: var(--recovery-aside-stack3-gap) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside > .workspace-stack.stack-count-4 {
+  grid-template-rows:
+    minmax(0, var(--recovery-aside-stack4-summary))
+    minmax(0, var(--recovery-aside-stack4-control))
+    minmax(0, var(--recovery-aside-stack4-action))
+    minmax(0, var(--recovery-aside-stack4-selector)) !important;
+  gap: var(--recovery-aside-stack4-gap) !important;
+}
+
+.workspace-layout.page-recovery.module-recovery_overview .workspace-aside > .workspace-stack.stack-count-3 {
+  grid-template-rows:
+    minmax(0, var(--recovery-overview-summary))
+    minmax(0, var(--recovery-overview-control))
+    minmax(0, var(--recovery-overview-action)) !important;
+}
+
+.workspace-layout.page-recovery:is(.module-policy_compare, .module-impact_paths) .workspace-aside > .workspace-stack.stack-count-3 {
+  grid-template-rows:
+    minmax(0, var(--recovery-compact-summary))
+    minmax(0, var(--recovery-compact-control))
+    minmax(0, var(--recovery-compact-selector)) !important;
+}
+
+.workspace-layout.page-recovery.module-recovery_network .workspace-aside > .workspace-stack.stack-count-4 {
+  grid-template-rows:
+    minmax(0, var(--recovery-network-summary))
+    minmax(0, var(--recovery-network-control))
+    minmax(0, var(--recovery-network-action))
+    minmax(0, var(--recovery-network-selector)) !important;
+}
+
+.workspace-layout.page-recovery.module-recovery_network .workspace-aside .aside-detail-panel {
+  overflow-y: auto !important;
+}
+
+.workspace-layout.page-recovery:is(.module-recovery_network, .module-policy_compare, .module-impact_paths) .workspace-aside .aside-control-panel {
+  padding: var(--recovery-detail-control-panel-padding) !important;
+  gap: 0 !important;
+}
+
+.workspace-layout.page-recovery:is(.module-recovery_network, .module-policy_compare, .module-impact_paths) .workspace-aside .aside-control-panel > .section-head {
+  margin-bottom: var(--recovery-detail-control-title-timeline-gap) !important;
+}
+
+.workspace-layout.page-recovery:is(.module-recovery_network, .module-policy_compare, .module-impact_paths) .workspace-aside .aside-control-panel > .timeline-controller {
+  margin-bottom: var(--recovery-detail-control-buttons-meta-gap) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside :is(.aside-summary-panel, .aside-control-panel, .aside-detail-panel, .aside-config-panel) {
+  min-height: 0 !important;
+  overflow: hidden !important;
+  padding: var(--recovery-summary-panel-padding) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-control-panel {
+  padding: var(--recovery-control-panel-padding) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-detail-panel {
+  padding: var(--recovery-action-panel-padding) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-config-panel {
+  padding: var(--recovery-selector-panel-padding) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-summary-panel {
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  gap: var(--recovery-summary-title-gap) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-summary-panel .section-head h2 {
+  white-space: pre-line !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-summary-panel .section-head.scenario-summary-head h2 {
+  white-space: nowrap !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-control-panel {
+  display: grid !important;
+  grid-template-rows: auto auto auto !important;
+  align-content: start !important;
+  gap: var(--recovery-control-row-gap) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-detail-panel {
+  display: grid !important;
+  grid-template-rows: auto auto minmax(0, 1fr) !important;
+  align-content: stretch !important;
+  gap: var(--recovery-action-title-gap) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-config-panel {
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) auto !important;
+  align-content: stretch !important;
+  gap: var(--recovery-selector-title-content-gap) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside :is(.aside-summary-panel, .aside-control-panel, .aside-detail-panel, .aside-config-panel) :is(h2, h3) {
+  font-size: var(--recovery-summary-title-font) !important;
+  line-height: 1.15 !important;
+  margin: 0 !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-control-panel :is(h2, h3) {
+  font-size: var(--recovery-control-title-font) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-detail-panel :is(h2, h3) {
+  font-size: var(--recovery-action-title-font) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-config-panel :is(h2, h3) {
+  font-size: var(--recovery-selector-title-font) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .section-head {
+  align-self: start !important;
+  margin: 0 !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside :is(.aside-summary-panel, .aside-control-panel, .aside-detail-panel, .aside-config-panel) > :is(.section-head, h3) {
+  align-self: start !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-summary-panel :is(.scene-meta, .scene-kpis, .compact-summary-grid) {
+  display: grid !important;
+  grid-template-columns: repeat(var(--recovery-summary-grid-cols), minmax(0, 1fr)) !important;
+  gap: var(--recovery-summary-grid-gap) !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  align-content: stretch !important;
+  grid-auto-rows: minmax(0, 1fr) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-detail-panel :is(.snapshot-stat-grid, .detail-grid) {
+  display: grid !important;
+  grid-template-columns: repeat(var(--recovery-action-grid-cols), minmax(0, 1fr)) !important;
+  gap: var(--recovery-action-grid-gap) !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  align-self: stretch !important;
+  align-content: var(--recovery-action-grid-align) !important;
+  grid-auto-rows: var(--recovery-action-grid-auto-rows) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-config-panel :is(.detail-grid, .compact-detail-grid) {
+  display: grid !important;
+  grid-template-columns: repeat(var(--recovery-selector-grid-cols), minmax(0, 1fr)) !important;
+  gap: var(--recovery-selector-grid-gap) !important;
+  height: var(--recovery-selector-grid-height) !important;
+  min-height: 0 !important;
+  align-self: var(--recovery-selector-grid-self) !important;
+  align-content: var(--recovery-selector-grid-align) !important;
+  grid-auto-rows: var(--recovery-selector-grid-auto-rows) !important;
+}
+
+.workspace-layout.page-recovery:is(.module-policy_compare, .module-impact_paths) .workspace-aside .aside-config-panel :is(.detail-grid, .compact-detail-grid) {
+  height: 100% !important;
+  align-self: stretch !important;
+  align-content: stretch !important;
+  grid-auto-rows: minmax(0, 1fr) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-summary-panel :is(.meta-item, .kpi-mini) {
+  min-height: var(--recovery-summary-card-min-h) !important;
+  padding: var(--recovery-summary-card-padding) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-detail-panel :is(.detail-card, .snapshot-stat-grid > *) {
+  min-height: var(--recovery-action-card-min-h) !important;
+  padding: var(--recovery-action-card-padding) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-config-panel .detail-card {
+  min-height: var(--recovery-selector-card-min-h) !important;
+  padding: var(--recovery-selector-card-padding) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside :is(.meta-item, .kpi-mini, .detail-card) span,
+.workspace-layout.page-recovery .workspace-aside .snapshot-stat-grid > * span,
+.workspace-layout.page-recovery .workspace-aside small {
+  font-size: var(--recovery-action-label-font) !important;
+  line-height: 1.25 !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside :is(.meta-item, .kpi-mini, .detail-card) strong,
+.workspace-layout.page-recovery .workspace-aside .snapshot-stat-grid > * strong {
+  font-size: var(--recovery-action-value-font) !important;
+  line-height: 1.2 !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-summary-panel :is(.meta-item, .kpi-mini) span {
+  font-size: var(--recovery-summary-label-font) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-summary-panel :is(.meta-item, .kpi-mini) strong {
+  font-size: var(--recovery-summary-value-font) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-control-panel .detail-card span {
+  font-size: var(--recovery-control-label-font) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-control-panel .detail-card strong {
+  font-size: var(--recovery-control-value-font) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-config-panel .detail-card span {
+  font-size: var(--recovery-selector-label-font) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .aside-config-panel .detail-card strong {
+  font-size: var(--recovery-selector-value-font) !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .timeline-controller {
+  display: grid !important;
+  grid-template-rows: auto auto !important;
+  gap: var(--recovery-control-timeline-gap) !important;
+  align-content: start !important;
+  min-height: 0 !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .timeline-action-row {
+  display: grid !important;
+  grid-template-columns: repeat(var(--recovery-control-button-cols), minmax(0, 1fr)) !important;
+  gap: var(--recovery-control-button-gap) !important;
+  margin: 0 !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .timeline-action-row > * {
+  min-width: 0 !important;
+  width: 100% !important;
+  padding: var(--recovery-control-card-padding) !important;
+  font-size: var(--recovery-control-button-font) !important;
+  white-space: nowrap !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .timeline-meta {
+  display: grid !important;
+  grid-template-columns: repeat(var(--recovery-control-meta-cols), minmax(0, 1fr)) !important;
+  gap: var(--recovery-control-meta-gap) !important;
+  align-self: start !important;
+  margin: 0 !important;
+}
+
+.workspace-layout.page-recovery:is(.module-recovery_network, .module-policy_compare, .module-impact_paths) .workspace-aside .timeline-controller {
+  gap: var(--recovery-detail-control-timeline-button-gap) !important;
+}
+
+.workspace-layout.page-recovery:is(.module-recovery_network, .module-policy_compare, .module-impact_paths) .workspace-aside .timeline-action-row {
+  grid-template-columns: repeat(var(--recovery-detail-control-button-cols), minmax(0, 1fr)) !important;
+  gap: var(--recovery-detail-control-button-gap) !important;
+}
+
+.workspace-layout.page-recovery.module-recovery_network .workspace-aside .aside-control-panel > .section-head {
+  margin-bottom: var(--recovery-network-control-title-timeline-gap) !important;
+}
+
+.workspace-layout.page-recovery.module-recovery_network .workspace-aside .timeline-controller {
+  gap: var(--recovery-network-control-timeline-button-gap) !important;
+}
+
+.workspace-layout.page-recovery.module-recovery_network .workspace-aside .timeline-action-row {
+  gap: var(--recovery-network-control-button-gap) !important;
+}
+
+.workspace-layout.page-recovery:is(.module-recovery_network, .module-policy_compare, .module-impact_paths) .workspace-aside .timeline-meta {
+  gap: var(--recovery-detail-control-meta-gap) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .selector-action-row {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: var(--recovery-selector-action-gap) !important;
+  align-self: end !important;
+  margin-top: var(--recovery-selector-action-top-gap) !important;
+}
+
+.workspace-layout.page-recovery .workspace-aside .selector-action-row > * {
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Trial: hide the global study title while keeping the page grid stable.
+   Rollback scope: remove this block and restore styles.css cache version. */
+body {
+  background:
+    radial-gradient(circle at 5% 8%, rgba(32, 178, 170, 0.22), transparent 18rem),
+    radial-gradient(circle at 92% 6%, rgba(207, 23, 31, 0.2), transparent 22rem),
+    linear-gradient(180deg, #0f172a 0, #111827 96px, #eef4fb 96px, #f6f8fc 100%) !important;
+}
+
+.hero {
+  display: none !important;
+}
+
+.page-shell {
+  grid-template-rows: clamp(66px, 7vh, 86px) auto minmax(0, 1fr) !important;
+}
+
+.toolbar-strip {
+  grid-row: 1 !important;
+}
+
+#result-banner {
+  grid-row: 2 !important;
+}
+
+.content {
+  grid-row: 3 !important;
+}

@@ -1,0 +1,2 @@
+scenario_id,scenario_name,scenario_type,scenario_type_name,target_type,target_id,start_date,duration_days,severity
+interactive_keynode_4nodes_sid0010,INTERACTIVE关键节点4NODESSID0010,random_distributed_node_disruption,随机节点中断,node_group,"SID0010,SID0013,SID0020,SID0019",2025-06-15,18,1.0

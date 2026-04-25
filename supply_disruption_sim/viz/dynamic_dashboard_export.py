@@ -182,8 +182,8 @@ def build_selector_graph(model: ModelBundle) -> dict[str, list[dict[str, Any]]]:
     edges: list[dict[str, Any]] = []
     for source_key, target_key, attrs in graph.edges(data=True):
         edge_type = str(attrs.get("edge_type") or "")
-        if edge_type == "alternative":
-            continue
+        # Keep alternative material edges so equivalent material nodes do not
+        # appear isolated in the interactive frontend network.
         edges.append(
             {
                 "edge_key": attrs.get("edge_key"),
@@ -219,8 +219,8 @@ def build_interactive_network_payload(result: SimulationResult) -> dict[str, Any
     edges: list[dict[str, Any]] = []
     for source_key, target_key, attrs in graph.edges(data=True):
         edge_type = str(attrs.get("edge_type") or "")
-        if edge_type == "alternative":
-            continue
+        # Keep alternative material edges so equivalent material nodes do not
+        # appear isolated in the interactive frontend network.
         edges.append(
             {
                 "edge_key": attrs.get("edge_key"),
