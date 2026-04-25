@@ -3956,6 +3956,10 @@
 
     const clearButton = createElement("button", "scene-pill", "清除当前推演");
     clearButton.addEventListener("click", () => {
+      stopPlay();
+      const baselineScene = baseScenes[family];
+      state.selectedIndexByFamily[family] = 0;
+      state.viewportByFamily[family] = createViewport(baselineScene?.daily?.length || 1, 0);
       state.whatIfPayloads[family] = null;
       state.resultModeByFamily[family] = "baseline";
       renderApp();

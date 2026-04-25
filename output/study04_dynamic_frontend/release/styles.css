@@ -4464,6 +4464,12 @@ body[data-page="overview"] .workspace-nav-button {
   font-weight: 700 !important;
 }
 
+body[data-page="overview"] .workspace-nav-button.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 28px rgba(37, 99, 235, 0.22) !important;
+}
+
 body[data-page="overview"] .overview-canvas-panel {
   height: 100% !important;
   min-height: 0 !important;
@@ -5307,12 +5313,78 @@ body {
   display: none !important;
 }
 
+:root {
+  --top-study-title-w: clamp(210px, 13vw, 280px);
+  --top-study-title-gap: clamp(12px, 0.8vw, 18px);
+  --top-study-title-padding: clamp(6px, 0.45vw, 9px) clamp(14px, 0.95vw, 18px);
+}
+
+.toolbar-left-group {
+  gap: 24px !important;
+}
+
 .page-shell {
-  grid-template-rows: clamp(66px, 7vh, 86px) auto minmax(0, 1fr) !important;
+  grid-template-rows: clamp(76px, 7.4vh, 94px) auto minmax(0, 1fr) !important;
+  gap: clamp(2px, 0.18vw, 4px) !important;
 }
 
 .toolbar-strip {
+  display: grid !important;
+  grid-template-columns: var(--top-study-title-w) minmax(0, 1fr) !important;
+  align-items: stretch !important;
+  gap: var(--top-study-title-gap) !important;
+  padding-block: 0 !important;
+  padding-left: 0 !important;
   grid-row: 1 !important;
+}
+
+.study-title-card {
+  min-width: 0 !important;
+  height: calc(100% + 2px) !important;
+  margin: -1px 0 -1px -1px !important;
+  padding: var(--top-study-title-padding) !important;
+  border-radius: inherit !important;
+  background: #0f172a !important;
+  color: #ffffff !important;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  overflow: hidden !important;
+}
+
+.study-title-card span {
+  font-size: clamp(12px, 0.68vw, 14px) !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  color: rgba(255, 255, 255, 0.74) !important;
+  white-space: nowrap !important;
+}
+
+.study-title-card strong {
+  display: block !important;
+  max-width: 100% !important;
+  font-size: clamp(25px, 1.3vw, 29px) !important;
+  font-weight: 900 !important;
+  line-height: 1.04 !important;
+  color: #ffffff !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.toolbar-main-row {
+  min-width: 0 !important;
+  align-self: center !important;
+  align-items: center !important;
+}
+
+.toolbar-left-group,
+.page-nav-group,
+#family-nav-row,
+#result-mode-row {
+  align-items: center !important;
 }
 
 #result-banner {
